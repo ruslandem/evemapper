@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Core\EveApiTokenExpiredException;
 use App\Core\EveAuth;
 use App\Core\EveLocationApi;
+use App\Core\EveSolarSystem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -62,19 +63,10 @@ class EveController extends Controller
             return $this->update();
         }
 
-        // searching for solar system name in our database
-        $systems = DB::table('wormhole_systems')->where('id', '=', $solarSystemId)->get();
+        $solarSystem = new EveSolarSystem($solarSystemId);
+        $data = $solarSystem->getData();
 
-        try {
-            $found = $systems->firstOrFail();
-        } catch (ItemNotFoundException $e) {
-            return view('system', [
-                'system' => null,
-                'errorMessage' => 'Not found (' . $solarSystemId . ')'
-            ]);
-        }
-
-        return redirect('/system/' . $found->system);
+        return redirect('/system/' . $data->solarSystemName);
     }
 
     public function update()

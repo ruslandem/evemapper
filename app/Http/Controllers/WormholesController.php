@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Core\EveApi;
+use App\Core\EveSolarSystem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ItemNotFoundException;
@@ -14,31 +15,12 @@ class WormholesController extends Controller
         if ($system === null) {
             return view('system', [
                 'system' => null,
-                'errorMessage' => 'Not system specified'
+                'errorMessage' => 'System not specified'
             ]);
         }
 
-        $systems = DB::table('wormhole_systems')->where('system', '=', $system)->get();
-
-        try {
-            $found = $systems->firstOrFail();
-        } catch (ItemNotFoundException $e) {
-            return view('system', [
-                'system' => null,
-                'errorMessage' => 'Not found'
-            ]);
-        }
-
-        $statics = array_flip(
-            explode(",", $found->static)
-        );
-
-        foreach ($statics as $staticName => $data) {
-            $classes = DB::table('wormhole_classes')->where('hole', '=', $staticName)->get();
-            $statics[$staticName] = $classes->first();
-        }
-
-        $found->static = $statics;
+        $solarSystem = new EveSolarSystem(0, $system);
+        $found = $solarSystem->getData();
 
         return view('system', [
             'system' => $found

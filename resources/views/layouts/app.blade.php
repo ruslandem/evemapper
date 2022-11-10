@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css">
 
     <link rel="stylesheet" href="/css/app.css">
+
+    
 </head>
 
 <body>
@@ -55,6 +57,10 @@
 
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+
+    @stack('scripts')
 
 </body>
 
