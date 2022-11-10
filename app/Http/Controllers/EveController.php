@@ -6,6 +6,7 @@ use App\Core\EveApiTokenExpiredException;
 use App\Core\EveAuth;
 use App\Core\EveLocationApi;
 use App\Core\EveSolarSystem;
+use App\Core\EveWormholeClasses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -19,8 +20,23 @@ class EveController extends Controller
     {
         $api = new EveAuth();
         $sessionData = $api->getSessionData();
+
+        $wormholeClasses = new EveWormholeClasses();
+        $classes = [
+            'C1' => $wormholeClasses->getList(1),
+            'C2' => $wormholeClasses->getList(2),
+            'C3' => $wormholeClasses->getList(3),
+            'C4' => $wormholeClasses->getList(4),
+            'C5' => $wormholeClasses->getList(5),
+            'C6' => $wormholeClasses->getList(6),
+            'C13' => $wormholeClasses->getList(13),
+            'High' => $wormholeClasses->getList(7),
+            'Low' => $wormholeClasses->getList(8),
+            'Null' => $wormholeClasses->getList(9),
+            'Thera' => $wormholeClasses->getList(12),
+        ];
         
-        return view('main', compact('sessionData'));
+        return view('main', compact('sessionData', 'classes'));
     }
 
     public function auth()
@@ -77,7 +93,7 @@ class EveController extends Controller
         return redirect()->action([EveController::class, 'locate']);
     }
 
-    public function clear()
+    public function logout()
     {
         $api = new EveAuth();
         $api->clearSession();

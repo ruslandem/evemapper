@@ -22,7 +22,7 @@ class EveSolarSystem
 
         if (
             $this->data &&
-            preg_match("/^J\d{6}$/", $this->data->solarSystemName, $matches)
+            (preg_match("/^J\d{6}$/", $this->data->solarSystemName, $matches) || $this->data->solarSystemName == 'Thera')
         ) {
             $this->getWormholeInfo();
         }

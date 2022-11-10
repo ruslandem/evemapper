@@ -1,67 +1,73 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>WH Ident</title>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
-        integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css">
-
+    <title>Eve Mapper</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="/css/app.css">
-
-    
 </head>
 
 <body>
+    <nav class="blue-grey darken-4" role="navigation">
+        <div class="nav-wrapper container"><a id="logo-container" href="/"
+                class="brand-logo amber-text lighten-4">Eve&nbsp;Mapper</a>
+            <ul class="right">
+                <li>
+                    @unless(isset($sessionData['CharacterName']))
+                        <a href="/auth" style="margin-top:.5rem">
+                            <img src="\img\eve-sso-login-white-large.png" alt="Log in with EVE Online">
+                        </a>
+                    @else
+                        <a id="locate" href="/locate" class="btn-floating btn-small left"
+                            style="margin-top:1rem;margin-right:2rem"><i class="material-icons">location_on</i></a>
+                        <i class="material-icons left">account_box</i>
+                        <span>{{ $sessionData['CharacterName'] }}</span>
+                        <a href="/logout" class="btn">Logout</a>
+                    @endunless
+                </li>
+            </ul>
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        </div>
+    </nav>
 
-    <div id="layout" class="pure-g">
-
-        <div class="sidebar pure-u-1 pure-u-md-1-4">
-            <div class="header">
-                <img src="/img/planet.svg" style="width:50px;height:50px;color:white">
-                <h1 class="brand-title">WH Ident</h1>
-
-                <nav class="nav">
-                    <ul class="nav-list">
-                        <li class="nav-item">
-                            <a class="pure-button" href="/">Main</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="pure-button" href="/system/J000000">System</a>
-                        </li>
-                    </ul>
-                </nav>
-
-                <nav class="nav">
-                    <ul class="nav-list">
-                        <li class="nav-item">
-                            @unless(App\Core\EveAuth::isAuthenticated())
-                                <a class="pure-button" href="/auth">SSO Login</a>
-                            @else
-                                <a class="pure-button" href="/locate">Get Location</a>
-                                <a class="pure-button" href="/clear">Logout</a>
-                            @endunless
-                        </li>
-
-                    </ul>
-                </nav>
+    <div class="container">
+        <form class="col s12">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="text" id="search" class="validate"
+                        placeholder="Solar system name (e.g. Jita, J123456)"
+                        value="{{ $system->solarSystemName ?? '' }}">
+                </div>
             </div>
-        </div>
-
-        <div class="content pure-u-1 pure-u-md-3-4">
-
-            @yield('content')
-
-        </div>
+        </form>
     </div>
 
+    <div id="progress" style="visibility:hidden">
+        <div class="indeterminate"></div>
+    </div>
+
+    <!-- Content starts -->
+    @yield('content')
+    <!-- Content ends -->
+
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script>
+        $(function() {
+            $(document).on("keypress", "#search", function(e) {
+                if (e.which == 13) {
+                    window.location.href = '/system/' + $(this).val();
+                    return false;
+                }
+            });
+        }); 
+    </script>
 
     @stack('scripts')
-
 </body>
 
 </html>

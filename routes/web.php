@@ -22,7 +22,7 @@ Route::get('/', [EveController::class, 'main']);
 // authentication
 Route::get('/auth', [EveController::class, 'auth']);
 Route::get('/callback', [EveController::class, 'callback']);
-Route::get('/clear', [EveController::class, 'clear']);
+Route::get('/logout', [EveController::class, 'logout']);
 
 // solar system search
 Route::get('/locate', [EveController::class, 'locate']);
