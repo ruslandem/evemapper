@@ -107,7 +107,7 @@ class EveAuth
      */
     public function getAccessToken(): ?string
     {
-        if ($this->sessionData['access_token']) {
+        if (array_key_exists('access_token', $this->sessionData)) {
             return $this->sessionData['access_token'];
         }
         

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Core\EveApiTokenExpiredException;
 use App\Core\EveAuth;
 use App\Core\EveLocationApi;
+use App\Core\EveLocationHistory;
 use App\Core\EveSolarSystem;
 use App\Core\EveWormholeClasses;
 use Illuminate\Http\Request;
@@ -82,7 +83,14 @@ class EveController extends Controller
         $solarSystem = new EveSolarSystem($solarSystemId);
         $data = $solarSystem->getData();
 
-        return redirect('/system/' . $data->solarSystemName);
+        // logging location
+        EveLocationHistory::write($character, $data->solarSystemName);
+
+        return response()->json([
+            'solarSystemName' => $data->solarSystemName
+        ]);
+
+        // return redirect('/system/' . $data->solarSystemName);
     }
 
     public function update()

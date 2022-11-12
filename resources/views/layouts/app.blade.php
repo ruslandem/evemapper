@@ -21,10 +21,16 @@
                             <img src="\img\eve-sso-login-white-large.png" alt="Log in with EVE Online">
                         </a>
                     @else
-                        <a id="locate" href="/locate" class="btn-floating btn-small left"
+                        <a id="autolocate" href="#" class="btn-floating btn-small left"
+                            style="margin-top:1rem;margin-right:0;padding-right:0"><i
+                                class="material-icons">autorenew</i></a>
+
+                        <a id="locate" href="#" class="btn-floating btn-small left"
                             style="margin-top:1rem;margin-right:2rem"><i class="material-icons">location_on</i></a>
+
                         <i class="material-icons left">account_box</i>
                         <span>{{ $sessionData['CharacterName'] }}</span>
+
                         <a href="/logout" class="btn">Logout</a>
                     @endunless
                 </li>
@@ -57,14 +63,48 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
     <script>
+        window.sessionStorage.autolocateInterval = null;
+
+        const setAutoLocationBtnColor = function() {
+            if (window.sessionStorage.autolocate === 'true') {
+                $('#autolocate').removeClass("red").addClass("green");
+                return;
+            }
+            $('#autolocate').removeClass("green").addClass("red");
+        };
+
+        const updateLocation = () => {
+            $.get('/locate')
+                .done(function(response) {
+                    if (response.solarSystemName && response.solarSystemName !=
+                        '{{ $system->solarSystemName ?? '' }}') {
+                        window.location.href = '/system/' + response.solarSystemName;
+                        return false;
+                    }
+                })
+                .fail(function(response) {
+                    throw 'Failed to get location. Response: ' + response;
+                    return false;
+                });
+        };
+
+        $(document).on('click', '#locate', function(e) {
+            e.preventDefault();
+            updateLocation();
+        });
+
         $(function() {
+            setAutoLocationBtnColor();
+
             $(document).on("keypress", "#search", function(e) {
                 if (e.which == 13) {
                     window.location.href = '/system/' + $(this).val();
                     return false;
                 }
             });
-        }); 
+
+
+        });
     </script>
 
     @stack('scripts')

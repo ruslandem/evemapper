@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\EveApi;
 use App\Core\EveAuth;
+use App\Core\EveLocationHistory;
 use App\Core\EveSolarSystem;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\ItemNotFoundException;
 
-class WormholesController extends Controller
+class SystemController extends Controller
 {
     public function show($system = null)
     {
@@ -31,10 +28,13 @@ class WormholesController extends Controller
             $found = null;
         }
 
+        $history = EveLocationHistory::get($sessionData['CharacterID']);
+
         return view('system', [
             'system' => $found,
-            'errorMessage' => 'Unknown solar system',
-            'sessionData' => $sessionData
+            'errorMessage' => '',
+            'sessionData' => $sessionData,
+            'history' => $history
         ]);
     }
 }

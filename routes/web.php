@@ -1,9 +1,8 @@
 <?php
 
 use App\Http\Controllers\EveController;
-use App\Http\Controllers\WormholesController;
+use App\Http\Controllers\SystemController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,5 +25,5 @@ Route::get('/logout', [EveController::class, 'logout']);
 
 // solar system search
 Route::get('/locate', [EveController::class, 'locate']);
-Route::get('/system', [WormholesController::class, 'show']);
-Route::get('/system/{id}', [WormholesController::class, 'show']);
+Route::get('/system', [SystemController::class, 'show']);
+Route::get('/system/{id}', [SystemController::class, 'show']);

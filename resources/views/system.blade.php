@@ -61,6 +61,17 @@
                     </a>
                 </div>
             </div>
+
+            <div class="row">
+                <div id="locationHistory" class="col s6 offset-s3 center white">
+                    @foreach ($history as $record)
+                        <div class="history-record">
+                            {{ $record->created_at }} -
+                            <b><a href="/system/{{ $record->solarSystemName }}">{{ $record->solarSystemName }}</a></b>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         @else
             <div class="row">
                 <h5 class="col s12 center light orange-text darken-4">
@@ -77,12 +88,33 @@
         .pure-table tr td:first-child {
             color: gray;
         }
+
+        #locationHistory {
+            height: 20rem;
+            overflow-y: auto;
+            background-color: rgba(242, 242, 242, 0.75) !important;
+        }
+
+        .history-record {
+        }
     </style>
 @endsection
 
 @push('scripts')
     <script>
-        $(function() {
+        const setLocationAutoUpdate = (enabled) => {
+            if (enabled === true) {
+                window.sessionStorage.autolocateInterval = setInterval(() => {
+                    updateLocation();
+                }, 10000);
+                return;
+            }
+            if (window.sessionStorage.autolocateInterval) {
+                clearInterval(window.sessionStorage.autolocateInterval);
+            }
+        };
+
+        const formatValues = () => {
             // security status color
             const security = parseFloat($('#security').text());
             $('#security').css('color', '#00BFFF');
@@ -98,7 +130,7 @@
             if (security < 0) {
                 $('#security').css('color', '#FF0000');
             }
-
+            // statics format
             $('.classType').each(function() {
                 let inClass = parseInt($(this).data('in-class'));
 
@@ -122,6 +154,38 @@
                     return "C" + inClass;
                 });
             });
+        };
+
+        $(document).on("click", "#autolocate", function(e) {
+            e.preventDefault();
+
+            if (window.sessionStorage.hasOwnProperty("autolocate")) {
+                window.sessionStorage.autolocate =
+                    (window.sessionStorage.autolocate === 'true') ? 'false' : 'true';
+                setAutoLocationBtnColor();
+                setLocationAutoUpdate(
+                    window.sessionStorage.autolocate !== 'false' ||
+                    !window.sessionStorage.autolocateInterval
+                );
+                return false;
+            }
+
+            window.sessionStorage.autolocate = 'true';
+            setAutoLocationBtnColor();
+            return false;
+        });
+
+        $(function() {
+            formatValues();
+
+            if (window.sessionStorage.autolocate === 'true') {
+                setLocationAutoUpdate(true);
+            }
+
+            if (window.sessionStorage.locateOnLoad === 'true') {
+                window.sessionStorage.locateOnLoad = false;
+                updateLocation();
+            }
         });
     </script>
 @endpush
