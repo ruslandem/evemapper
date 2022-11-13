@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EveController;
+use App\Http\Controllers\RoutesController;
 use App\Http\Controllers\SystemController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,3 +28,5 @@ Route::get('/logout', [EveController::class, 'logout']);
 Route::get('/locate', [EveController::class, 'locate']);
 Route::get('/system', [SystemController::class, 'show']);
 Route::get('/system/{id}', [SystemController::class, 'show']);
+
+Route::get('/route', [RoutesController::class, 'route']);
