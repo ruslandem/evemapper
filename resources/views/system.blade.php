@@ -25,6 +25,7 @@
                                 <td>Constellation</td>
                                 <td>{{ $system->constellationName }}</td>
                             </tr>
+                            
                             @if (isset($system->wormholeClass))
                                 <tr>
                                     <td>Wormhole Class</td>
@@ -69,6 +70,15 @@
                             {{ $record->created_at }} -
                             <b><a href="/system/{{ $record->solarSystemName }}">{{ $record->solarSystemName }}</a></b>
                         </div>
+                    @endforeach
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col s6 offset-s3 center grey">
+                    <div style="font-weight:bold" class="white-text">Jumps to trade hubs:</div>
+                    @foreach ($hubsJumps as $hubName => $jumps)
+                        <span style="margin-right:1rem">{{ $hubName }}<i class="tiny material-icons">arrow_forward</i>{{ $jumps }}</span>
                     @endforeach
                 </div>
             </div>

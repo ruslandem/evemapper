@@ -2,156 +2,59 @@
 
 namespace App\Core;
 
+use Fisharebest\Algorithm\Dijkstra;
 use Illuminate\Database\ConnectionInterface;
 
 class EveRoute
 {
-    protected $db;
+    protected array $systemJumps = [];
+    protected array $systemNames = [];
 
-    protected $regionJumps;
-    protected $constellationJumps;
-    protected $systemJumps;
-    protected $solarSystemNames;
 
     public function __construct(ConnectionInterface $db)
     {
-        $this->db = $db;
-
-        $this->regionJumps = [];
-        $data = $this->db->table('mapRegionJumps')->get();
+        $data = $db->table('mapSolarSystemJumps')->get();
         foreach ($data as $item) {
-            $this->regionJumps[intval($item->fromRegionID)][] = intval($item->toRegionID);
+            $this->systemJumps[intval($item->fromSolarSystemID)][intval($item->toSolarSystemID)] = 1;
         }
 
-        $this->constellationJumps = [];
-        $data = $this->db->table('mapConstellationJumps')->get();
+        $data = $db->table('mapSolarSystems')->get();
         foreach ($data as $item) {
-            $this->constellationJumps[intval($item->fromConstellationID)][] = intval($item->toConstellationID);
-        }
-
-        $this->systemJumps = [];
-        $data = $this->db->table('mapSolarSystemJumps')->get();
-        foreach ($data as $item) {
-            $this->systemJumps[intval($item->fromSolarSystemID)][] = intval($item->toSolarSystemID);
-        }
-
-        $this->solarSystemNames = [];
-        $data = $this->db->table('mapSolarSystems')->get();
-        foreach ($data as $item) {
-            $this->solarSystemNames[intval($item->solarSystemID)] = $item->solarSystemName;
+            $this->systemNames[intval($item->solarSystemID)] = $item->solarSystemName;
         }
     }
 
     public function getRoute(string $fromSolarSystemName, string $toSolarSystemName)
     {
-        $from = $this->db->table('mapSolarSystems')
-            ->where('solarSystemName', '=', $fromSolarSystemName)
-            ->first();
+        $fromSolarSystemId = array_search($fromSolarSystemName, $this->systemNames, true);
+        $toSolarSystemId = array_search($toSolarSystemName, $this->systemNames, true);
 
-        $to = $this->db->table('mapSolarSystems')
-            ->where('solarSystemName', '=', $toSolarSystemName)
-            ->first();
-
-        if (!$from || !$to) {
+        if (!$fromSolarSystemId || !$toSolarSystemId) {
             throw new \Exception('origin or target system not found');
         }
 
-        $route = $this->findRoute($this->systemJumps, $from->solarSystemID, $to->solarSystemID);
+        $algorithm = new Dijkstra($this->systemJumps);
+        $route = $algorithm->shortestPaths($fromSolarSystemId, $toSolarSystemId);
 
-        // debug output
-        $names = [];
-        foreach ($route as $id) {
-            $names[] = $id . ':' . $this->solarSystemNames[$id];
+        if (isset($route[0])) {
+            return Utils::mapArray($route[0], $this->systemNames);
         }
-        dd($names);
+
+        return [];
     }
 
-    protected function getRegionsRoute(int $fromRegionId, int $toRegionId)
-    {
-        # code...
-    }
+    // Query get XYZ-positions between gates
 
-    protected function findRoute(array $map, int $from, int $to, int $maxRoute = 15)
-    {
-        $failedRoutes = [];
+    // SELECT invItems.itemID as originID, invItems.locationID AS originLocationID, invNames.itemName, mapJumps.destinationID, destinationItems.locationID AS destinationLocationID,
+    // originPositions.x as originX, originPositions.y as originY, originPositions.z as originZ,
+    // destinationPositions.x as destinationX, destinationPositions.y as destinationY, destinationPositions.z as destinationZ
+    // FROM invItems 
+    // LEFT JOIN invNames ON invNames.itemID = invItems.itemID
+    // LEFT JOIN invTypes ON invTypes.typeID = invItems.typeID
+    // LEFT JOIN mapJumps ON mapJumps.stargateID = invItems.itemID
+    // LEFT JOIN invItems AS destinationItems ON destinationItems.itemID = mapJumps.destinationID
+    // LEFT JOIN invPositions AS originPositions ON originPositions.itemID = invNames.itemID
+    // LEFT JOIN invPositions AS destinationPositions ON destinationPositions.itemID = mapJumps.destinationID
+    // WHERE invItems.locationID = 30000140 AND invTypes.groupID = 10
 
-        do {
-            $route = [$from];
-            do {
-                $count = count($route);
-                $waypoints = $map[$route[$count - 1]];
-                if (count($waypoints) > 0) {
-                    $gotNewWaypoint = false;
-                    foreach ($waypoints as $waypoint) {
-                        if (!in_array($waypoint, $route)) {
-                            $route[] = $waypoint;
-
-                            if (in_array($route, $failedRoutes)) {
-                                // failed route
-                                array_pop($route);
-                                continue;
-                            }
-
-                            $gotNewWaypoint = true;
-                            break;
-                        }
-                    }
-
-                    if (count($route) > $maxRoute) {
-                        // waypoints limit reached
-                        $failedRoutes[] = $route;
-                        break;
-                    }
-
-                    if (!$gotNewWaypoint) {
-                        // no more waypoints available
-                        break;
-                    }
-                }
-            } while (end($route) != $to);
-            if (end($route) != $to) {
-                $failedRoutes[] = $route;
-            }
-        } while (end($route) != $to && count($failedRoutes) < 1000);
-
-        return $route;
-    }
-
-    // protected function getSampleRoute(int $fromSolarSystemId, int $toSolarSystemId, array &$failedRoutes)
-    // {
-    //     $route = [$fromSolarSystemId];
-
-    //     do {
-    //         $count = count($route);
-    //         $waypoints = $this->jumps[$route[$count - 1]];
-
-    //         if ($waypoints > 1) {
-    //             $routeSize = count($route);
-    //             foreach ($waypoints as $waypoint) {
-    //                 if (!in_array($waypoint, $route)) {
-    //                     $route[] = $waypoint;
-    //                     if (in_array($route, $failedRoutes)) {
-    //                         array_pop($route);
-    //                         continue;
-    //                     }
-    //                     break;
-    //                 }
-    //             }
-    //             if ($routeSize > 12) {
-    //                 // too much waypoints
-    //                 break;
-    //             }
-    //             if ($routeSize == count($route)) {
-    //                 // no more waypoints
-    //                 break;
-    //             }
-    //             if (end($route) == $toSolarSystemId) {
-    //                 // destination reached
-    //                 break;
-    //             }
-    //         }
-    //     } while (count($waypoints) > 1);
-
-    //     return $route;
-    // }
 }
