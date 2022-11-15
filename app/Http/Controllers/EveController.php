@@ -2,18 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\EveApiTokenExpiredException;
+use App\Core\Exceptions\EveApiTokenExpiredException;
 use App\Core\EveAuth;
 use App\Core\EveLocationApi;
 use App\Core\EveLocationHistory;
 use App\Core\EveSolarSystem;
 use App\Core\EveWormholeClasses;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\ItemNotFoundException;
-use Swagger\Client\Eve\Api\CharacterApi;
-use Swagger\Client\Eve\Model\GetCharactersCharacterIdLocationOk;
 
 class EveController extends Controller
 {
@@ -80,17 +75,15 @@ class EveController extends Controller
             return $this->update();
         }
 
-        $solarSystem = new EveSolarSystem($solarSystemId);
-        $data = $solarSystem->getData();
+        $solarSystem = new EveSolarSystem();
+        $data = $solarSystem->getById($solarSystemId);
 
         // logging location
-        EveLocationHistory::write($character, $data->solarSystemName);
+        (new EveLocationHistory())->write($character, $data->solarSystemName);
 
         return response()->json([
             'solarSystemName' => $data->solarSystemName
         ]);
-
-        // return redirect('/system/' . $data->solarSystemName);
     }
 
     public function update()

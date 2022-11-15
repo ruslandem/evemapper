@@ -5,7 +5,7 @@ namespace App\Core;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Nette\Utils\Random;
-use App\Core\EveApiException;
+use App\Core\Exceptions\EveApiException;
 
 class EveAuth
 {

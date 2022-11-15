@@ -3,10 +3,18 @@
 namespace App\Core;
 
 use DateTime;
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Facades\DB;
 
 class EveLocationHistory
 {
+    private ConnectionInterface $db;
+
+    public function __construct(string $connection = 'app')
+    {
+        $this->db = DB::connection($connection);
+    }
+
     /**
      * Records location (if changed) of the specified user into database.
      * 
@@ -14,38 +22,33 @@ class EveLocationHistory
      * @param string $solarSystemName
      * @return bool
      */
-    public static function write(int $userId, string $solarSystemName): bool
+    public function write(int $userId, string $solarSystemName): bool
     {
-        $prevRecord = DB::table('location_history')
+        // check previous location does not equals to present location
+        $record = $this->db->table('locationHistory')
             ->where(['userId' => $userId])
-            ->orderByDesc('created_at')
+            ->orderByDesc('createdAt')
             ->limit(1)
             ->first();
 
-        if (
-            $prevRecord &&
-            isset($prevRecord->solarSystemName) &&
-            $prevRecord->solarSystemName == $solarSystemName
-        ) {
+        if ($record && $record->solarSystemName == $solarSystemName) {
             return false;
         }
 
-        return DB::table('location_history')->insert([
+        return $this->db->table('locationHistory')->insert([
             'userId' => $userId,
             'solarSystemName' => $solarSystemName,
-            'created_at' => new DateTime()
+            'createdAt' => new DateTime()
         ]);
     }
 
-    public static function get(int $userId, int $limit = 100)
+    public function get(int $userId, int $limit = 100)
     {
-        $records = DB::table('location_history')
+        return $this->db->table('locationHistory')
             ->where(['userId' => $userId])
-            ->orderByDesc('created_at')
+            ->orderByDesc('createdAt')
             ->limit($limit)
-            ->get(['solarSystemName', 'created_at'])
+            ->get(['solarSystemName', 'createdAt'])
             ->toArray();
-
-        return $records;
     }
 }

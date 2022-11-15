@@ -11,62 +11,39 @@ use Illuminate\Support\Facades\DB;
 
 class SystemController extends Controller
 {
+    protected array $tradeHubs = [
+        'Jita',
+        'Amarr',
+        'Dodixie',
+        'Rens',
+        'Hek'
+    ];
+
     public function show($system = null)
     {
-        $api = new EveAuth();
-        $sessionData = $api->getSessionData();
+        $result = [
+            'system' => null,
+            'jumps' => [],
+            'errorMessage' => null,
+            'sessionData' => (new EveAuth())->getSessionData(),
+            'history' => []
+        ];
 
         if ($system === null) {
-            return view('system', [
-                'system' => null,
-                'errorMessage' => 'System not specified',
-                'sessionData' => $sessionData
-            ]);
+            $result['errorMessage'] = 'System not specified';
+            return view('system', $result);
         }
 
-        $hubsJumps = [];
+        $result['system'] = (new EveSolarSystem())->getByName($system);
 
-        try {
-            $solarSystem = new EveSolarSystem(0, $system);
-            $found = $solarSystem->getData();
-
-
-
-            //
-            //if (!$hubsJumps) {
-
-
-            //Cache::put('hubsJumps_' . $found->solarSystemName, $hubsJumps);
-            //}
-        } catch (\Throwable $th) {
-            $found = null;
+        $eveRoute = new EveRoute();
+        foreach ($this->tradeHubs as $tradeHub) {
+            $result['jumps'][$tradeHub] = count($eveRoute->getRoute($result['system']->solarSystemName, $tradeHub));
         }
+        @asort($result['jumps']);
 
-        $hubsJumps = Cache::get('hubsJumps_' . $found->solarSystemName);
-        if ($hubsJumps === null) {
-            $eveRoute = new EveRoute(
-                DB::connection('sqlite')
-            );
+        $result['history'] = (new EveLocationHistory())->get($result['sessionData']['CharacterID']);
 
-            $hubs = ['Jita', 'Amarr', 'Dodixie', 'Rens', 'Hek'];
-            $hubsJumps = [];
-            foreach ($hubs as $hub) {
-                $hubsJumps[$hub] = count($eveRoute->getRoute($found->solarSystemName, $hub));
-            }
-
-            asort($hubsJumps);
-
-            Cache::put('hubsJumps_' . $found->solarSystemName, $hubsJumps);
-        }
-
-        $history = EveLocationHistory::get($sessionData['CharacterID']);
-
-        return view('system', [
-            'system' => $found,
-            'hubsJumps' => $hubsJumps,
-            'errorMessage' => '',
-            'sessionData' => $sessionData,
-            'history' => $history
-        ]);
+        return view('system', $result);
     }
 }
