@@ -6,8 +6,6 @@ use App\Core\EveAuth;
 use App\Core\EveLocationHistory;
 use App\Core\EveRoute;
 use App\Core\EveSolarSystem;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class SystemController extends Controller
 {

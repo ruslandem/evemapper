@@ -35,9 +35,13 @@ class EveLocationHistory
             return false;
         }
 
+        $solarSystemInfo = (new EveSolarSystem())->getByName($solarSystemName);
+
         return $this->db->table('locationHistory')->insert([
             'userId' => $userId,
             'solarSystemName' => $solarSystemName,
+            'solarSystemSecurity' => $solarSystemInfo->security,
+            'wormholeClass' => $solarSystemInfo->wormholeClass ?? null,
             'createdAt' => new DateTime()
         ]);
     }
@@ -48,7 +52,7 @@ class EveLocationHistory
             ->where(['userId' => $userId])
             ->orderByDesc('createdAt')
             ->limit($limit)
-            ->get(['solarSystemName', 'createdAt'])
+            ->get()
             ->toArray();
     }
 }

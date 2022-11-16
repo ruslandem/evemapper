@@ -15,7 +15,7 @@
                         <tbody>
                             <tr>
                                 <td>Security</td>
-                                <td><span id="security">{{ round($system->security, 2) }}</span></td>
+                                <td><span class="security">{{ round($system->security, 2) }}</span></td>
                             </tr>
                             <tr>
                                 <td>Region</td>
@@ -25,7 +25,7 @@
                                 <td>Constellation</td>
                                 <td>{{ $system->constellationName }}</td>
                             </tr>
-                            
+
                             @if (isset($system->wormholeClass))
                                 <tr>
                                     <td>Wormhole Class</td>
@@ -64,21 +64,24 @@
             </div>
 
             <div class="row">
-                <div id="locationHistory" class="col s6 offset-s3 center white">
+                <div id="locationHistory" class="col s6 offset-s3 white" style="padding:1rem">
                     @foreach ($history as $record)
-                        <div class="history-record">
-                            {{ $record->createdAt }} -
-                            <b><a href="/system/{{ $record->solarSystemName }}">{{ $record->solarSystemName }}</a></b>
+                        <div class="history-record left" style="width:100%">
+                            {{ $record->createdAt }}
+                            <span style="margin-left:.5rem;font-weight:bold;"><a href="/system/{{ $record->solarSystemName }}">{{ $record->solarSystemName }}</a></span>
+                            <span class="security" style="margin-left:.5rem;">{{ round($record->solarSystemSecurity, 1) }}</span>
+                            <span style="margin-left:.5rem;">{{ $record->wormholeClass }}</span>
                         </div>
                     @endforeach
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col s6 offset-s3 center grey">
                     <div style="font-weight:bold" class="white-text">Jumps to trade hubs:</div>
                     @foreach ($jumps as $hubName => $jumps)
-                        <span style="margin-right:1rem">{{ $hubName }}<i class="tiny material-icons">arrow_forward</i>{{ $jumps }}</span>
+                        <span style="margin-right:1rem">{{ $hubName }}<i
+                                class="tiny material-icons">arrow_forward</i>{{ $jumps }}</span>
                     @endforeach
                 </div>
             </div>
@@ -105,7 +108,8 @@
             background-color: rgba(242, 242, 242, 0.75) !important;
         }
 
-        .history-record {
+        .history-record:hover {
+            background-color: rgb(187, 187, 187);
         }
     </style>
 @endsection
@@ -126,20 +130,23 @@
 
         const formatValues = () => {
             // security status color
-            const security = parseFloat($('#security').text());
-            $('#security').css('color', '#00BFFF');
-            if (security <= 0.8) {
-                $('#security').css('color', '#008000');
-            }
-            if (security < 0.6) {
-                $('#security').css('color', '#FFD700');
-            }
-            if (security < 0.5) {
-                $('#security').css('color', '#FF8C00');
-            }
-            if (security < 0) {
-                $('#security').css('color', '#FF0000');
-            }
+            $('.security').each(function() {
+                let security = parseFloat($(this).text());
+                $(this).css('color', '#00BFFF')
+                if (security <= 0.8) {
+                    $(this).css('color', '#008000');
+                }
+                if (security < 0.6) {
+                    $(this).css('color', '#FFD700');
+                }
+                if (security < 0.5) {
+                    $(this).css('color', '#FF8C00');
+                }
+                if (security < 0) {
+                    $(this).css('color', '#FF0000');
+                }
+            });
+            
             // statics format
             $('.classType').each(function() {
                 let inClass = parseInt($(this).data('in-class'));

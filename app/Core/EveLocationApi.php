@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Core\Exceptions\EveApiException;
 use App\Core\Exceptions\EveApiTokenExpiredException;
 use GuzzleHttp\Client;
 use Swagger\Client\Eve\Api\LocationApi;
