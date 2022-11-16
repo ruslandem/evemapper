@@ -44,14 +44,14 @@ services:
     networks:
       - whident
 
-  adminer:
-    image: adminer
-    container_name: adminer_sql
-    restart: unless-stopped
-    ports:
-      - 8888:8080
-    networks:
-      - whident
+  # adminer:
+  #   image: adminer
+  #   container_name: adminer_sql
+  #   restart: unless-stopped
+  #   ports:
+  #     - 8888:8080
+  #   networks:
+  #     - whident
 
 networks:
   whident:

@@ -38,7 +38,7 @@
                                             @foreach ($system->wormholeStatics as $item)
                                                 <span style="margin-right:.25rem">
                                                     {{ $item->hole }}
-                                                    (<span class="classType" data-in-class="{{ $item->in_class }}"></span>)
+                                                    (<span class="classType" data-in-class="{{ $item->inClass }}"></span>)
                                                 </span>
                                             @endforeach
                                         @endif
