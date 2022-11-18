@@ -18,30 +18,22 @@
     </ul>
     <nav class="blue-grey darken-4" role="navigation">
         <div class="nav-wrapper container">
-            
-            <ul class="left">
+
+            <ul>
                 <li>
                     <a class="main-title" href="/" class="amber-text lighten-4">Eve&nbsp;Mapper</a>
                 </li>
                 @unless(isset($sessionData['CharacterName']))
-                    <li>
+                    <li data-menu-item="home"><a href="/">Home</a></li>
+                    <li class="right">
                         <a href="/auth" style="margin-top:.5rem">
                             <img src="\img\eve-sso-login-white-large.png" alt="Log in with EVE Online">
                         </a>
                     </li>
                 @else
-                    <li>
-                        {{-- <a id="autolocate" href="#" class="btn-floating btn-small left"
-                            style="margin-top:1rem;margin-right:0;padding-right:0"><i
-                                class="material-icons">autorenew</i></a>
-
-                        <a id="locate" href="#" class="btn-floating btn-small left"
-                            style="margin-top:1rem;margin-right:2rem"><i class="material-icons">location_on</i></a> --}}
-
-                    </li>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/system">System</a></li>
-                    <li>
+                    <li data-menu-item="home"><a href="/">Home</a></li>
+                    <li data-menu-item="system"><a href="/system">System</a></li>
+                    <li class="right">
                         <a class="dropdown-trigger" href="#!" data-target="authDropdown" title="Logged in as">
                             {{ $sessionData['CharacterName'] }}
                             <i class="material-icons right">arrow_drop_down</i>

@@ -217,6 +217,8 @@
         });
 
         $(function() {
+            $('[data-menu-item="system"]').addClass('active');
+
             formatValues();
 
             if (window.sessionStorage.autolocate === 'true') {

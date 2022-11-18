@@ -56,3 +56,11 @@
        
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(function() {
+            $('[data-menu-item="home"]').addClass('active');
+        });
+    </script>
+@endpush
