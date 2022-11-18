@@ -31,8 +31,23 @@ class EveController extends Controller
             'Null' => $wormholeClasses->getList(9),
             'Thera' => $wormholeClasses->getList(12),
         ];
-        
-        return view('main', compact('sessionData', 'classes'));
+
+        $damageTypes = [
+            ["Blood Raider", "EM/Thermal", "EM"],
+            ["Guristas", "Kinetic/Thermal", "Kinetic"],
+            ["Sanshas", "EM/Thermal", "EM"],
+            ["Serpentis", "Thermal/Kinetic", "Kinetic"],
+            ["Angel", "Explosive/Kinetic", "Explosive"],
+            ["Mordus", "Kinetic/Thermal", "Kinetic"],
+            ["Rogue Drones", "Explosive/Kinetic", "EM"],
+            ["Mercenary", "EM/Thermal", "Thermal"],
+            ["Minmatar", "Thermal", " Explo"],
+            ["Gallente", "Kinetic/Thermal", "Thermal"],
+            ["Amarr", "EM/Thermal", "Thermal"],
+            ["Caldari", "Kinetic/Thermal", "Kinetic"],
+        ];
+
+        return view('main', compact('sessionData', 'classes', 'damageTypes'));
     }
 
     public function auth()

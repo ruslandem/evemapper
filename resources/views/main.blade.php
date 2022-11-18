@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container" style="margin-top: 1rem">
         <div class="row z-depth-5" style="background-color:rgba(0,0,0,.5);font-size:1.25rem;padding:1rem">
             <div class="col center green-text accent-2">
                 <h4>High</h4>
@@ -36,5 +36,23 @@
                 </div>
             @endforeach
         </div>
+    </div>
+
+    <div class="container">
+        <div class="z-depth-5 white-text" style="background-color:rgba(0,0,0,.5);font-size:1.25rem;padding:1rem">
+            <div class="row">
+                <div class="col s3"><h5>Enemies</h5></div>
+                <div class="col s3"><h5>Hardeners to Use</h5></div>
+                <div class="col s3"><h5>Damage to use</h5></div>
+            </div>
+            @foreach ($damageTypes as $item)
+            <div class="row m-0">
+                <div class="col s3">{{ $item[0] }}</div>
+                <div class="col s3">{{ $item[1] }}</div>
+                <div class="col s3">{{ $item[2] }}</div>
+            </div>
+            @endforeach
+        </div>
+       
     </div>
 @endsection

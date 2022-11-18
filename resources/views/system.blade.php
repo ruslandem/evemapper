@@ -2,6 +2,23 @@
 
 @section('content')
     <div class="container">
+        <form class="col s12">
+            <div class="row">
+                <div class="input-field col s11">
+                    <input type="text" id="search" class="validate" placeholder="Enter solar system name here"
+                        value="{{ $system->solarSystemName ?? '' }}">
+                </div>
+                <div class="col s1">
+                    <a id="locate" href="#" class="btn-floating btn-small left"
+                        style="margin-top:1rem;margin-right:2rem">
+                        <i class="material-icons">location_on</i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="container">
 
         @unless($system === null)
 
@@ -68,8 +85,10 @@
                     @foreach ($history as $record)
                         <div class="history-record left" style="width:100%">
                             {{ $record->createdAt }}
-                            <span style="margin-left:.5rem;font-weight:bold;"><a href="/system/{{ $record->solarSystemName }}">{{ $record->solarSystemName }}</a></span>
-                            <span class="security" style="margin-left:.5rem;">{{ round($record->solarSystemSecurity, 1) }}</span>
+                            <span style="margin-left:.5rem;font-weight:bold;"><a
+                                    href="/system/{{ $record->solarSystemName }}">{{ $record->solarSystemName }}</a></span>
+                            <span class="security"
+                                style="margin-left:.5rem;">{{ round($record->solarSystemSecurity, 1) }}</span>
                             <span style="margin-left:.5rem;">{{ $record->wormholeClass }}</span>
                         </div>
                     @endforeach
@@ -146,7 +165,7 @@
                     $(this).css('color', '#FF0000');
                 }
             });
-            
+
             // statics format
             $('.classType').each(function() {
                 let inClass = parseInt($(this).data('in-class'));

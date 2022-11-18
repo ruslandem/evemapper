@@ -11,45 +11,48 @@
 </head>
 
 <body>
+    <ul id="authDropdown" class="dropdown-content">
+        <li>
+            <a href="/logout"><i class="material-icons tiny">exit_to_app</i> Logout</a>
+        </li>
+    </ul>
     <nav class="blue-grey darken-4" role="navigation">
-        <div class="nav-wrapper container"><a id="logo-container" href="/"
-                class="brand-logo amber-text lighten-4">Eve&nbsp;Mapper</a>
-            <ul class="right">
+        <div class="nav-wrapper container">
+            
+            <ul class="left">
                 <li>
-                    @unless(isset($sessionData['CharacterName']))
+                    <a class="main-title" href="/" class="amber-text lighten-4">Eve&nbsp;Mapper</a>
+                </li>
+                @unless(isset($sessionData['CharacterName']))
+                    <li>
                         <a href="/auth" style="margin-top:.5rem">
                             <img src="\img\eve-sso-login-white-large.png" alt="Log in with EVE Online">
                         </a>
-                    @else
-                        <a id="autolocate" href="#" class="btn-floating btn-small left"
+                    </li>
+                @else
+                    <li>
+                        {{-- <a id="autolocate" href="#" class="btn-floating btn-small left"
                             style="margin-top:1rem;margin-right:0;padding-right:0"><i
                                 class="material-icons">autorenew</i></a>
 
                         <a id="locate" href="#" class="btn-floating btn-small left"
-                            style="margin-top:1rem;margin-right:2rem"><i class="material-icons">location_on</i></a>
+                            style="margin-top:1rem;margin-right:2rem"><i class="material-icons">location_on</i></a> --}}
 
-                        <i class="material-icons left">account_box</i>
-                        <span>{{ $sessionData['CharacterName'] }}</span>
+                    </li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/system">System</a></li>
+                    <li>
+                        <a class="dropdown-trigger" href="#!" data-target="authDropdown" title="Logged in as">
+                            {{ $sessionData['CharacterName'] }}
+                            <i class="material-icons right">arrow_drop_down</i>
+                        </a>
+                    </li>
+                @endunless
 
-                        <a href="/logout" class="btn">Logout</a>
-                    @endunless
-                </li>
             </ul>
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         </div>
     </nav>
-
-    <div class="container">
-        <form class="col s12">
-            <div class="row">
-                <div class="input-field col s12">
-                    <input type="text" id="search" class="validate"
-                        placeholder="Solar system name (e.g. Jita, J123456)"
-                        value="{{ $system->solarSystemName ?? '' }}">
-                </div>
-            </div>
-        </form>
-    </div>
 
     <div id="progress" style="visibility:hidden">
         <div class="indeterminate"></div>
@@ -94,6 +97,10 @@
         });
 
         $(function() {
+            $(".dropdown-trigger").dropdown({
+                coverTrigger: false
+            });
+
             setAutoLocationBtnColor();
 
             $(document).on("keypress", "#search", function(e) {

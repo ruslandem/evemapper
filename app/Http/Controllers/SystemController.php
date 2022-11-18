@@ -27,8 +27,8 @@ class SystemController extends Controller
             'history' => []
         ];
 
-        if ($system === null) {
-            $result['errorMessage'] = 'System not specified';
+        if (empty($system)) {
+            $result['errorMessage'] = 'No system specified';
             return view('system', $result);
         }
 
