@@ -4,15 +4,20 @@
     <div class="container">
         <form class="col s12">
             <div class="row">
-                <div class="input-field col s11">
+                <div class="input-field col s10">
                     <input type="text" id="search" class="validate" placeholder="Enter solar system name here"
                         value="{{ $system->solarSystemName ?? '' }}">
                 </div>
                 <div class="col s1">
-                    <a id="locate" href="#" class="btn-floating btn-small left"
+                    <a id="locate" href="#" class="btn-floating btn-small"
                         style="margin-top:1rem;margin-right:2rem">
                         <i class="material-icons">location_on</i>
                     </a>
+                </div>
+                <div class="col s1">
+                    <a id="autolocate" href="#" class="btn-floating btn-small"
+                            style="margin-top:1rem;margin-right:0;padding-right:0"><i
+                                class="material-icons">autorenew</i></a>
                 </div>
             </div>
         </form>
