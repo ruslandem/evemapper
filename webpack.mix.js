@@ -1,4 +1,5 @@
-const mix = require('laravel-mix');
+const { minify } = require("laravel-mix");
+const mix = require("laravel-mix");
 
 /*
  |--------------------------------------------------------------------------
@@ -11,7 +12,14 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
-        //
-    ]);
+mix.copy("resources/assets/img", "public/img");
+
+mix.js("resources/assets/js/app.js", "public/js");
+mix.js("node_modules/jquery/dist/jquery.min.js", "public/js");
+
+mix.postCss("resources/assets/css/app.css", "public/css");
+mix.postCss("node_modules/bulma/css/bulma.min.css", "public/css");
+mix.postCss(
+    "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+    "public/css/fontawesome.min.css"
+);

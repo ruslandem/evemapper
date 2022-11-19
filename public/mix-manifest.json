@@ -1,0 +1,12 @@
+{
+    "/js/app.js": "/js/app.js",
+    "/js/jquery.min.js": "/js/jquery.min.js",
+    "/css/fontawesome.min.css": "/css/fontawesome.min.css",
+    "/css/bulma.min.css": "/css/bulma.min.css",
+    "/css/app.css": "/css/app.css",
+    "/img/bg.jpg": "/img/bg.jpg",
+    "/img/dotlan.png": "/img/dotlan.png",
+    "/img/eve-sso-login-white-large.png": "/img/eve-sso-login-white-large.png",
+    "/img/map.png": "/img/map.png",
+    "/img/planet.svg": "/img/planet.svg"
+}

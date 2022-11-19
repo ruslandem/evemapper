@@ -6,58 +6,80 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <link rel="stylesheet" href="/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/css/bulma.min.css">
     <link rel="stylesheet" href="/css/app.css">
 </head>
 
 <body>
-    <ul id="authDropdown" class="dropdown-content">
-        <li>
-            <a href="/logout"><i class="material-icons tiny">exit_to_app</i> Logout</a>
-        </li>
-    </ul>
-    <nav class="blue-grey darken-4" role="navigation">
-        <div class="nav-wrapper container">
-
-            <ul>
-                <li>
-                    <a class="main-title" href="/" class="amber-text lighten-4">Eve&nbsp;Mapper</a>
-                </li>
-                @unless(isset($sessionData['CharacterName']))
-                    <li data-menu-item="home"><a href="/">Home</a></li>
-                    <li class="right">
-                        <a href="/auth" style="margin-top:.5rem">
-                            <img src="\img\eve-sso-login-white-large.png" alt="Log in with EVE Online">
+    <!-- START NAV -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-item is-size-5 has-text-weight-bold" href="#">
+                    Eve Mapper
+                </a>
+                <span class="navbar-burger burger" data-target="navbarMenu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </div>
+            <div id="navbarMenu" class="navbar-menu">
+                <div class="navbar-end">
+                    <a class="navbar-item" href="/">
+                        Home
+                    </a>
+                    @unless(isset($sessionData['CharacterName']))
+                        <a class="navbar-item" href="/auth">
+                            <img src="/img/eve-sso-login-white-large.png" alt="Log in with EVE Online">
                         </a>
-                    </li>
-                @else
-                    <li data-menu-item="home"><a href="/">Home</a></li>
-                    <li data-menu-item="system"><a href="/system">System</a></li>
-                    <li data-menu-item="system"><a href="/route">Route</a></li>
-                    <li class="right">
-                        <a class="dropdown-trigger" href="#!" data-target="authDropdown" title="Logged in as">
-                            {{ $sessionData['CharacterName'] }}
-                            <i class="material-icons right">arrow_drop_down</i>
+                    @else
+                        <a class="navbar-item" href="/system">
+                            System
                         </a>
-                    </li>
-                @endunless
-
-            </ul>
-            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                        <a class="navbar-item" href="/route">
+                            Route
+                        </a>
+                        <div class="navbar-item dropdown is-right">
+                            <div class="dropdown-trigger">
+                                <button class="button" aria-haspopup="true" aria-controls="profile-menu">
+                                    <span>{{ $sessionData['CharacterName'] }}</span>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="dropdown-menu" id="profile-menu" role="menu">
+                                <div class="dropdown-content">
+                                    <a href="/logout" class="dropdown-item">
+                                        Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endunless
+                </div>
+            </div>
         </div>
     </nav>
-
-    <div id="progress" style="visibility:hidden">
-        <div class="indeterminate"></div>
-    </div>
+    <!-- END NAV -->
 
     <!-- Content starts -->
     @yield('content')
     <!-- Content ends -->
 
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>Eve Mapper</strong>.
+                &copy;2022 - All rights reserved. Fly safe ;-)
+            </p>
+        </div>
+    </footer>
+
+    <script src="/js/app.js"></script>
 
     <script>
         window.sessionStorage.autolocateInterval = null;
@@ -90,23 +112,15 @@
             updateLocation();
         });
 
+        $(document).on("keypress", "#search", function(e) {
+            if (e.which == 13) {
+                window.location.href = '/system/' + $(this).val();
+                return false;
+            }
+        });
+
         $(function() {
-            M.AutoInit();
-            
-            $(".dropdown-trigger").dropdown({
-                coverTrigger: false
-            });
-
             setAutoLocationBtnColor();
-
-            $(document).on("keypress", "#search", function(e) {
-                if (e.which == 13) {
-                    window.location.href = '/system/' + $(this).val();
-                    return false;
-                }
-            });
-
-
         });
     </script>
 
