@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="/css/fontawesome.min.css">
     <link rel="stylesheet" href="/css/bulma.min.css">
+    <link rel="stylesheet" href="/css/toastify.css">
     <link rel="stylesheet" href="/css/app.css">
 </head>
 
@@ -86,10 +87,10 @@
 
         const setAutoLocationBtnColor = function() {
             if (window.sessionStorage.autolocate === 'true') {
-                $('#autolocate').removeClass("red").addClass("green");
+                $('#autolocate').removeClass("has-background-danger	").addClass("has-background-success");
                 return;
             }
-            $('#autolocate').removeClass("green").addClass("red");
+            $('#autolocate').removeClass("has-background-success").addClass("has-background-danger	");
         };
 
         const updateLocation = () => {

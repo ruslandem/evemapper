@@ -2,45 +2,69 @@
 
 @section('content')
     <div class="container">
-        <div class="row">
-            <div class="col s6">
-                <div class="row">
-                    <div class="input-field col">
-                        <input id="solarSystem" type="text" class="validate" placeholder="Solar system" value="">
-                    </div>
-                    <div class="input-field col">
-                        <a id="addBtn" href="#" class="btn"><i class="material-icons left">add</i> add</a>
-                    </div>
+        <div class="columns has-text-white">
+
+            <div class="column is-half">
+
+                <div class="tile is-parent is-vertical">
+                    <article class="tile is-child notification is-dark-half">
+                        <p class="title has-text-white">Waypoints Route</p>
+                        <p class="subtitle has-text-white">Calculates optimal route though given waypoints</p>
+
+                        <div class="field is-horizontal">
+                            <div class="field-body">
+                                <div class="field">
+                                    <p class="control has-icons-left">
+                                        <input id="solarSystem" class="input" type="text" placeholder="Solar system"
+                                            value="{{ $system->solarSystemName ?? '' }}">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa-solid fa-location-crosshairs"></i>
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="field">
+                                    <p class="control is-expanded">
+                                        <a id="addBtn" href="#" class="button is-primary" title="Add">add</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="m-4 px-2 has-text-warning has-text-weight-bold is-size-5	">
+                            <ol id="waypointsList">
+                                <li>Ohmahailen</li>
+                                <li>Obanen</li>
+                                <li>Arera</li>
+                                <li>Isseras</li>
+                                <li>Nasreri</li>
+                            </ol>
+
+
+                        </div>
+                        <div>
+                            <a id="clearBtn" href="#" class="button is-danger">clear</a>
+                            <a id="routeBtn" href="#" class="button is-primary">route</a>
+                        </div>
+
+                    </article>
                 </div>
-                <div class="row">
-                    <ol id="waypointsList">
-                        <li>Ohmahailen</li>
-                        <li>Obanen</li>
-                        <li>Arera</li>
-                        <li>Isseras</li>
-                        <li>Nasreri</li>
-                    </ol>
-                    <a id="clearBtn" href="#" class="btn red lighten-2"><i class="material-icons left">delete</i>
-                        clear</a>
-                    <a id="routeBtn" href="#" class="btn"><i class="material-icons left">call_split</i> route</a>
-                </div>
+
             </div>
-            <div class="col s6 yellow-text">
-                <div id="routeResult"></div>
+
+            <div class="column is-half">
+                <div id="routeResult" class="is-dark-half"></div>
+
             </div>
         </div>
 
     </div>
     <style>
         #routeResult {
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 1rem;
+            padding: 2rem;
         }
 
-        #waypointsList li {
-            font-size: 125%;
-            font-weight: bold;
-            color: yellowgreen;
+        #routeResult ol {
+            margin-left: 3rem;
         }
     </style>
 @endsection
@@ -50,16 +74,16 @@
         $(function() {
             $(document).on('click', '#addBtn', function(e) {
                 e.preventDefault();
-                e.stopPropagation();
 
                 let name = $('#solarSystem').val().trim();
                 $('#solarSystem').val("")
 
                 $('#waypointsList li').each(function() {
                     if ($(this).text() == name) {
-                        M.toast({
-                            html: 'Waypoint already exists!'
-                        });
+                        Toastify({
+                            text: "waypoint already exists",
+                            duration: 3000
+                        }).showToast();
                         name = "";
                         return false;
                     }
@@ -101,7 +125,8 @@
                             path[0] += ' <sup>[return route]</sup>';
                         }
                         $('#routeResult')
-                            .append('<h5>' + path[0] + '</h5>')
+                            .append('<div class="is-size-4 has-text-warning">' + path[0] +
+                                '</div>')
                             .append(list);
                         path.forEach((waypoint, waypointIndex) => {
                             if (waypointIndex > 0) {

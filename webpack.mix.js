@@ -15,7 +15,6 @@ const mix = require("laravel-mix");
 mix.copy("resources/assets/img", "public/img");
 
 mix.js("resources/assets/js/app.js", "public/js");
-mix.js("node_modules/jquery/dist/jquery.min.js", "public/js");
 
 mix.postCss("resources/assets/css/app.css", "public/css");
 mix.postCss("node_modules/bulma/css/bulma.min.css", "public/css");
@@ -23,3 +22,4 @@ mix.postCss(
     "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
     "public/css/fontawesome.min.css"
 );
+mix.postCss("node_modules/toastify-js/src/toastify.css", "public/css");
