@@ -6,6 +6,7 @@ use App\Core\EveAuth;
 use App\Core\EveLocationHistory;
 use App\Core\EveRoute;
 use App\Core\EveSolarSystem;
+use Illuminate\Http\Request;
 
 class SystemController extends Controller
 {
@@ -16,6 +17,21 @@ class SystemController extends Controller
         'Rens',
         'Hek'
     ];
+
+    public function list(Request $request)
+    {
+        $systems = [];
+
+        $searchText = trim($request->input('search'));
+
+        if (!empty($searchText)) {
+            $systems = (new EveSolarSystem())->search($searchText);
+        }
+
+        return response()->json([
+            'systems' => array_column($systems, 'solarSystemName')
+        ]);
+    }
 
     public function show($system = null)
     {

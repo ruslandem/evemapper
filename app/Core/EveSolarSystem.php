@@ -49,6 +49,15 @@ class EveSolarSystem
         return $data;
     }
 
+    public function search(string $searchText): array
+    {
+        $data = $this->dbEve->table('mapSolarSystems')
+            ->where('solarSystemName', 'like', $searchText . '%')
+            ->get('solarSystemName');
+
+        return $data->toArray();
+    }
+
     public static function isWormholeSystem(string $solarSystemName): bool
     {
         return preg_match("/^J\d{6}$/", $solarSystemName, $matches) ||

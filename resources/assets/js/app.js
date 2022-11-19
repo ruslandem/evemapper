@@ -1,5 +1,6 @@
 import $ from "jquery";
 window.$ = window.jQuery = $;
+
 import Toastify from "toastify-js";
 window.Toastify = Toastify;
 

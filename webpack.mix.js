@@ -23,3 +23,4 @@ mix.postCss(
     "public/css/fontawesome.min.css"
 );
 mix.postCss("node_modules/toastify-js/src/toastify.css", "public/css");
+

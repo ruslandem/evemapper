@@ -28,6 +28,7 @@ Route::get('/logout', [EveController::class, 'logout']);
 Route::get('/locate', [EveController::class, 'locate']);
 Route::get('/system', [SystemController::class, 'show']);
 Route::get('/system/{id}', [SystemController::class, 'show']);
+Route::post('/systemlist', [SystemController::class, 'list']);
 
 Route::get('/route', [RoutesController::class, 'route']);
 Route::post('/route', [RoutesController::class, 'buildRoute']);

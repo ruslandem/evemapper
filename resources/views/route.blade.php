@@ -14,12 +14,11 @@
                         <div class="field is-horizontal">
                             <div class="field-body">
                                 <div class="field">
-                                    <p class="control has-icons-left">
+                                    <p class="control">
                                         <input id="solarSystem" class="input" type="text" placeholder="Solar system"
                                             value="{{ $system->solarSystemName ?? '' }}">
-                                        <span class="icon is-small is-left">
-                                            <i class="fa-solid fa-location-crosshairs"></i>
-                                        </span>
+                                    <div id="suggesstions" class="has-background-white has-text-black py-1 px-3"
+                                        style="display: none"></div>
                                     </p>
                                 </div>
                                 <div class="field">
@@ -66,12 +65,48 @@
         #routeResult ol {
             margin-left: 3rem;
         }
+
+        #suggesstions {
+            max-height: 200px;
+            overflow-y: auto;
+            position: fixed;
+            margin-top: .25rem;
+            z-index: 999;
+        }
+
+        #suggesstions>div:hover {
+            background-color: #efefef;
+            cursor: pointer;
+        }
     </style>
 @endsection
 
 @push('scripts')
     <script>
         $(function() {
+            $("#solarSystem").keyup(function() {
+                $.post({
+                    url: '/systemlist',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        search: $(this).val()
+                    },
+                }).done(function(response) {
+                    $("#suggesstions").html("");
+                    response.systems.forEach(element => {
+                        $("#suggesstions").append("<div>" + element + "</div>")
+                    });
+                    $("#suggesstions").show();
+                });
+            });
+
+            $(document).on('click', '#suggesstions>div', function(e) {
+                $('#solarSystem').val($(this).text());
+                $("#suggesstions").hide();
+            });
+
             $(document).on('click', '#addBtn', function(e) {
                 e.preventDefault();
 
