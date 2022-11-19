@@ -25,6 +25,43 @@ class EveRoute
         $this->useCache = $useCache;
     }
 
+    public function getWaypointsRoute(array $waypoints)
+    {
+        $destinations = $waypoints;
+        $route = [
+            array_shift($destinations)
+        ];
+
+        while (count($destinations) > 0) {
+            $position = end($route);
+
+            $paths = [];
+            foreach ($destinations as $waypoint) {
+                $waypointRoute = $this->getRoute($position, $waypoint);
+                $paths[$waypoint] = count($waypointRoute);
+            }
+
+            if (count($paths) > 0) {
+                $shortest = array_keys($paths, min($paths));
+                $route[] = $shortest[0];
+
+                if (($key = array_search($shortest[0], $destinations)) !== false) {
+                    unset($destinations[$key]);
+                }
+            }
+        }
+
+        $result = [];
+        if (count($route) > 1) {
+            for ($i = 1; $i < count($route); $i++) {
+                $result[] = $this->getRoute($route[$i - 1], $route[$i]);
+            }
+            $result[] = $this->getRoute($route[count($route)-1], $route[0]);
+        }
+
+        return $result;
+    }
+
     public function getRoute(string $fromSystemName, string $toSystemName)
     {
         if ($this->useCache) {

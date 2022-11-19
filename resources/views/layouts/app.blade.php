@@ -5,6 +5,7 @@
     <title>Eve Mapper</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="/css/app.css">
@@ -33,6 +34,7 @@
                 @else
                     <li data-menu-item="home"><a href="/">Home</a></li>
                     <li data-menu-item="system"><a href="/system">System</a></li>
+                    <li data-menu-item="system"><a href="/route">Route</a></li>
                     <li class="right">
                         <a class="dropdown-trigger" href="#!" data-target="authDropdown" title="Logged in as">
                             {{ $sessionData['CharacterName'] }}
@@ -89,6 +91,8 @@
         });
 
         $(function() {
+            M.AutoInit();
+            
             $(".dropdown-trigger").dropdown({
                 coverTrigger: false
             });

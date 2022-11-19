@@ -30,3 +30,4 @@ Route::get('/system', [SystemController::class, 'show']);
 Route::get('/system/{id}', [SystemController::class, 'show']);
 
 Route::get('/route', [RoutesController::class, 'route']);
+Route::post('/route', [RoutesController::class, 'buildRoute']);
