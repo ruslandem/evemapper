@@ -50,13 +50,15 @@ class SystemController extends Controller
 
         $result['system'] = (new EveSolarSystem())->getByName($system);
 
-        $eveRoute = new EveRoute();
-        foreach ($this->tradeHubs as $tradeHub) {
-            $result['jumps'][$tradeHub] = count($eveRoute->getRoute($result['system']->solarSystemName, $tradeHub));
-        }
-        @asort($result['jumps']);
+        if ($result['system']) {
+            $eveRoute = new EveRoute();
+            foreach ($this->tradeHubs as $tradeHub) {
+                $result['jumps'][$tradeHub] = count($eveRoute->getRoute($result['system']->solarSystemName, $tradeHub));
+            }
+            @asort($result['jumps']);
 
-        $result['history'] = (new EveLocationHistory())->get($result['sessionData']['CharacterID']);
+            $result['history'] = (new EveLocationHistory())->get($result['sessionData']['CharacterID']);
+        }
 
         return view('system', $result);
     }

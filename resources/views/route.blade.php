@@ -30,13 +30,7 @@
                         </div>
 
                         <div class="m-4 px-2 has-text-warning has-text-weight-bold is-size-5	">
-                            <ol id="waypointsList">
-                                <li>Ohmahailen</li>
-                                <li>Obanen</li>
-                                <li>Arera</li>
-                                <li>Isseras</li>
-                                <li>Nasreri</li>
-                            </ol>
+                            <ol id="waypointsList"></ol>
 
 
                         </div>
@@ -165,10 +159,11 @@
                             .append(list);
                         path.forEach((waypoint, waypointIndex) => {
                             if (waypointIndex > 0) {
-                                list.append('<li>' + waypoint + '</li>');
+                                list.append('<li>' + waypoint + ' (<span class="security">' + Math.round(response.info[pathIndex][waypointIndex]['security'] * 10) / 10 + '</span>)</li>');
                             }
                         });
                         $('#routeResult').append('</ol>');
+                        formatValues();
                     });
 
                 });

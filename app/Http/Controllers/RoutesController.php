@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Core\EveApiRoute;
 use App\Core\EveAuth;
 use App\Core\EveRoute;
+use App\Core\EveSolarSystem;
 use Illuminate\Http\Request;
 
 class RoutesController extends Controller
@@ -24,8 +25,15 @@ class RoutesController extends Controller
         $api = new EveRoute();
         $route = $api->getWaypointsRoute($waypoints);
 
+        $info = [];
+        $api = new EveSolarSystem();
+        foreach($route as $key => $value) {
+            $info[$key] = $api->getByNames($route[$key]);
+        }
+
+
         return response()->json(
-            ['route' => $route]
+            ['route' => $route, 'info' => $info]
         );
     }
 }

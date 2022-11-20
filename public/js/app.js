@@ -21,6 +21,48 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on("click", ".dropdown",
   e.stopPropagation();
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).toggleClass("is-active");
 });
+window.formatValues = function () {
+  // security status color
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(".security").each(function () {
+    var security = parseFloat(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).text());
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).css("color", "#00BFFF");
+    if (security <= 0.8) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).css("color", "#008000");
+    }
+    if (security < 0.6) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).css("color", "#FFD700");
+    }
+    if (security < 0.5) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).css("color", "#FF8C00");
+    }
+    if (security < 0) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).css("color", "#FF0000");
+    }
+  });
+
+  // statics format
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(".class-type").each(function () {
+    var inClass = parseInt(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).data("in-class"));
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).text(function () {
+      switch (inClass) {
+        case 7:
+          jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).addClass("has-text-success");
+          return "High";
+        case 8:
+          jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).addClass("has-text-warning");
+          return "Low";
+        case 9:
+          jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).addClass("has-text-danger");
+          return "Null";
+        case 12:
+          jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).addClass("has-text-info");
+          return "Thera";
+      }
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).addClass("has-text-link");
+      return "C" + inClass;
+    });
+  });
+};
 
 /***/ }),
 

@@ -30,6 +30,8 @@ class EveSolarSystem
             $this->addWormholeSystemData($data);
         }
 
+        $this->addRatsInfo($data);
+
         return $data;
     }
 
@@ -46,7 +48,14 @@ class EveSolarSystem
             $this->addWormholeSystemData($data);
         }
 
+        $this->addRatsInfo($data);
+
         return $data;
+    }
+
+    public function getByNames(array $names): array
+    {
+        return array_map([$this, 'getByName'], $names);
     }
 
     public function search(string $searchText): array
@@ -100,5 +109,23 @@ class EveSolarSystem
         $data->wormholeEffect = $wormholeData->effect;
         $data->wormholeStar = $wormholeData->star;
         $data->wormholeStatics = $wormholeData->static;
+    }
+
+    protected function addRatsInfo(?stdClass &$data): void
+    {
+        if ($data instanceof stdClass) {
+
+            if (self::isWormholeSystem($data->solarSystemName)) {
+                $data->rats = 'Sleepers';
+                return;
+            }
+
+            $rats = $this->dbApp->table('regionRats')
+                ->where('regionName', '=', $data->regionName)
+                ->get()
+                ->first();
+
+            $data->rats = $rats ? $rats->rats : null;
+        }
     }
 }
