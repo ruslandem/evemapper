@@ -14,3 +14,5 @@ yarn-error.log
 /.idea
 /.vscode
 database/whident.db
+public/phpliteadmin.php
+public/phpliteadmin.config.php
