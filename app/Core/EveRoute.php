@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Core\Exceptions\EveRouteNotFoundException;
 use Fisharebest\Algorithm\Dijkstra;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Facades\Cache;
@@ -56,7 +57,7 @@ class EveRoute
             for ($i = 1; $i < count($route); $i++) {
                 $result[] = $this->getRoute($route[$i - 1], $route[$i]);
             }
-            $result[] = $this->getRoute($route[count($route)-1], $route[0]);
+            $result[] = $this->getRoute($route[count($route) - 1], $route[0]);
         }
 
         return $result;
@@ -77,7 +78,7 @@ class EveRoute
         $toSolarSystemId = array_search($toSystemName, $this->systemNames, true);
 
         if (!$fromSolarSystemId || !$toSolarSystemId) {
-            throw new \Exception('origin or target system not found');
+            throw new EveRouteNotFoundException();
         }
 
         $result = [];

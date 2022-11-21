@@ -154,6 +154,14 @@
                 }).done(function(response) {
                     $('#routeResult').html("");
 
+                    if (response.error) {
+                        Toastify({
+                            text: response.error,
+                            duration: 3000
+                        }).showToast();
+                        return;
+                    }
+
                     response.route.forEach((path, pathIndex, array) => {
                         let list = $('<ol></ol>');
                         if (pathIndex === array.length - 1) {
