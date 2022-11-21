@@ -4,6 +4,9 @@ window.$ = window.jQuery = $;
 import Toastify from "toastify-js";
 window.Toastify = Toastify;
 
+import tippy from 'tippy.js';
+window.tippy = tippy;
+
 $(document).on("click", ".dropdown", function (e) {
     e.stopPropagation();
     $(this).toggleClass("is-active");
@@ -15,7 +18,7 @@ window.formatValues = () => {
         let security = parseFloat($(this).text());
         $(this).css("color", "#00BFFF");
         if (security <= 0.8) {
-            $(this).css("color", "#008000");
+            $(this).css("color", "#57EDAA");
         }
         if (security < 0.6) {
             $(this).css("color", "#FFD700");
@@ -52,4 +55,11 @@ window.formatValues = () => {
             return "C" + inClass;
         });
     });
+};
+
+window.toast = (message) => {
+    return Toastify({
+        text: message,
+        duration: 3000,
+    }).showToast();
 };

@@ -2,6 +2,19 @@ body {
     background-image: url('/img/bg.jpg');
 }
 
+.footer {
+    padding:.5rem;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.main-content {
+    min-height:100vh;
+    padding-bottom: 5rem;
+}
+
 .is-dark-half {
     background-color: rgba(54, 54, 54, .5) !important;
 }

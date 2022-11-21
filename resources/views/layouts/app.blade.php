@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="/css/fontawesome.min.css">
     <link rel="stylesheet" href="/css/bulma.min.css">
     <link rel="stylesheet" href="/css/toastify.css">
+    <link rel="stylesheet" href="/css/tippy/tippy.css">
+    <link rel="stylesheet" href="/css/tippy/themes/light.css">
     <link rel="stylesheet" href="/css/app.css">
 </head>
 

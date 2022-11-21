@@ -10,12 +10,17 @@ use Illuminate\Http\Request;
 
 class RoutesController extends Controller
 {
-    public function route()
+    public function route(Request $request)
     {
         $api = new EveAuth();
         $sessionData = $api->getSessionData();
 
-        return view('route', compact('sessionData'));
+        $waypoints = [];
+        if ($request->input('waypoints')) {
+            $waypoints = explode(',', $request->input('waypoints'));
+        }
+
+        return view('route', compact('sessionData', 'waypoints'));
     }
 
     public function buildRoute(Request $request)

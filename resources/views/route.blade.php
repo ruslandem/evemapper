@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container main-content">
         <div class="columns has-text-white">
 
             <div class="column is-half">
@@ -45,8 +45,9 @@
             </div>
 
             <div class="column is-half">
-                <div id="routeResult" class="is-dark-half"></div>
-
+                <div class="tile is-parent is-vertical">
+                    <div id="routeResult" class="is-dark-half"></div>
+                </div>
             </div>
         </div>
 
@@ -54,6 +55,8 @@
     <style>
         #routeResult {
             padding: 2rem;
+            overflow-y: auto;
+            max-height: 85vh;
         }
 
         #routeResult ol {
@@ -77,7 +80,34 @@
 
 @push('scripts')
     <script>
+        const addWaypoint = (name) => {
+            let exists = false;
+            if (name) {
+                $('#waypointsList .waypoint-item').each(function() {
+                    if ($(this).text() == name) {
+                        exists = true;
+                        return false;
+                    }
+                });
+
+                if (!exists) {
+                    $('#waypointsList').append(
+                        '<li><span class="waypoint-item">' + name +
+                        '</span><button class="delete m-1"></button></li>');
+                }
+            }
+
+            return !exists;
+        };
+
         $(function() {
+
+            @if ($waypoints)
+                @foreach ($waypoints as $name)
+                    addWaypoint('{{ $name }}');
+                @endforeach
+            @endif
+
             $("#solarSystem").keyup(function() {
                 $.post({
                     url: '/systemlist',
@@ -104,22 +134,11 @@
             $(document).on('click', '#addBtn', function(e) {
                 e.preventDefault();
 
-                let name = $('#solarSystem').val().trim();
-                $('#solarSystem').val("")
+                const name = $('#solarSystem').val().trim();
+                $('#solarSystem').val("");
 
-                $('#waypointsList li').each(function() {
-                    if ($(this).text() == name) {
-                        Toastify({
-                            text: "waypoint already exists",
-                            duration: 3000
-                        }).showToast();
-                        name = "";
-                        return false;
-                    }
-                });
-
-                if (name) {
-                    $('#waypointsList').append('<li><span class="waypoint-item">' + name + '</span><button class="delete m-1"></button></li>');
+                if (!addWaypoint(name)) {
+                    toast('waypoint already exists');
                 }
             });
 
@@ -173,7 +192,17 @@
                             .append(list);
                         path.forEach((waypoint, waypointIndex) => {
                             if (waypointIndex > 0) {
-                                list.append('<li>' + waypoint + ' (<span class="security">' + Math.round(response.info[pathIndex][waypointIndex]['security'] * 10) / 10 + '</span>)</li>');
+                                let item = list.append(
+                                    '<li>' +
+                                    waypoint +
+                                    ' (<span class="security">' +
+                                    new Intl.NumberFormat('en-US', {
+                                        minimumFractionDigits: 1,
+                                        maximumFractionDigits: 1
+                                    }).format(response.info[pathIndex][
+                                        waypointIndex
+                                    ]['security']) +
+                                    '</span>)</li>');
                             }
                         });
                         $('#routeResult').append('</ol>');

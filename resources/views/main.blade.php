@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container main-content">
         <div class="tile is-parent is-vertical">
             <article class="tile is-child notification is-dark-half">
                 <p class="title has-text-white">Wormhole Types</p>
