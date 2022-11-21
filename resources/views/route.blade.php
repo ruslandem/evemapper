@@ -119,7 +119,7 @@
                 });
 
                 if (name) {
-                    $('#waypointsList').append('<li>' + name + '</li>');
+                    $('#waypointsList').append('<li><span class="waypoint-item">' + name + '</span><button class="delete m-1"></button></li>');
                 }
             });
 
@@ -131,11 +131,17 @@
                 $('#routeResult').html("");
             });
 
+            $(document).on('click', '#waypointsList li .delete', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).parent('li').remove();
+            });
+
             $(document).on('click', '#routeBtn', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
-                const waypoints = $('#waypointsList li').toArray().map(p => p.innerHTML);
+                const waypoints = $('#waypointsList .waypoint-item').toArray().map(p => p.innerHTML);
 
                 $.post({
                     url: '/route',
