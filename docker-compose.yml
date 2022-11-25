@@ -16,7 +16,6 @@ services:
     networks:
       - whident
 
-
   nginx:
     image: nginx:alpine
     container_name: whident-nginx
@@ -28,18 +27,7 @@ services:
       - ./docker-compose/nginx:/etc/nginx/conf.d/
     networks:
       - whident
-
-  phpliteadmin:
-    image: acttaiwan/phpliteadmin:latest
-    container_name: phpliteadmin
-    restart: unless-stopped
-    ports:
-      - 2015:2015
-    volumes:
-      - ./database/:/db
-    networks:
-      - whident
-
+    
 networks:
   whident:
     driver: bridge
