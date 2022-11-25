@@ -5,7 +5,7 @@
         <div class="tile is-parent is-vertical">
             <article class="tile is-child notification is-dark-half">
                 <p class="title has-text-white">Wormhole Types</p>
-                <p class="subtitle has-text-white">Top tile</p>
+                <p class="subtitle has-text-white"></p>
                 <div class="columns has-text-centered">
                     <div class="column has-text-success">
                         <div class="is-size-4">High</div>
@@ -43,7 +43,7 @@
             </article>
             <article class="tile is-child notification is-dark-half">
                 <p class="title has-text-white">Rats Damage Types</p>
-                <p class="subtitle has-text-white">Bottom tile</p>
+                <p class="subtitle has-text-white"></p>
                 <div class="has-text-white has-text-centered">
                     <div class="columns">
                         <div class="column is-size-4 has-text-warning">Enemies</div>

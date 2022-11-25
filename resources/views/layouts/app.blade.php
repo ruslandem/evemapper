@@ -20,7 +20,7 @@
     <nav class="navbar">
         <div class="container">
             <div class="navbar-brand">
-                <a class="navbar-item is-size-5 has-text-weight-bold" href="#">
+                <a class="navbar-item is-size-3 has-text-weight-bold" href="#">
                     Eve Mapper
                 </a>
                 <span class="navbar-burger burger" data-target="navbarMenu">
@@ -48,6 +48,7 @@
                         <div class="navbar-item dropdown is-right">
                             <div class="dropdown-trigger">
                                 <button class="button" aria-haspopup="true" aria-controls="profile-menu">
+                                    <span><img class="mt-2 mr-3" src="https://image.eveonline.com/Character/{{ $sessionData['CharacterID'] }}_32.png"/></span>
                                     <span>{{ $sessionData['CharacterName'] }}</span>
                                     <span class="icon is-small">
                                         <i class="fas fa-angle-down" aria-hidden="true"></i>
