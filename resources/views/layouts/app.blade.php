@@ -34,22 +34,23 @@
                     <a class="navbar-item" href="/">
                         Home
                     </a>
-                    @unless(isset($sessionData['CharacterName']))
+                    <a class="navbar-item" href="/system">
+                        System
+                    </a>
+                    <a class="navbar-item" href="/route">
+                        Route
+                    </a>
+                    @unless(Auth::check())
                         <a class="navbar-item" href="/auth">
                             <img src="/img/eve-sso-login-white-large.png" alt="Log in with EVE Online">
                         </a>
                     @else
-                        <a class="navbar-item" href="/system">
-                            System
-                        </a>
-                        <a class="navbar-item" href="/route">
-                            Route
-                        </a>
                         <div class="navbar-item dropdown is-right">
                             <div class="dropdown-trigger">
                                 <button class="button" aria-haspopup="true" aria-controls="profile-menu">
-                                    <span><img class="mt-2 mr-3" src="https://image.eveonline.com/Character/{{ $sessionData['CharacterID'] }}_32.png"/></span>
-                                    <span>{{ $sessionData['CharacterName'] }}</span>
+                                    <span><img class="mt-2 mr-3"
+                                            src="https://image.eveonline.com/Character/{{ Auth::id() }}_32.png" /></span>
+                                    <span>{{ Auth::user()->characterName }}</span>
                                     <span class="icon is-small">
                                         <i class="fas fa-angle-down" aria-hidden="true"></i>
                                     </span>

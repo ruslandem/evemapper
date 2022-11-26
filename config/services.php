@@ -30,4 +30,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'eveonline' => [
+        'client_id' => env('EVE_API_CLIENT_ID'),
+        'client_secret' => env('EVE_API_SECRET_KEY'),
+        'redirect' => env('EVE_API_CALLBACK_URL')
+    ],
+
 ];

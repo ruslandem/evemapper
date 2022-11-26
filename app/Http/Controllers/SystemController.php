@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\EveAuth;
 use App\Core\EveLocationHistory;
 use App\Core\EveRoute;
 use App\Core\EveSolarSystem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SystemController extends Controller
 {
@@ -39,7 +39,6 @@ class SystemController extends Controller
             'system' => null,
             'jumps' => [],
             'errorMessage' => null,
-            'sessionData' => (new EveAuth())->getSessionData(),
             'history' => []
         ];
 
@@ -57,7 +56,7 @@ class SystemController extends Controller
             }
             @asort($result['jumps']);
 
-            $result['history'] = (new EveLocationHistory())->get($result['sessionData']['CharacterID']);
+            $result['history'] = (new EveLocationHistory())->get(Auth::id());
         }
 
         return view('system', $result);

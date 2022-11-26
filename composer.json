@@ -12,7 +12,9 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
+        "laravel/socialite": "^5.5",
         "laravel/tinker": "^2.5",
+        "socialiteproviders/eveonline": "^4.2",
         "tkhamez/swagger-eve-php": "^8.0"
     },
     "require-dev": {
