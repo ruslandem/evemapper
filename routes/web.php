@@ -20,15 +20,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [EveController::class, 'main']);
 
 // authentication
-Route::get('/auth', [EveController::class, 'auth']);
+Route::get('/auth', [EveController::class, 'auth'])->name('auth');
 Route::get('/callback', [EveController::class, 'callback']);
 Route::get('/logout', [EveController::class, 'logout']);
 
 // solar system search
-Route::get('/locate', [EveController::class, 'locate']);
-Route::get('/system', [SystemController::class, 'show']);
-Route::get('/system/{id}', [SystemController::class, 'show']);
+Route::get('/locate', [EveController::class, 'locate'])->middleware('auth');
+Route::get('/system', [SystemController::class, 'show'])->middleware('auth');
+Route::get('/system/{id}', [SystemController::class, 'show'])->middleware('auth');
 Route::post('/systemlist', [SystemController::class, 'list']);
 
-Route::get('/route', [RoutesController::class, 'route']);
+Route::get('/route', [RoutesController::class, 'route'])->middleware('auth');
 Route::post('/route', [RoutesController::class, 'buildRoute']);

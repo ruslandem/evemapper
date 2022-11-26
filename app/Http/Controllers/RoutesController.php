@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\EveAuth;
 use App\Core\EveRoute;
 use App\Core\EveSolarSystem;
 use App\Core\Exceptions\EveRouteNotFoundException;
@@ -12,15 +11,12 @@ class RoutesController extends Controller
 {
     public function route(Request $request)
     {
-        $api = new EveAuth();
-        $sessionData = $api->getSessionData();
-
         $waypoints = [];
         if ($request->input('waypoints')) {
             $waypoints = explode(',', $request->input('waypoints'));
         }
 
-        return view('route', compact('sessionData', 'waypoints'));
+        return view('route', compact('waypoints'));
     }
 
     public function buildRoute(Request $request)

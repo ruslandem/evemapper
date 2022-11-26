@@ -8,15 +8,23 @@ use App\Core\EveLocationApi;
 use App\Core\EveLocationHistory;
 use App\Core\EveSolarSystem;
 use App\Core\EveWormholeClasses;
+use App\Models\User;
+use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 
 class EveController extends Controller
 {
+    protected static $scopes = ['esi-location.read_location.v1'];
+
+    public function __construct()
+    {
+        JWT::$leeway = 60;
+    }
+
     public function main()
     {
-        $api = new EveAuth();
-        $sessionData = $api->getSessionData();
-
         $wormholeClasses = new EveWormholeClasses();
         $classes = [
             'C1' => $wormholeClasses->getList(1),
@@ -47,72 +55,94 @@ class EveController extends Controller
             ["Caldari", "Kinetic/Thermal", "Kinetic"],
         ];
 
-        return view('main', compact('sessionData', 'classes', 'damageTypes'));
+        return view('main', compact('classes', 'damageTypes'));
     }
 
     public function auth()
     {
-        $api = new EveAuth();
-        $requestUrl = $api->getAuthRequestUrl();
-
-        return redirect($requestUrl);
+        return Socialite::driver('eveonline')
+            ->scopes(self::$scopes)
+            ->redirect();
     }
+
+
 
     public function callback(Request $request)
     {
-        $api = new EveAuth();
-        $api->getAuthCallback(
-            $request->input('code')
-        );
+        $eveUser = Socialite::driver('eveonline')->user();
+
+        $user = User::where('characterId', $eveUser->character_id)->first();
+
+        if ($user) {
+            $user->update([
+                'token' => $eveUser->token,
+                'refreshToken' => $eveUser->refreshToken,
+            ]);
+        } else {
+            $user = User::create([
+                'characterId' => $eveUser->character_id,
+                'characterName' => $eveUser->character_name,
+                'ownerHash' => $eveUser->character_owner_hash,
+                'token' => $eveUser->token,
+                'refreshToken' => $eveUser->refreshToken,
+                'scopes' => self::$scopes,
+            ]);
+        }
+
+        Auth::login($user, true);
 
         return redirect('/');
     }
 
     public function locate()
     {
-        $api = new EveAuth();
-        $token = $api->getAccessToken();
-
-        if ($token === null) {
-            return redirect('/auth');
-        }
-
-        $character = $api->getCharacterId();
-
-        if ($character === null) {
-            throw new \Exception('failed to get character ID');
-        }
+        $user = Auth::user();
 
         try {
-            $locationApi = new EveLocationApi($token);
-            $solarSystemId = $locationApi->getCharacterLocation($character);
+            $locationApi = new EveLocationApi($user->token);
+            $solarSystemId = $locationApi->getCharacterLocation($user->characterId);
         } catch (EveApiTokenExpiredException $e) {
-            return $this->update();
+            return $this->update($user);
         }
 
         $solarSystem = new EveSolarSystem();
         $data = $solarSystem->getById($solarSystemId);
 
         // logging location
-        (new EveLocationHistory())->write($character, $data->solarSystemName);
+        (new EveLocationHistory())->write($user->characterId, $data->solarSystemName);
 
         return response()->json([
             'solarSystemName' => $data->solarSystemName
         ]);
     }
 
-    public function update()
+    public function update(User $user)
     {
-        $api = new EveAuth();
-        $api->refreshAuth();
+        try {
+            $data = EveAuth::refreshAuthToken($user->refreshToken);
+            if (empty($data)) {
+                throw new \UnexpectedValueException('empty token data received');
+            }
+        } catch (\Throwable $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
+
+        $user->token = $data['access_token'];
+        $user->refreshToken = $data['refresh_token'];
+
+        $user->save();
 
         return redirect()->action([EveController::class, 'locate']);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        $api = new EveAuth();
-        $api->clearSession();
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect('/');
     }
