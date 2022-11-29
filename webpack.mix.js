@@ -17,6 +17,7 @@ mix.copy("resources/assets/img", "public/img");
 mix.js("resources/assets/js/app.js", "public/js");
 
 mix.postCss("resources/assets/css/app.css", "public/css")
+    .postCss("resources/assets/css/bulmaswatch.min.css", "public/css")
     .postCss("node_modules/bulma/css/bulma.min.css", "public/css")
     .postCss(
         "node_modules/@fortawesome/fontawesome-free/css/all.min.css",

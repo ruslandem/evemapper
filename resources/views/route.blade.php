@@ -2,65 +2,67 @@
 
 @section('content')
     <div class="container main-content">
-        <div class="columns has-text-white">
+        <h1 class="title is-1 has-text-centered m-3">Route Calculator</h1>
 
-            <div class="column is-half">
+        <div class="columns has-text-white p-3">
 
-                <div class="tile is-parent is-vertical">
-                    <article class="tile is-child notification is-dark-half">
-                        <p class="title has-text-white">Waypoints Route</p>
-                        <p class="subtitle has-text-white">Calculates optimal route though given waypoints</p>
+            {{-- Waypoints Form Start --}}
+            <div class="column is-one-third is-dark-half mr-2">
 
-                        <div class="field is-horizontal">
-                            <div class="field-body">
-                                <div class="field">
-                                    <p class="control">
-                                        <input id="solarSystem" class="input" type="text" placeholder="Solar system"
-                                            value="{{ $system->solarSystemName ?? '' }}">
-                                    <div id="suggesstions" class="has-background-white has-text-black py-1 px-3"
-                                        style="display: none"></div>
-                                    </p>
-                                </div>
-                                <div class="field">
-                                    <p class="control is-expanded">
-                                        <a id="addBtn" href="#" class="button is-primary" title="Add">add</a>
-                                    </p>
-                                </div>
-                            </div>
+                <div class="content">
+                    <p class="title is-3 has-text-white">Waypoints</p>
+                    <p class="subtitle is-6 has-text-white">Enter waypoints you plan to visit:</p>
+
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input id="solarSystem" class="input" type="text" placeholder="Jita"
+                                value="{{ $system->solarSystemName ?? '' }}">
+                            <div id="suggesstions" class="has-background-white has-text-black py-1 px-3"
+                                style="display: none"></div>
                         </div>
-
-                        <div class="m-4 px-2 has-text-warning has-text-weight-bold is-size-5	">
-                            <ol id="waypointsList"></ol>
-
-
+                        <div class="control">
+                            <a class="button is-primary" id="addBtn" title="Add solar system">
+                                add
+                            </a>
                         </div>
-                        <div>
-                            <a id="clearBtn" href="#" class="button is-danger">clear</a>
-                            <a id="routeBtn" href="#" class="button is-primary">route</a>
-                        </div>
-
-                    </article>
+                    </div>
                 </div>
 
-            </div>
+                <div class="content">
+                    <ol id="waypointsList">
+                        <li><span class="waypoint-item">Sooma</span><button class="delete is-small m-1"></button></li>
+                        <li><span class="waypoint-item">Jita</span><button class="delete is-small m-1"></button></li>
+                        <li><span class="waypoint-item">Amarr</span><button class="delete is-small m-1"></button></li>
+                    </ol>
+                </div>
 
-            <div class="column is-half">
-                <div class="tile is-parent is-vertical">
-                    <div id="routeResult" class="is-dark-half"></div>
+                <div class="content">
+                    <a id="clearBtn" href="#" class="button is-danger">clear</a>
+                    <a id="routeBtn" href="#" class="button is-success">route</a>
                 </div>
             </div>
+            {{-- Waypoints Form End --}}
+
+            {{-- Route Start --}}
+            <div class="results-wrapper column auto is-dark-half">
+                <p class="title is-3 has-text-white">Optimal route</p>
+                <div class="content">
+                    <span id="routeResult">No route waypoints</span>
+                </div>
+            </div>
+            {{-- Route End --}}
+
         </div>
 
     </div>
     <style>
-        #routeResult {
-            padding: 2rem;
-            overflow-y: auto;
-            max-height: 85vh;
+        .results-wrapper {
+            height: 100%;
         }
 
-        #routeResult ol {
-            margin-left: 3rem;
+        .results-wrapper>.content {
+            height: 80vh;
+            overflow-y: auto;
         }
 
         #suggesstions {
@@ -76,10 +78,52 @@
             cursor: pointer;
         }
     </style>
+
+    <div id="templates" style="display:none">
+
+        <div class="waypoint-template">
+            <li>
+                <span class="waypoint-item">%%name%%</span>
+                <button class="delete is-small m-1"></button>
+            </li>
+        </div>
+
+        <div class="result-title">
+            <span class="is-size-4 has-text-warning tag">
+                <a href="#" class="mx-2" data-waypoint-link="%%name%%">
+                    <i class="fa-solid fa-location-dot"></i>
+                </a>
+                %%name%%
+                <span class="tag is-size-6" style="display:%%returnRoute%%">(return route)</span>
+            </span>
+        </div>
+
+        <div class="result-waypoint">
+            <li>
+                %%name%%
+                (<span class="security">%%security%%</span>)
+            </li>
+        </div>
+
+    </div>
 @endsection
 
 @push('scripts')
     <script>
+        const getFromTemplate = (templateClass, replaces = {}) => {
+            const template = $('#templates ' + templateClass).html();
+
+            if (template) {
+                let content = template;
+                for (const property in replaces) {
+                    content = content.split('%%' + property + '%%').join(replaces[property]);
+                }
+                return content;
+            }
+
+            throw 'template not found';
+        };
+
         const addWaypoint = (name) => {
             let exists = false;
             if (name) {
@@ -91,9 +135,10 @@
                 });
 
                 if (!exists) {
-                    $('#waypointsList').append(
-                        '<li><span class="waypoint-item">' + name +
-                        '</span><button class="delete m-1"></button></li>');
+                    const content = getFromTemplate('.waypoint-template', {
+                        'name': name
+                    });
+                    $('#waypointsList').append(content);
                 }
             }
 
@@ -101,6 +146,22 @@
         };
 
         $(function() {
+            // get current location on page load
+            $('#solarSystem').attr('readonly', true).val('loading...');
+            $('#addBtn').attr('disabled', true);
+            $.get('/locate')
+                .done(function(response) {
+                    if (response.solarSystemName) {
+                        $('#solarSystem').val(response.solarSystemName);
+                        $('#solarSystem').attr('readonly', false);
+                        $('#addBtn').attr('disabled', false);
+                        return false;
+                    }
+                })
+                .fail(function(response) {
+                    throw 'Failed to get location. Response: ' + response;
+                    return false;
+                });
 
             @if ($waypoints)
                 @foreach ($waypoints as $name)
@@ -181,31 +242,46 @@
                         return;
                     }
 
+                    const numOptions = {
+                        minimumFractionDigits: 1,
+                        maximumFractionDigits: 1
+                    };
+
                     response.route.forEach((path, pathIndex, array) => {
+
+
                         let list = $('<ol></ol>');
-                        if (pathIndex === array.length - 1) {
-                            path[0] += ' <sup>[return route]</sup>';
-                        }
-                        $('#routeResult')
-                            .append('<div class="is-size-4 has-text-warning">' + path[0] +
-                                '</div>')
-                            .append(list);
+
                         path.forEach((waypoint, waypointIndex) => {
                             if (waypointIndex > 0) {
-                                let item = list.append(
-                                    '<li>' +
-                                    waypoint +
-                                    ' (<span class="security">' +
-                                    new Intl.NumberFormat('en-US', {
-                                        minimumFractionDigits: 1,
-                                        maximumFractionDigits: 1
-                                    }).format(response.info[pathIndex][
-                                        waypointIndex
-                                    ]['security']) +
-                                    '</span>)</li>');
+                                const security =
+                                    response.info[pathIndex][waypointIndex][
+                                        'security'
+                                    ];
+
+                                const replaces = {
+                                    'name': waypoint,
+                                    'security': new Intl.NumberFormat('en-US',
+                                            numOptions)
+                                        .format(security)
+                                };
+
+                                list.append(
+                                    getFromTemplate('.result-waypoint',
+                                        replaces)
+                                );
                             }
                         });
-                        $('#routeResult').append('</ol>');
+
+                        $('#routeResult')
+                            .append(
+                                getFromTemplate('.result-title', {
+                                    'name': path[0],
+                                    'returnRoute': (pathIndex === (array.length - 1)) ? 'visible' : 'none',
+                                })
+                            )
+                            .append(list);
+
                         formatValues();
                     });
 

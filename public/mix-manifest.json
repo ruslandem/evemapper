@@ -1,6 +1,6 @@
 {
     "/js/app.js": "/js/app.js",
-    "/css/tippy/tippy.css": "/css/tippy/tippy.css",
+    "/css/bulmaswatch.min.css": "/css/bulmaswatch.min.css",
     "/css/toastify.css": "/css/toastify.css",
     "/css/fontawesome.min.css": "/css/fontawesome.min.css",
     "/css/bulma.min.css": "/css/bulma.min.css",
@@ -9,6 +9,7 @@
     "/css/tippy/themes/material.css": "/css/tippy/themes/material.css",
     "/css/tippy/themes/light-border.css": "/css/tippy/themes/light-border.css",
     "/css/tippy/themes/light.css": "/css/tippy/themes/light.css",
+    "/css/tippy/tippy.css": "/css/tippy/tippy.css",
     "/img/bg.jpg": "/img/bg.jpg",
     "/img/dotlan.png": "/img/dotlan.png",
     "/img/eve-sso-login-white-large.png": "/img/eve-sso-login-white-large.png",

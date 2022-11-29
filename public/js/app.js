@@ -14178,6 +14178,19 @@ return jQuery;
 
 /***/ }),
 
+/***/ "./node_modules/tippy.js/dist/tippy.css":
+/*!**********************************************!*\
+  !*** ./node_modules/tippy.js/dist/tippy.css ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
 /***/ "./node_modules/tippy.js/themes/light.css":
 /*!************************************************!*\
   !*** ./node_modules/tippy.js/themes/light.css ***!
@@ -14243,6 +14256,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/assets/css/bulmaswatch.min.css":
+/*!**************************************************!*\
+  !*** ./resources/assets/css/bulmaswatch.min.css ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
 /***/ "./node_modules/bulma/css/bulma.min.css":
 /*!**********************************************!*\
   !*** ./node_modules/bulma/css/bulma.min.css ***!
@@ -14273,19 +14299,6 @@ __webpack_require__.r(__webpack_exports__);
 /*!***************************************************!*\
   !*** ./node_modules/toastify-js/src/toastify.css ***!
   \***************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
-
-
-/***/ }),
-
-/***/ "./node_modules/tippy.js/dist/tippy.css":
-/*!**********************************************!*\
-  !*** ./node_modules/tippy.js/dist/tippy.css ***!
-  \**********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -17372,7 +17385,7 @@ tippy.setDefaultProps({
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
 /******/ 			"/js/app": 0,
-/******/ 			"css/tippy/tippy": 0,
+/******/ 			"css/bulmaswatch.min": 0,
 /******/ 			"css/toastify": 0,
 /******/ 			"css/fontawesome.min": 0,
 /******/ 			"css/bulma.min": 0,
@@ -17380,7 +17393,8 @@ tippy.setDefaultProps({
 /******/ 			"css/tippy/themes/translucent": 0,
 /******/ 			"css/tippy/themes/material": 0,
 /******/ 			"css/tippy/themes/light-border": 0,
-/******/ 			"css/tippy/themes/light": 0
+/******/ 			"css/tippy/themes/light": 0,
+/******/ 			"css/tippy/tippy": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -17430,16 +17444,17 @@ tippy.setDefaultProps({
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["css/tippy/tippy","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light"], () => (__webpack_require__("./resources/assets/js/app.js")))
-/******/ 	__webpack_require__.O(undefined, ["css/tippy/tippy","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light"], () => (__webpack_require__("./resources/assets/css/app.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/tippy/tippy","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light"], () => (__webpack_require__("./node_modules/bulma/css/bulma.min.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/tippy/tippy","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light"], () => (__webpack_require__("./node_modules/@fortawesome/fontawesome-free/css/all.min.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/tippy/tippy","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light"], () => (__webpack_require__("./node_modules/toastify-js/src/toastify.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/tippy/tippy","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light"], () => (__webpack_require__("./node_modules/tippy.js/dist/tippy.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/tippy/tippy","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light"], () => (__webpack_require__("./node_modules/tippy.js/themes/light.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/tippy/tippy","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light"], () => (__webpack_require__("./node_modules/tippy.js/themes/light-border.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/tippy/tippy","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light"], () => (__webpack_require__("./node_modules/tippy.js/themes/material.css")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/tippy/tippy","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light"], () => (__webpack_require__("./node_modules/tippy.js/themes/translucent.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/bulmaswatch.min","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light","css/tippy/tippy"], () => (__webpack_require__("./resources/assets/js/app.js")))
+/******/ 	__webpack_require__.O(undefined, ["css/bulmaswatch.min","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light","css/tippy/tippy"], () => (__webpack_require__("./resources/assets/css/app.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/bulmaswatch.min","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light","css/tippy/tippy"], () => (__webpack_require__("./resources/assets/css/bulmaswatch.min.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/bulmaswatch.min","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light","css/tippy/tippy"], () => (__webpack_require__("./node_modules/bulma/css/bulma.min.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/bulmaswatch.min","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light","css/tippy/tippy"], () => (__webpack_require__("./node_modules/@fortawesome/fontawesome-free/css/all.min.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/bulmaswatch.min","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light","css/tippy/tippy"], () => (__webpack_require__("./node_modules/toastify-js/src/toastify.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/bulmaswatch.min","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light","css/tippy/tippy"], () => (__webpack_require__("./node_modules/tippy.js/dist/tippy.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/bulmaswatch.min","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light","css/tippy/tippy"], () => (__webpack_require__("./node_modules/tippy.js/themes/light.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/bulmaswatch.min","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light","css/tippy/tippy"], () => (__webpack_require__("./node_modules/tippy.js/themes/light-border.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/bulmaswatch.min","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light","css/tippy/tippy"], () => (__webpack_require__("./node_modules/tippy.js/themes/material.css")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/bulmaswatch.min","css/toastify","css/fontawesome.min","css/bulma.min","css/app","css/tippy/themes/translucent","css/tippy/themes/material","css/tippy/themes/light-border","css/tippy/themes/light","css/tippy/tippy"], () => (__webpack_require__("./node_modules/tippy.js/themes/translucent.css")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
