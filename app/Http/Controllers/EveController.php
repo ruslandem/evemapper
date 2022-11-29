@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Socialite\Facades\Socialite;
+use RuntimeException;
+use TimeHunter\LaravelGoogleReCaptchaV3\Facades\GoogleReCaptchaV3;
 
 class EveController extends Controller
 {
@@ -166,12 +168,19 @@ class EveController extends Controller
 
     public function contact(Request $request)
     {
-        $recipient = Config::get('mail.admin');
-        $message = new ContactMessage($request);
+        $captchaValidated = GoogleReCaptchaV3::verifyResponse(
+            $request->input('g-recaptcha-response'),
+            $request->getClientIp()
+        )->isSuccess();
 
-        if ($recipient) {
-            Mail::to($recipient)->send($message);
-            return view('contact-thanks');
-        }
+        if ($captchaValidated) {
+            $recipient = Config::get('mail.admin');
+            $message = new ContactMessage($request);
+
+            if ($recipient) {
+                Mail::to($recipient)->send($message);
+                return view('contact-thanks');
+            }
+        }        
     }
 }
