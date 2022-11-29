@@ -29,11 +29,7 @@
                 </div>
 
                 <div class="content">
-                    <ol id="waypointsList">
-                        <li><span class="waypoint-item">Sooma</span><button class="delete is-small m-1"></button></li>
-                        <li><span class="waypoint-item">Jita</span><button class="delete is-small m-1"></button></li>
-                        <li><span class="waypoint-item">Amarr</span><button class="delete is-small m-1"></button></li>
-                    </ol>
+                    <ol id="waypointsList"></ol>
                 </div>
 
                 <div class="content">
