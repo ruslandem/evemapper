@@ -7,6 +7,7 @@
             <div class="content">
                 <form action="/contact" method="post">
                     @csrf
+                    <div id="contact_id"></div>
                     <div class="field">
                         <label for="name" class="label is-size-4 has-text-weight-light"></label>
                         <div class="control has-icons-left">
@@ -31,6 +32,9 @@
                     </div>
                     <button type="submit" class="button is-success is-size-5">Submit</button>
                 </form>
+
+                {!!  GoogleReCaptchaV3::renderOne('contact_id','contact') !!}
+
             </div>
         </div>
     </div>
