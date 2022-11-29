@@ -273,7 +273,8 @@
                             .append(
                                 getFromTemplate('.result-title', {
                                     'name': path[0],
-                                    'returnRoute': (pathIndex === (array.length - 1)) ? 'visible' : 'none',
+                                    'returnRoute': (pathIndex === (array.length - 1)) ?
+                                        'visible' : 'none',
                                 })
                             )
                             .append(list);
@@ -281,6 +282,22 @@
                         formatValues();
                     });
 
+                });
+            });
+
+            $(document).on('click', 'a[data-waypoint-link]', function(e) {
+                e.preventDefault();
+                const name = $(this).data('waypoint-link');
+                $.post({
+                    url: '/waypoint',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        system: name,
+                    },
+                }).fail(function(err) {
+                    console.error(err);
                 });
             });
         });

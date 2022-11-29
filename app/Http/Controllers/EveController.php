@@ -16,7 +16,7 @@ use Laravel\Socialite\Facades\Socialite;
 
 class EveController extends Controller
 {
-    protected static $scopes = ['esi-location.read_location.v1'];
+    protected static $scopes = ['esi-location.read_location.v1', 'esi-ui.write_waypoint.v1'];
 
     public function __construct()
     {
@@ -145,5 +145,20 @@ class EveController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    public function waypoint(Request $request)
+    {
+        $user = Auth::user();
+
+        try {
+            $api = new EveLocationApi($user->token);
+            $api->addAutopilotWaypoint(
+                $request->input('system')
+            );
+
+        } catch (EveApiTokenExpiredException $e) {
+            return $this->update($user);
+        }
     }
 }

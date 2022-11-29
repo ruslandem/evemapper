@@ -29,6 +29,7 @@ Route::get('/locate', [EveController::class, 'locate'])->middleware('auth');
 Route::get('/system', [SystemController::class, 'show'])->middleware('auth');
 Route::get('/system/{id}', [SystemController::class, 'show'])->middleware('auth');
 Route::post('/systemlist', [SystemController::class, 'list']);
+Route::post('/waypoint', [EveController::class, 'waypoint'])->middleware('auth');
 
 Route::get('/route', [RoutesController::class, 'route'])->middleware('auth');
 Route::post('/route', [RoutesController::class, 'buildRoute']);
