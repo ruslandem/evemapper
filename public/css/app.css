@@ -1,13 +1,19 @@
+@import url(https://fonts.googleapis.com/css?family=Orbitron&display=swap);
 body {
     background-image: url('/img/bg.jpg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    height:100vh;
+}
+
+.logo {
+    font-family: 'Orbitron';
 }
 
 .footer {
-    padding:.5rem;
-    position: fixed;
+    padding:1rem;
+    position: relative;
     left: 0;
     bottom: 0;
     width: 100%;
@@ -20,4 +26,8 @@ body {
 
 .is-dark-half {
     background-color: rgba(54, 54, 54, .5) !important;
+}
+
+.is-darker {
+    background-color: rgba(54, 54, 54, .8) !important;
 }

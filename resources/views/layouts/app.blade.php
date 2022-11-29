@@ -17,11 +17,11 @@
 </head>
 
 <body>
-    <!-- START NAV -->
+    <!-- Navbar starts -->
     <nav class="navbar">
         <div class="container">
             <div class="navbar-brand">
-                <a class="navbar-item is-size-3 has-text-weight-bold" href="#">
+                <a class="navbar-item is-size-3 has-text-weight-bold logo" href="/">
                     Eve Mapper
                 </a>
                 <span class="navbar-burger burger" data-target="navbarMenu">
@@ -70,7 +70,7 @@
             </div>
         </div>
     </nav>
-    <!-- END NAV -->
+    <!-- Navbar ends -->
 
     <!-- Content starts -->
     @yield('content')
@@ -79,11 +79,17 @@
     <footer class="footer">
         <div class="content has-text-centered">
             <p>
-                <strong>Eve Mapper</strong>.
-                &copy;2022 - All rights reserved. Fly safe ;-)
+                &copy;2022 by <span>Khazad Tyori</span> |
+                All <a href="/legal">Eve Related Materials</a> are Property Of
+                <a href="http://www.ccpgames.com/" target="_blank">CCP Games</a> |
+                <a href="/legal">Legal Notice</a> |
+                <a href="/privacy">Privacy Policy</a> |
+                <a href="/contact">Contacts</a>
             </p>
         </div>
     </footer>
+
+
 
     <script src="/js/app.js"></script>
 

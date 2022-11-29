@@ -8,10 +8,13 @@ use App\Core\EveLocationApi;
 use App\Core\EveLocationHistory;
 use App\Core\EveSolarSystem;
 use App\Core\EveWormholeClasses;
+use App\Mail\ContactMessage;
 use App\Models\User;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Socialite\Facades\Socialite;
 
 class EveController extends Controller
@@ -156,9 +159,19 @@ class EveController extends Controller
             $api->addAutopilotWaypoint(
                 $request->input('system')
             );
-
         } catch (EveApiTokenExpiredException $e) {
             return $this->update($user);
+        }
+    }
+
+    public function contact(Request $request)
+    {
+        $recipient = Config::get('mail.admin');
+        $message = new ContactMessage($request);
+
+        if ($recipient) {
+            Mail::to($recipient)->send($message);
+            return view('contact-thanks');
         }
     }
 }

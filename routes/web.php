@@ -33,3 +33,9 @@ Route::post('/waypoint', [EveController::class, 'waypoint'])->middleware('auth')
 
 Route::get('/route', [RoutesController::class, 'route'])->middleware('auth');
 Route::post('/route', [RoutesController::class, 'buildRoute']);
+
+Route::view('/privacy', 'privacy');
+Route::view('/legal', 'legal');
+
+Route::view('/contact', 'contact');
+Route::post('/contact', [EveController::class, 'contact']);
