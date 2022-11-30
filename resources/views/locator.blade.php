@@ -101,7 +101,7 @@
                             <h5 class="title">Nearest Trade Hubs</h5>
                             @foreach ($jumps as $hubName => $jumps)
                                 <span class="tag is-medium is-info m-1">{{ $hubName }}: {{ $jumps }} 
-                                    <a href="/route?waypoints={{ $hubName }},{{ $system->solarSystemName }}" class="has-text-warning"><i class="fa-solid fa-route ml-1"></i></a>
+                                    <a href="/route?waypoints={{ $system->solarSystemName }},{{ $hubName }}" class="has-text-warning"><i class="fa-solid fa-route ml-1"></i></a>
                                 </span>
                             @endforeach
                         </div>
@@ -157,7 +157,7 @@
         const updateLocation = () => {
             $('#searchBar a').attr('disabled', true);
 
-            $.get('/locate')
+            $.get('{{ route("api.locate") }}')
                 .done(function(response) {
                     if (
                         response.solarSystemName &&
@@ -173,7 +173,7 @@
         };
 
         const openSystemPage = (systemName) => {
-            window.location.href = '/system/' + systemName;
+            window.location.href = '{{ route("locate") }}/' + systemName;
             return false;
         };
 
@@ -217,7 +217,7 @@
             setAutoLocationState(state);
         };
 
-        $('#search').solarSystemSelector();
+        $('#search').solarSystemSelector('{{ route("api.systems") }}');
 
         $(document).on('click', '#locate', function(e) {
             e.preventDefault();
@@ -240,7 +240,7 @@
 
         $(document).on('click', '.solar-system-link', function(e) {
             e.preventDefault();
-            window.location.href = '/system/' + $(this).text();
+            window.location.href = '{{ route("locate") }}/' + $(this).text();
         });
 
         $(document).on("keypress", "#search", function(e) {

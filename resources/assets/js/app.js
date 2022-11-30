@@ -83,15 +83,16 @@ window.getFromTemplate = (templateClass, replaces = {}) => {
 };
 
 (function ($) {
-    $.fn.solarSystemSelector = function () {
+    $.fn.solarSystemSelector = function (url) {
         const self = this;
 
         const listObject = self.siblings(".suggestions");
 
         if (listObject.length) {
             self.on("keyup", () => {
+                console.log(url);
                 $.post({
-                    url: "/systemlist",
+                    url: url,
                     headers: {
                         "X-CSRF-TOKEN": getCsrfToken(),
                     },
@@ -120,3 +121,10 @@ window.getFromTemplate = (templateClass, replaces = {}) => {
         return this;
     };
 })(jQuery);
+
+$(function () {
+    $(".navbar-burger").on("click", function () {
+        $(".navbar-burger").toggleClass("is-active");
+        $(".navbar-menu").toggleClass("is-active");
+    });
+});

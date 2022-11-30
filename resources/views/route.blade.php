@@ -118,7 +118,7 @@
             // get current location on page load
             $('#solarSystem').attr('readonly', true).val('loading...');
             $('#addBtn').attr('disabled', true);
-            $.get('/locate')
+            $.get('{{ route('api.locate') }}')
                 .done(function(response) {
                     if (response.solarSystemName) {
                         $('#solarSystem').val(response.solarSystemName);
@@ -132,7 +132,7 @@
                     return false;
                 });
 
-            $('#solarSystem').solarSystemSelector();
+            $('#solarSystem').solarSystemSelector('{{ route('api.systems') }}');
 
             $(document).on('click', '#addBtn', function(e) {
                 e.preventDefault();
@@ -168,9 +168,9 @@
                     .map(p => p.innerHTML);
 
                 $.post({
-                    url: '/route',
+                    url: '{{ route('api.route') }}',
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        'X-CSRF-TOKEN': getCsrfToken()
                     },
                     data: {
                         waypoints: waypoints,
@@ -235,16 +235,22 @@
                 e.preventDefault();
                 const name = $(this).data('waypoint-link');
                 $.post({
-                    url: '/waypoint',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        system: name,
-                    },
-                }).fail(function(err) {
-                    console.error(err);
-                });
+                        url: '{{ route('api.waypoint') }}',
+                        headers: {
+                            'X-CSRF-TOKEN': getCsrfToken()
+                        },
+                        data: {
+                            system: name,
+                        },
+                    }).done(() => {
+                        Toastify({
+                            text: `Added waypoint: ${name}`,
+                            duration: 3000
+                        }).showToast();
+                    })
+                    .fail((err) => {
+                        throw err;
+                    });
             });
 
             @if ($waypoints)

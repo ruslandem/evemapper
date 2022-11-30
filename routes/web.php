@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\EveController;
 use App\Http\Controllers\RoutesController;
-use App\Http\Controllers\SystemController;
+use App\Http\Controllers\LocatorController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,26 +16,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// main page
+// website
 Route::get('/', [EveController::class, 'main']);
+Route::view('/privacy', 'privacy')->name('privacy');
+Route::view('/legal', 'legal')->name('legal');
+Route::view('/contact', 'contact')->name('contact');
+Route::post('/contact', [EveController::class, 'contact']);
 
-// authentication
+// auth
 Route::get('/auth', [EveController::class, 'auth'])->name('auth');
 Route::get('/callback', [EveController::class, 'callback']);
-Route::get('/logout', [EveController::class, 'logout']);
+Route::get('/logout', [EveController::class, 'logout'])->name('logout');
 
 // solar system search
-Route::get('/locate', [EveController::class, 'locate'])->middleware('auth');
-Route::get('/system', [SystemController::class, 'show'])->middleware('auth');
-Route::get('/system/{id}', [SystemController::class, 'show'])->middleware('auth');
-Route::post('/systemlist', [SystemController::class, 'list']);
-Route::post('/waypoint', [EveController::class, 'waypoint'])->middleware('auth');
+Route::get('/locator', [LocatorController::class, 'show'])->name('locate')->middleware('auth');
+Route::get('/locator/{id}', [LocatorController::class, 'show'])->middleware('auth');
+Route::get('/route', [RoutesController::class, 'route'])->name('route')->middleware('auth');
 
-Route::get('/route', [RoutesController::class, 'route'])->middleware('auth');
-Route::post('/route', [RoutesController::class, 'buildRoute']);
-
-Route::view('/privacy', 'privacy');
-Route::view('/legal', 'legal');
-
-Route::view('/contact', 'contact');
-Route::post('/contact', [EveController::class, 'contact']);
+// ajax
+Route::prefix('api')->group(function () {
+    Route::get('/locate', [EveController::class, 'locate'])->name('api.locate')->middleware('auth');
+    Route::post('/waypoint', [EveController::class, 'waypoint'])->name('api.waypoint')->middleware('auth');
+    Route::post('/route', [RoutesController::class, 'buildRoute'])->name('api.route');
+    Route::post('/systems', [LocatorController::class, 'list'])->name('api.systems');
+});

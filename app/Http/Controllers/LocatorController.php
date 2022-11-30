@@ -8,7 +8,7 @@ use App\Core\EveSolarSystem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class SystemController extends Controller
+class LocatorController extends Controller
 {
     protected array $tradeHubs = [
         'Jita',
@@ -44,7 +44,7 @@ class SystemController extends Controller
 
         if (empty($system)) {
             $result['errorMessage'] = 'No system specified';
-            return view('system', $result);
+            return view('locator', $result);
         }
 
         $result['system'] = (new EveSolarSystem())->getByName($system);
@@ -59,6 +59,6 @@ class SystemController extends Controller
             $result['history'] = (new EveLocationHistory())->get(Auth::id());
         }
 
-        return view('system', $result);
+        return view('locator', $result);
     }
 }

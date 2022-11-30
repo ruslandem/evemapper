@@ -5,23 +5,25 @@
             <a class="navbar-item is-size-3 has-text-weight-bold logo" href="/">
                 Eve Mapper
             </a>
-            <span class="navbar-burger burger" data-target="navbarMenu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </span>
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
         </div>
-        <div id="navbarMenu" class="navbar-menu">
+        <div class="navbar-menu">
             <div class="navbar-end">
                 <a class="navbar-item" href="/">
                     Home
                 </a>
-                <a class="navbar-item" href="/system">
-                    System
+                <a class="navbar-item" href="{{ route('locate') }}">
+                    Locator
                 </a>
-                <a class="navbar-item" href="/route">
+                <a class="navbar-item" href="{{ route('route') }}">
                     Route
                 </a>
+            </div>
+            <div class="navbar-end">
                 @unless(Auth::check())
                     <a class="navbar-item" href="/auth">
                         <img src="/img/eve-sso-login-white-large.png" alt="Log in with EVE Online">
@@ -40,7 +42,7 @@
                         </div>
                         <div class="dropdown-menu" id="profile-menu" role="menu">
                             <div class="dropdown-content">
-                                <a href="/logout" class="dropdown-item">
+                                <a href="{{ route('logout') }}" class="dropdown-item">
                                     Logout
                                 </a>
                             </div>

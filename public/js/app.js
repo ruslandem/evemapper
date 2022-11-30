@@ -3275,13 +3275,14 @@ window.getFromTemplate = function (templateClass) {
   throw "template not found";
 };
 (function ($) {
-  $.fn.solarSystemSelector = function () {
+  $.fn.solarSystemSelector = function (url) {
     var self = this;
     var listObject = self.siblings(".suggestions");
     if (listObject.length) {
       self.on("keyup", function () {
+        console.log(url);
         $.post({
-          url: "/systemlist",
+          url: url,
           headers: {
             "X-CSRF-TOKEN": getCsrfToken()
           },
@@ -3327,6 +3328,12 @@ window.getFromTemplate = function (templateClass) {
     return this;
   };
 })(jQuery);
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(".navbar-burger").on("click", function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(".navbar-burger").toggleClass("is-active");
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(".navbar-menu").toggleClass("is-active");
+  });
+});
 
 /***/ }),
 
