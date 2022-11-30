@@ -15,7 +15,7 @@ class RoutesController extends Controller
         if ($request->input('waypoints')) {
             $waypoints = explode(',', $request->input('waypoints'));
         }
-
+        
         return view('route', compact('waypoints'));
     }
 

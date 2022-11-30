@@ -4,7 +4,7 @@ window.$ = window.jQuery = $;
 import Toastify from "toastify-js";
 window.Toastify = Toastify;
 
-import tippy from 'tippy.js';
+import tippy from "tippy.js";
 window.tippy = tippy;
 
 $(document).on("click", ".dropdown", function (e) {
@@ -63,3 +63,60 @@ window.toast = (message) => {
         duration: 3000,
     }).showToast();
 };
+
+window.getCsrfToken = () => {
+    return $('meta[name="csrf-token"]').attr("content");
+};
+
+window.getFromTemplate = (templateClass, replaces = {}) => {
+    const template = $("#templates " + templateClass).html();
+    if (template) {
+        let content = template;
+        for (const property in replaces) {
+            content = content
+                .split("%%" + property + "%%")
+                .join(replaces[property]);
+        }
+        return content;
+    }
+    throw "template not found";
+};
+
+(function ($) {
+    $.fn.solarSystemSelector = function () {
+        const self = this;
+
+        const listObject = self.siblings(".suggestions");
+
+        if (listObject.length) {
+            self.on("keyup", () => {
+                $.post({
+                    url: "/systemlist",
+                    headers: {
+                        "X-CSRF-TOKEN": getCsrfToken(),
+                    },
+                    data: {
+                        search: self.val(),
+                    },
+                }).done(async (response) => {
+                    const getList = (response, listObject) => {
+                        listObject.html("");
+                        response.systems.forEach((element) => {
+                            listObject.append("<div>" + element + "</div>");
+                        });
+                        listObject.show();
+                        return listObject;
+                    };
+
+                    const list = await getList(response, listObject);
+                    list.children("div").on("click", (e) => {
+                        self.val(e.currentTarget.innerText);
+                        listObject.hide();
+                    });
+                });
+            });
+        }
+
+        return this;
+    };
+})(jQuery);

@@ -17,8 +17,8 @@
                         <div class="control">
                             <input id="solarSystem" class="input" type="text" placeholder="Jita"
                                 value="{{ $system->solarSystemName ?? '' }}">
-                            <div id="suggesstions" class="has-background-white has-text-black py-1 px-3"
-                                style="display: none"></div>
+                            <div class="suggestions has-background-white has-text-black py-1 px-3" style="display: none">
+                            </div>
                         </div>
                         <div class="control">
                             <a class="button is-primary" id="addBtn" title="Add solar system">
@@ -57,21 +57,8 @@
         }
 
         .results-wrapper>.content {
-            height: 80vh;
+            height: 70vh;
             overflow-y: auto;
-        }
-
-        #suggesstions {
-            max-height: 200px;
-            overflow-y: auto;
-            position: fixed;
-            margin-top: .25rem;
-            z-index: 999;
-        }
-
-        #suggesstions>div:hover {
-            background-color: #efefef;
-            cursor: pointer;
         }
     </style>
 
@@ -106,20 +93,6 @@
 
 @push('scripts')
     <script>
-        const getFromTemplate = (templateClass, replaces = {}) => {
-            const template = $('#templates ' + templateClass).html();
-
-            if (template) {
-                let content = template;
-                for (const property in replaces) {
-                    content = content.split('%%' + property + '%%').join(replaces[property]);
-                }
-                return content;
-            }
-
-            throw 'template not found';
-        };
-
         const addWaypoint = (name) => {
             let exists = false;
             if (name) {
@@ -159,34 +132,7 @@
                     return false;
                 });
 
-            @if ($waypoints)
-                @foreach ($waypoints as $name)
-                    addWaypoint('{{ $name }}');
-                @endforeach
-            @endif
-
-            $("#solarSystem").keyup(function() {
-                $.post({
-                    url: '/systemlist',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        search: $(this).val()
-                    },
-                }).done(function(response) {
-                    $("#suggesstions").html("");
-                    response.systems.forEach(element => {
-                        $("#suggesstions").append("<div>" + element + "</div>")
-                    });
-                    $("#suggesstions").show();
-                });
-            });
-
-            $(document).on('click', '#suggesstions>div', function(e) {
-                $('#solarSystem').val($(this).text());
-                $("#suggesstions").hide();
-            });
+            $('#solarSystem').solarSystemSelector();
 
             $(document).on('click', '#addBtn', function(e) {
                 e.preventDefault();
@@ -217,7 +163,9 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                const waypoints = $('#waypointsList .waypoint-item').toArray().map(p => p.innerHTML);
+                const waypoints = $('#waypointsList .waypoint-item')
+                    .toArray()
+                    .map(p => p.innerHTML);
 
                 $.post({
                     url: '/route',
@@ -244,8 +192,6 @@
                     };
 
                     response.route.forEach((path, pathIndex, array) => {
-
-
                         let list = $('<ol></ol>');
 
                         path.forEach((waypoint, waypointIndex) => {
@@ -300,6 +246,13 @@
                     console.error(err);
                 });
             });
+
+            @if ($waypoints)
+                @foreach ($waypoints as $name)
+                    addWaypoint('{{ $name }}');
+                @endforeach
+                $('#routeBtn').trigger('click');
+            @endif
         });
     </script>
 @endpush

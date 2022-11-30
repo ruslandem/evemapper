@@ -2,47 +2,47 @@
 
 @section('content')
     <div class="container main-content">
-        <div class="tile is-parent is-vertical">
-            <article class="tile is-child notification is-dark-half">
-                <p class="title has-text-white">Solar system</p>
-                <p class="subtitle has-text-white">Search for a solar system and track your character location</p>
+        <h1 class="title is-1 has-text-centered m-3">Locator</h1>
 
-                <div class="field is-horizontal">
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control has-icons-left">
-                                <input id="search" class="input" type="text" placeholder="Solar system"
-                                    value="{{ $system->solarSystemName ?? '' }}">
-                                <span class="icon is-small is-left">
-                                    <i class="fa-solid fa-location-crosshairs"></i>
-                                </span>
-                            </p>
+        <div class="columns has-text-white p-3">
+            <div class="column is-dark-half">
+                <div class="content">
+                    <p class="title is-3 has-text-white">Solar System</p>
+                    <p class="subtitle is-6 has-text-white">Search for a solar system and track your character location:</p>
+
+                    <div id="searchBar" class="field has-addons">
+                        <div class="control">
+                            <input id="search" class="input" type="text" placeholder="Jita" autocomplete="off"
+                                value="{{ $system->solarSystemName ?? '' }}">
+                            <div class="suggestions has-background-white has-text-black py-1 px-3" style="display: none">
+                            </div>
                         </div>
-                        <div class="field">
-                            <p class="control is-expanded">
-                                <a id="search" href="#" class="button is-primary mr-4" title="Search">search</a>
-                                <a id="locate" href="#" class="button is-primary" title="Get current location"><i
-                                        class="fa-solid fa-location-crosshairs"></i></a>
-                                <a id="autolocate" href="#" class="button is-danger"
-                                    title="Auto-refresh current location"><i class="fa-solid fa-rotate"></i></a>
-                            </p>
+                        <div class="control">
+                            <a class="button is-primary" id="searchBtn" title="Find solar system"><i
+                                    class="fa-solid fa-search mr-2"></i>search</a>
+                        </div>
+                        <div class="control">
+                            <a id="locate" href="#" class="button is-warning" title="Get current location"><i
+                                    class="fa-solid fa-location-crosshairs"></i></a>
+                        </div>
+                        <div class="control">
+                            <a id="autolocate" href="#" class="button is-danger"
+                                title="Auto-refresh current location"><i class="fa-solid fa-rotate"></i></a>
                         </div>
                     </div>
                 </div>
-
-            </article>
+            </div>
         </div>
 
-        <div class="tile is-parent is-vertical has-text-white">
-            <article class="tile is-child notification is-dark-half">
-
+        <div class="columns has-text-white p-3">
+            <div class="column auto is-dark-half mr-2">
                 @unless($system === null)
 
                     <div class="has-text-centered is-size-1 mb-4">
                         {{ $system->solarSystemName }}
                     </div>
 
-                    <div class="has-text-centered mb-4" style="min-height: 280px">
+                    <div class="has-text-centered mb-4">
                         <table class="table mx-auto">
                             <tbody>
                                 <tr>
@@ -86,40 +86,23 @@
 
                         <div class="has-text-centered mb-4">
                             <a class="button is-warning" target="_blank"
-                                href="https://evemaps.dotlan.net/system/{{ urlencode($system->solarSystemName) }}">
-                                DotLan Map
+                                href="https://evemaps.dotlan.net/map/{{ str_replace('+', '_', urlencode($system->regionName)) }}/{{ str_replace('+', '_', urlencode($system->solarSystemName)) }}#sec">
+                                DotLan Map <i class="fa-solid fa-arrow-up-right-from-square ml-1 fa-xs"></i>
                             </a>
                             <a class="button is-black" target="_blank"
                                 href="https://zkillboard.com/system/{{ urlencode($system->solarSystemID) }}">
-                                zKillboard
+                                zKillboard <i class="fa-solid fa-arrow-up-right-from-square ml-1 fa-xs"></i>
                             </a>
-                        </div>
-                    </div>
-
-                    
-
-                    <div class="columns my-4">
-                        <div class="column is-narrow scrollable mx-auto">
-                            <table id="historyTable" class="table is-striped">
-                                <tbody>
-                                    @foreach ($history as $record)
-                                        <tr>
-                                            <td>{{ $record->createdAt }}</td>
-                                            <th><a href="#" class="solar-system-link">{{ $record->solarSystemName }}</a></th>
-                                            <td class="security">{{ round($record->solarSystemSecurity, 1) }}</td>
-                                            <td>{{ $record->wormholeClass ?? null }}</td>
-                                        </tr>
-                                </tbody>
-                                @endforeach
-                            </table>
                         </div>
                     </div>
 
                     <div class="columns">
                         <div class="column has-text-centered">
-                            <div class="is-size-3">Nearest Trade Hubs</div>
+                            <h5 class="title">Nearest Trade Hubs</h5>
                             @foreach ($jumps as $hubName => $jumps)
-                                <span style="margin-right:1rem">{{ $hubName }}: <b>{{ $jumps }}</b></span>
+                                <span class="tag is-medium is-info m-1">{{ $hubName }}: {{ $jumps }} 
+                                    <a href="/route?waypoints={{ $hubName }},{{ $system->solarSystemName }}" class="has-text-warning"><i class="fa-solid fa-route ml-1"></i></a>
+                                </span>
                             @endforeach
                         </div>
                     </div>
@@ -131,56 +114,128 @@
                     </div>
 
                 @endunless
+            </div>
 
-            </article>
+            <div class="column is-one-third is-dark-half" style="height:100%">
+                <h5 class="subtitle has-text-white">Locations History</h5>
+                <div class="scrollable">
+                    <table id="historyTable" class="table is-striped">
+                        <tbody>
+                            @foreach ($history as $record)
+                                <tr>
+                                    <td>{{ $record->createdAt }}</td>
+                                    <th><a href="#" class="solar-system-link">{{ $record->solarSystemName }}</a>
+                                    </th>
+                                    <td class="security">{{ round($record->solarSystemSecurity, 1) }}</td>
+                                    <td>{{ $record->wormholeClass ?? null }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+
     </div>
 
     <style>
         .scrollable {
-            height: 20rem;
+            height: 62vh;
             overflow-y: auto;
         }
+
         .solar-system-link {
             text-decoration: none !important;
-        }
-        .class-type {
-            font-weight: bold;
         }
     </style>
 @endsection
 
 @push('scripts')
     <script>
-        const setLocationAutoUpdate = (enabled) => {
-            if (enabled === true) {
-                window.sessionStorage.autolocateInterval = setInterval(() => {
-                    updateLocation();
-                }, 10000);
-                return;
-            }
-            if (window.sessionStorage.autolocateInterval) {
-                clearInterval(window.sessionStorage.autolocateInterval);
+        const currenSolarSystem = "{{ $system->solarSystemName ?? '' }}";
+
+        const updateLocation = () => {
+            $('#searchBar a').attr('disabled', true);
+
+            $.get('/locate')
+                .done(function(response) {
+                    if (
+                        response.solarSystemName &&
+                        response.solarSystemName != currenSolarSystem
+                    ) {
+                        return openSystemPage(response.solarSystemName);
+                    }
+                    $('#searchBar a').attr('disabled', false);
+                })
+                .fail(function(response) {
+                    throw 'Failed to get location (' + response + ')';
+                });
+        };
+
+        const openSystemPage = (systemName) => {
+            window.location.href = '/system/' + systemName;
+            return false;
+        };
+
+        // Auto-location
+        const autoLocationInterval = 10000;
+        window.sessionStorage.removeItem('autolocateInterval');
+
+        const getAutoLocationState = () => {
+            if (window.sessionStorage.key)
+                if (!window.sessionStorage.hasOwnProperty("autolocate")) {
+                    window.sessionStorage.autolocate = 'false';
+                    return false;
+                }
+            return window.sessionStorage.autolocate === 'true';
+        };
+
+        const setAutoLocationState = (state) => {
+            window.sessionStorage.autolocate = (state ? 'true' : 'false');
+            if (state) {
+                $('#autolocate')
+                    .removeClass("has-background-danger	")
+                    .addClass("has-background-success");
+            } else {
+                $('#autolocate')
+                    .removeClass("has-background-success")
+                    .addClass("has-background-danger");
             }
         };
+
+        const setAutoLocation = (state) => {
+            if (state === true) {
+                window.sessionStorage.autolocateInterval = setInterval(() => {
+                    updateLocation();
+                }, autoLocationInterval);
+            } else {
+                if (window.sessionStorage.autolocateInterval) {
+                    clearInterval(window.sessionStorage.autolocateInterval);
+                    window.sessionStorage.removeItem('autolocateInterval');
+                }
+            }
+            setAutoLocationState(state);
+        };
+
+        $('#search').solarSystemSelector();
+
+        $(document).on('click', '#locate', function(e) {
+            e.preventDefault();
+            updateLocation();
+        });
 
         $(document).on("click", "#autolocate", function(e) {
             e.preventDefault();
 
-            if (window.sessionStorage.hasOwnProperty("autolocate")) {
-                window.sessionStorage.autolocate =
-                    (window.sessionStorage.autolocate === 'true') ? 'false' : 'true';
-                setAutoLocationBtnColor();
-                setLocationAutoUpdate(
-                    window.sessionStorage.autolocate !== 'false' ||
-                    !window.sessionStorage.autolocateInterval
-                );
-                return false;
-            }
+            const currentState = getAutoLocationState();
+            setAutoLocation(!currentState);
 
-            window.sessionStorage.autolocate = 'true';
-            setAutoLocationBtnColor();
-            return false;
+            Toastify({
+                text: "Autolocation " + (!currentState ? "on" : "off"),
+                duration: 3000
+            }).showToast();
+
+            $(this).blur();
         });
 
         $(document).on('click', '.solar-system-link', function(e) {
@@ -188,19 +243,24 @@
             window.location.href = '/system/' + $(this).text();
         });
 
+        $(document).on("keypress", "#search", function(e) {
+            if (e.which == 13) {
+                return openSystemPage($(this).val());
+            }
+        });
+
+        $(document).on("click", "#searchBtn", function(e) {
+            return openSystemPage($('#search').val());
+        });
+
         $(function() {
             $('[data-menu-item="system"]').addClass('active');
 
             formatValues();
 
-            if (window.sessionStorage.autolocate === 'true') {
-                setLocationAutoUpdate(true);
-            }
-
-            if (window.sessionStorage.locateOnLoad === 'true') {
-                window.sessionStorage.locateOnLoad = false;
-                updateLocation();
-            }
+            setAutoLocation(
+                getAutoLocationState()
+            );
         });
     </script>
 @endpush

@@ -1,10 +1,10 @@
 {
     "/js/app.js": "/js/app.js",
     "/css/bulmaswatch.min.css": "/css/bulmaswatch.min.css",
+    "/css/app.css": "/css/app.css",
     "/css/toastify.css": "/css/toastify.css",
     "/css/fontawesome.min.css": "/css/fontawesome.min.css",
     "/css/bulma.min.css": "/css/bulma.min.css",
-    "/css/app.css": "/css/app.css",
     "/css/tippy/themes/translucent.css": "/css/tippy/themes/translucent.css",
     "/css/tippy/themes/material.css": "/css/tippy/themes/material.css",
     "/css/tippy/themes/light-border.css": "/css/tippy/themes/light-border.css",
