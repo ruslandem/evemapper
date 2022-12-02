@@ -13,6 +13,7 @@ const mix = require("laravel-mix");
  */
 
 mix.copy("resources/assets/img", "public/img");
+mix.js("resources/assets/js/cookie-consent.js", "public/js");
 mix.js("resources/assets/js/app.js", "public/js");
 
 mix.postCss("resources/assets/css/app.css", "public/css")
