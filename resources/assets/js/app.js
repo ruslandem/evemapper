@@ -1,11 +1,12 @@
 import $ from "jquery";
-window.$ = window.jQuery = $;
-
 import Toastify from "toastify-js";
-window.Toastify = Toastify;
-
 import tippy from "tippy.js";
+import cookieconsent from "vanilla-cookieconsent";
+
+window.$ = window.jQuery = $;
+window.Toastify = Toastify;
 window.tippy = tippy;
+window.cookieconsent = initCookieConsent();
 
 $(document).on("click", ".dropdown", function (e) {
     e.stopPropagation();

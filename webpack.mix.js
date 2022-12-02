@@ -13,7 +13,6 @@ const mix = require("laravel-mix");
  */
 
 mix.copy("resources/assets/img", "public/img");
-
 mix.js("resources/assets/js/app.js", "public/js");
 
 mix.postCss("resources/assets/css/app.css", "public/css")
@@ -25,7 +24,23 @@ mix.postCss("resources/assets/css/app.css", "public/css")
     )
     .postCss("node_modules/toastify-js/src/toastify.css", "public/css")
     .postCss("node_modules/tippy.js/dist/tippy.css", "public/css/tippy")
-    .postCss("node_modules/tippy.js/themes/light.css", "public/css/tippy/themes")
-    .postCss("node_modules/tippy.js/themes/light-border.css", "public/css/tippy/themes")
-    .postCss("node_modules/tippy.js/themes/material.css", "public/css/tippy/themes")
-    .postCss("node_modules/tippy.js/themes/translucent.css", "public/css/tippy/themes");
+    .postCss(
+        "node_modules/tippy.js/themes/light.css",
+        "public/css/tippy/themes"
+    )
+    .postCss(
+        "node_modules/tippy.js/themes/light-border.css",
+        "public/css/tippy/themes"
+    )
+    .postCss(
+        "node_modules/tippy.js/themes/material.css",
+        "public/css/tippy/themes"
+    )
+    .postCss(
+        "node_modules/tippy.js/themes/translucent.css",
+        "public/css/tippy/themes"
+    )
+    .postCss(
+        "node_modules/vanilla-cookieconsent/dist/cookieconsent.css",
+        "public/css"
+    );
