@@ -6,6 +6,7 @@ use App\Core\Exceptions\EveApiTokenExpiredException;
 use App\Core\EveAuth;
 use App\Core\EveLocationApi;
 use App\Core\EveLocationHistory;
+use App\Core\EveSignatures;
 use App\Core\EveSolarSystem;
 use App\Core\EveWormholeClasses;
 use App\Mail\ContactMessage;
@@ -14,6 +15,7 @@ use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Socialite\Facades\Socialite;
 use RuntimeException;
@@ -181,6 +183,61 @@ class EveController extends Controller
                 Mail::to($recipient)->send($message);
                 return view('contact-thanks');
             }
-        }        
+        }
+    }
+
+    public function getSignatures(string $system)
+    {
+        $signatures = (new EveSignatures())
+            ->get(Auth::id(), $system);
+
+        return response()->json([
+            'signatures' => $signatures
+        ]);
+    }
+
+    public function updateSignatures(Request $request)
+    {
+        $api = new EveSignatures();
+
+        if ($request->boolean('replace')) {
+            $api->deleteAll(
+                Auth::id(),
+                $request->input('solarSystemName')
+            );
+        }
+
+        $updated = $api->updateFromString(
+            Auth::id(),
+            $request->input('solarSystemName'),
+            $request->input('text')
+        );
+
+        return response()->json([
+            'signatures' => $updated,
+            'updated' => count($updated)
+        ]);
+    }
+
+    public function deleteSignatures(Request $request)
+    {
+        $api = new EveSignatures();
+
+        if ($request->input('signatureId') !== '*') {
+            $result = $api->delete(
+                Auth::id(),
+                $request->input('solarSystemName'),
+                $request->input('signatureId'),
+            );
+        } else {
+            $result = $api->deleteAll(
+                Auth::id(),
+                $request->input('solarSystemName'),
+            );
+        }
+
+        return response()->json([
+            'deleted' => $result
+        ]);
     }
 }

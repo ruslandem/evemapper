@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Core\EveLocationHistory;
 use App\Core\EveRoute;
+use App\Core\EveSignatures;
 use App\Core\EveSolarSystem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +40,8 @@ class LocatorController extends Controller
             'system' => null,
             'jumps' => [],
             'errorMessage' => null,
-            'history' => []
+            'history' => [],
+            'signatures' => [],
         ];
 
         if (empty($system)) {
@@ -57,6 +59,7 @@ class LocatorController extends Controller
             @asort($result['jumps']);
 
             $result['history'] = (new EveLocationHistory())->get(Auth::id());
+            $result['signatures'] = (new EveSignatures())->get(Auth::id(), $system);
         }
 
         return view('locator', $result);

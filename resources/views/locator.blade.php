@@ -101,10 +101,37 @@
                         <div class="column has-text-centered">
                             <h5 class="title">Nearest Trade Hubs</h5>
                             @foreach ($jumps as $hubName => $jumps)
-                                <span class="tag is-medium is-info m-1">{{ $hubName }}: {{ $jumps }} 
-                                    <a href="/route?waypoints={{ $system->solarSystemName }},{{ $hubName }}" class="has-text-warning"><i class="fa-solid fa-route ml-1"></i></a>
+                                <span class="tag is-medium is-info m-1">{{ $hubName }}: {{ $jumps }}
+                                    <a href="/route?waypoints={{ $system->solarSystemName }},{{ $hubName }}"
+                                        class="has-text-warning"><i class="fa-solid fa-route ml-1"></i></a>
                                 </span>
                             @endforeach
+                        </div>
+                    </div>
+
+                    <div class="columns">
+                        <div class="column has-text-centered">
+                            <h5 class="title">Cosmic Signatures</h5>
+
+                            <div class="table-container p-5">
+                                <table id="signatureTable" class="table is-fullwidth is-bordered is-size-7">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Group</th>
+                                            <th>Created</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+
+                            <div class="m-5">
+                                <a id="updateSignatures" href="#" class="button">update</a>
+                                <a id="replaceSignatures" href="#" class="button">replace</a>
+                            </div>
                         </div>
                     </div>
                 @else
@@ -155,10 +182,103 @@
     <script>
         const currenSolarSystem = "{{ $system->solarSystemName ?? '' }}";
 
+        const seedSignaturesTable = (data, highlight = false) => {
+            const oldSignatures = $('#signatureTable td:nth-child(1)').
+            map(function() {
+                return $(this).text();
+            }).get();
+
+            let tableBody = $('#signatureTable tbody');
+            tableBody.text("");
+            data.forEach(element => {
+                let row = $("<tr" + (highlight && !oldSignatures.includes(element.signatureId) ?
+                    ' class="has-background-warning-dark"' : "") + "></tr>");
+                row.append(`<td>${element.signatureId}</td>`);
+                row.append(`<td>${element.signatureName}</td>`);
+                row.append(`<td>${element.groupName}</td>`);
+                row.append(`<td>${element.created_at}</td>`);
+                row.append(`<td><button class="delete"></button></td>`);
+                tableBody.append(row);
+            });
+        };
+
+        const getSignatures = () => {
+            $.get({
+                    url: "{{ route('api.getSignatures', ['system' => $system->solarSystemName]) }}"
+                })
+                .done(response => {
+                    if (response.signatures) {
+                        seedSignaturesTable(response.signatures);
+                    }
+                });
+        };
+
+        const updateSignatures = (replace = false) => {
+            navigator.clipboard.readText()
+                .then(text => {
+                    $.post({
+                            url: "{{ route('api.updateSignatures') }}",
+                            headers: {
+                                "X-CSRF-TOKEN": getCsrfToken(),
+                            },
+                            data: {
+                                solarSystemName: currenSolarSystem,
+                                text: text,
+                                replace: replace,
+                            }
+                        })
+                        .done(response => {
+                            if (response.signatures) {
+                                seedSignaturesTable(response.signatures, true);
+                            }
+                            if (response.updated) {
+                                Toastify({
+                                    text: `Updated ${response.updated} signatures`,
+                                    duration: 3000
+                                }).showToast();
+                            }
+                        });
+
+                });
+        };
+
+        const deleteSignature = (signatureId) => {
+            $.post({
+                    type: "delete",
+                    url: "{{ route('api.deleteSignatures') }}",
+                    headers: {
+                        "X-CSRF-TOKEN": getCsrfToken(),
+                    },
+                    data: {
+                        solarSystemName: currenSolarSystem,
+                        signatureId: signatureId,
+                    }
+                })
+                .done(response => {
+                    if (response.deleted) {
+                        getSignatures();
+                        Toastify({
+                            text: `Deleted signature ${signatureId}`,
+                            duration: 3000
+                        }).showToast();
+                    }
+                });
+        };
+
+        $(document).on("click", ".delete", (e) => {
+            e.preventDefault();
+            const id = $(e.currentTarget).parents('tr').children('td').first().text();
+            console.log(e);
+            console.log(id);
+            if (id) {
+                deleteSignature(id);
+            }
+        });
+
         const updateLocation = () => {
             $('#searchBar a').attr('disabled', true);
 
-            $.get('{{ route("api.locate") }}')
+            $.get('{{ route('api.locate') }}')
                 .done(function(response) {
                     if (
                         response.solarSystemName &&
@@ -174,7 +294,7 @@
         };
 
         const openSystemPage = (systemName) => {
-            window.location.href = '{{ route("locate") }}/' + systemName;
+            window.location.href = '{{ route('locate') }}/' + systemName;
             return false;
         };
 
@@ -218,7 +338,7 @@
             setAutoLocationState(state);
         };
 
-        $('#search').solarSystemSelector('{{ route("api.systems") }}');
+        $('#search').solarSystemSelector('{{ route('api.systems') }}');
 
         $(document).on('click', '#locate', function(e) {
             e.preventDefault();
@@ -241,7 +361,7 @@
 
         $(document).on('click', '.solar-system-link', function(e) {
             e.preventDefault();
-            window.location.href = '{{ route("locate") }}/' + $(this).text();
+            window.location.href = '{{ route('locate') }}/' + $(this).text();
         });
 
         $(document).on("keypress", "#search", function(e) {
@@ -262,6 +382,18 @@
             setAutoLocation(
                 getAutoLocationState()
             );
+
+            getSignatures();
+        });
+
+        $(document).on('click', '#updateSignatures', function(e) {
+            e.preventDefault();
+            updateSignatures();
+        });
+
+        $(document).on('click', '#replaceSignatures', function(e) {
+            e.preventDefault();
+            updateSignatures(true);
         });
     </script>
 @endpush
