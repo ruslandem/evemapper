@@ -4,7 +4,6 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    /* height: 100%; */
 }
 
 .logo {
@@ -39,4 +38,8 @@ body {
 .suggestions>div:hover {
     background-color: #efefef;
     cursor: pointer;
+}
+
+.new-signature {
+    background-color: rgb(60 80 60);
 }

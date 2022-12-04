@@ -15,10 +15,8 @@ use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Socialite\Facades\Socialite;
-use RuntimeException;
 use TimeHunter\LaravelGoogleReCaptchaV3\Facades\GoogleReCaptchaV3;
 
 class EveController extends Controller
@@ -188,8 +186,12 @@ class EveController extends Controller
 
     public function getSignatures(string $system)
     {
-        $signatures = (new EveSignatures())
-            ->get(Auth::id(), $system);
+        $signatures = [];
+
+        if ($system) {
+            $signatures = (new EveSignatures())
+                ->get(Auth::id(), $system);
+        }
 
         return response()->json([
             'signatures' => $signatures

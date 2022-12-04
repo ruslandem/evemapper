@@ -40,7 +40,7 @@ Route::prefix('api')->group(function () {
     Route::post('/route', [RoutesController::class, 'buildRoute'])->name('api.route');
     Route::post('/systems', [LocatorController::class, 'list'])->name('api.systems');
 
-    Route::get('/signatures/{system}', [EveController::class, 'getSignatures'])->name('api.getSignatures');
+    Route::get('/signatures/{system?}', [EveController::class, 'getSignatures'])->name('api.getSignatures');
     Route::post('/signatures/update', [EveController::class, 'updateSignatures'])->name('api.updateSignatures');
     Route::delete('/signatures/delete', [EveController::class, 'deleteSignatures'])->name('api.deleteSignatures');
 });

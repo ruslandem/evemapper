@@ -118,8 +118,8 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Name</th>
                                             <th>Group</th>
+                                            <th>Name</th>
                                             <th>Created</th>
                                             <th></th>
                                         </tr>
@@ -192,10 +192,10 @@
             tableBody.text("");
             data.forEach(element => {
                 let row = $("<tr" + (highlight && !oldSignatures.includes(element.signatureId) ?
-                    ' class="has-background-warning-dark"' : "") + "></tr>");
+                    ' class="new-signature"' : "") + "></tr>");
                 row.append(`<td>${element.signatureId}</td>`);
-                row.append(`<td>${element.signatureName}</td>`);
                 row.append(`<td>${element.groupName}</td>`);
+                row.append(`<td>${element.signatureName}</td>`);
                 row.append(`<td>${element.created_at}</td>`);
                 row.append(`<td><button class="delete"></button></td>`);
                 tableBody.append(row);
@@ -204,7 +204,7 @@
 
         const getSignatures = () => {
             $.get({
-                    url: "{{ route('api.getSignatures', ['system' => $system->solarSystemName]) }}"
+                    url: "{{ route('api.getSignatures', ['system' => $system->solarSystemName ?? '']) }}"
                 })
                 .done(response => {
                     if (response.signatures) {
