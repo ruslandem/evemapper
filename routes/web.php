@@ -3,6 +3,8 @@
 use App\Http\Controllers\EveController;
 use App\Http\Controllers\RoutesController;
 use App\Http\Controllers\LocatorController;
+use App\Http\Controllers\SignatureController;
+use App\Http\Controllers\SignaturesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,7 +42,8 @@ Route::prefix('api')->group(function () {
     Route::post('/route', [RoutesController::class, 'buildRoute'])->name('api.route');
     Route::post('/systems', [LocatorController::class, 'list'])->name('api.systems');
 
-    Route::get('/signatures/{system?}', [EveController::class, 'getSignatures'])->name('api.getSignatures');
-    Route::post('/signatures/update', [EveController::class, 'updateSignatures'])->name('api.updateSignatures');
+    // Route::get('/signatures/{system?}', [EveController::class, 'getSignatures'])->name('api.getSignatures');
+    Route::get('/signatures', [SignaturesController::class, 'index'])->name('api.getSignatures');
+    Route::post('/signatures/update', [SignaturesController::class, 'update'])->name('api.updateSignatures');
     Route::delete('/signatures/delete', [EveController::class, 'deleteSignatures'])->name('api.deleteSignatures');
 });

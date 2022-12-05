@@ -7,6 +7,7 @@ window.$ = window.jQuery = $;
 window.Toastify = Toastify;
 window.tippy = tippy;
 window.cookieconsent = initCookieConsent();
+window.hdate = require('human-date');
 
 $(document).on("click", ".dropdown", function (e) {
     e.stopPropagation();

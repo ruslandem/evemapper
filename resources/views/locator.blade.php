@@ -196,7 +196,7 @@
                 row.append(`<td>${element.signatureId}</td>`);
                 row.append(`<td>${element.groupName}</td>`);
                 row.append(`<td>${element.signatureName}</td>`);
-                row.append(`<td>${element.created_at}</td>`);
+                row.append(`<td title="${hdate.prettyPrint(element.created_at, {showTime: true})}">${hdate.relativeTime(element.created_at)}</td>`);
                 row.append(`<td><button class="delete"></button></td>`);
                 tableBody.append(row);
             });
@@ -207,8 +207,8 @@
                     url: "{{ route('api.getSignatures', ['system' => $system->solarSystemName ?? '']) }}"
                 })
                 .done(response => {
-                    if (response.signatures) {
-                        seedSignaturesTable(response.signatures);
+                    if (response.data) {
+                        seedSignaturesTable(response.data);
                     }
                 });
         };
