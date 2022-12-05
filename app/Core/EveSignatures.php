@@ -85,14 +85,17 @@ class EveSignatures
                 'updated_at' => now()
             ]);
 
-            $itemsCount = $this->db->table('signatures')
+            $existing = $this->db->table('signatures')
                 ->where($attributes)
-                ->count();
+                ->get()
+                ->first();
 
-            if ($itemsCount > 0) {
-                $this->db->table('signatures')
-                    ->where($attributes)
-                    ->update($record);
+            if ($existing) {
+                if (!empty($record['signatureName']) || !empty($record['groupName'])) {
+                    $this->db->table('signatures')
+                        ->where($attributes)
+                        ->update($record);
+                }
             } else {
                 $record['created_at'] = now();
                 $this->db->table('signatures')
