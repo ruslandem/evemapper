@@ -59,7 +59,6 @@ class LocatorController extends Controller
             @asort($result['jumps']);
 
             $result['history'] = (new EveLocationHistory())->get(Auth::id());
-            $result['signatures'] = (new EveSignatures())->get(Auth::id(), $system);
         }
 
         return view('locator', $result);

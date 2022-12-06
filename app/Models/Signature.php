@@ -19,6 +19,8 @@ class Signature extends Model
         'signatureId',
         'signatureName',
         'groupName',
+        'created_at',
+        'updated_at'
     ];
 
     public function updateData(array $attributes)
@@ -28,5 +30,7 @@ class Signature extends Model
                 $this->attributes[$value] = $attributes[$value];
             }
         }
+
+        return $this;
     }
 }

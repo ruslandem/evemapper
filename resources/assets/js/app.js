@@ -7,7 +7,14 @@ window.$ = window.jQuery = $;
 window.Toastify = Toastify;
 window.tippy = tippy;
 window.cookieconsent = initCookieConsent();
-window.hdate = require('human-date');
+window.hdate = require("human-date");
+
+window.toast = (message) => {
+    return Toastify({
+        text: message,
+        duration: 3000,
+    }).showToast();
+};
 
 $(document).on("click", ".dropdown", function (e) {
     e.stopPropagation();

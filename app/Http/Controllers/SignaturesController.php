@@ -2,27 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\ApiResponseReport;
 use App\Core\SignaturesHelper;
 use App\Http\Resources\SignatureResource;
 use App\Models\Signature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class SignaturesController extends Controller
 {
+    /**
+     * Lists signatures for the specific solar system.
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function index(Request $request)
     {
         return SignatureResource::collection(
             Signature::where([
                 'characterId' => Auth::id(),
                 'solarSystemName' => $request->input('system')
-            ])->get()
+            ])->orderBy('signatureId')->get()
         );
     }
 
 
+    /**
+     * Updates signatures for the specified solar system.
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request)
     {
+        $result = new ApiResponseReport();
+
         $validated = $request->validate([
             'solarSystemName' => 'required|string',
             'text' => 'required|string',
@@ -43,7 +59,7 @@ class SignaturesController extends Controller
             $validated['text']
         );
 
-        // updating or inserting signatures
+        // updating/inserting signatures
         foreach ($signatures as $signature) {
             $existing = Signature::where([
                 'characterId' => Auth::id(),
@@ -53,16 +69,40 @@ class SignaturesController extends Controller
 
             $existing
                 ? $existing->updateData($signature)->save()
-                : Signature::factory()->createOne($signature);
+                : Signature::create($signature);
+
+            $result->increment($existing ? 'updated' : 'created');
         }
 
-        return redirect()
-            ->action([SignaturesController::class, 'index'])
-            ->withInput(['system' => $validated['solarSystemName']]);
+        return response()->json(
+            $result->output()
+        );
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $result = new ApiResponseReport();
+
+        $validated = $request->validate([
+            'solarSystemName' => 'required|string',
+            'signatureId' => 'required|string',
+        ]);
+
+        if ($validated['signatureId'] === '*') {
+            $deleted = Signature::where([
+                'characterId' => Auth::id(),
+                'solarSystemName' => $validated['solarSystemName']
+            ])->delete();
+        } else {
+            $deleted = Signature::where([
+                'characterId' => Auth::id(),
+                'solarSystemName' => $validated['solarSystemName'],
+                'signatureId' => $validated['signatureId']
+            ])->delete();
+        }
+
+        return response()->json(
+            $result->increment('deleted', intval($deleted))->output()
+        );
     }
 }
