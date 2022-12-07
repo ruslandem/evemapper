@@ -137,7 +137,7 @@ class CosmicSignaturesTest extends TestCase
         );
 
         // updating with a signature with more data
-        $text = "KOA-124	Cosmic Signature	Regional Guristas Command Center	Data Site	0.0%	23.13 AU";
+        $text = "KOA-124	Cosmic Signature	Data Site	Regional Guristas Command Center	0.0%	23.13 AU";
         $service->updateFromClipboardText(
             $this->user->characterId,
             self::SOLAR_SYSTEM,
@@ -209,9 +209,9 @@ class CosmicSignaturesTest extends TestCase
             "ISN-720	Cosmic Signature			0.0%	2.58 AU",
             "KOA-124	Cosmic Signature			0.0%	3.73 AU",
             "QPI-926	Cosmic Signature			0.0%	6.78 AU",
-            "ROJ-096	Cosmic Signature	Regional Guristas Command Center	Data Site	0.0%	29.53 AU",
+            "ROJ-096	Cosmic Signature	Data Site	Regional Guristas Command Center	0.0%	29.53 AU",
             "XCO-255	Cosmic Signature			0.0%	1.79 AU",
-            "KOL-024	Cosmic Signature	Regional Guristas Command Center	Data Site	0.0%	1.79 AU",
+            "KOL-024	Cosmic Signature	Data Site	Regional Guristas Command Center	0.0%	1.79 AU",
         ]);
     }
 }

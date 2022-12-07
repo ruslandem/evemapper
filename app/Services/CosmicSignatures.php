@@ -114,7 +114,7 @@ class CosmicSignatures
         $lines = explode(PHP_EOL, trim($text));
         foreach ($lines as $line) {
 
-            list($id,, $name, $group) = str_getcsv(trim($line), "\t");
+            list($id,, $group, $name) = str_getcsv(trim($line), "\t");
 
             if ($id) {
                 $signatures[] = [
