@@ -5,135 +5,16 @@
     <div class="container main-content">
         <h1 class="title is-1 has-text-centered m-3">Locator</h1>
 
-        <div class="columns has-text-white p-3">
-            <div class="column is-dark-half">
-                <div class="content">
-                    <p class="title is-3 has-text-white">Solar System</p>
-                    <p class="subtitle is-6 has-text-white">Search for a solar system and track your character location:</p>
-
-                    <div id="searchBar" class="field has-addons">
-                        <div class="control">
-                            <input id="search" class="input" type="text" placeholder="Jita" autocomplete="off"
-                                value="{{ $system->solarSystemName ?? '' }}">
-                            <div class="suggestions has-background-white has-text-black py-1 px-3" style="display: none">
-                            </div>
-                        </div>
-                        <div class="control">
-                            <a class="button is-primary" id="searchBtn" title="Find solar system"><i
-                                    class="fa-solid fa-search mr-2"></i>search</a>
-                        </div>
-                        <div class="control">
-                            <a id="locate" href="#" class="button is-warning" title="Get current location"><i
-                                    class="fa-solid fa-location-crosshairs"></i></a>
-                        </div>
-                        <div class="control">
-                            <a id="autolocate" href="#" class="button is-danger"
-                                title="Auto-refresh current location"><i class="fa-solid fa-rotate"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <x-locator.search-bar system="{{ $system->solarSystemName ?? '' }}"/>
 
         <div class="columns has-text-white p-3">
             <div class="column auto is-dark-half mr-2">
                 @unless($system === null)
+                    <x-locator.systemInfo :system="$system"/>
 
-                    <div class="has-text-centered is-size-1 mb-4">
-                        {{ $system->solarSystemName }}
-                    </div>
+                    <x-locator.hubs system="{{ $system->solarSystemName }}" :jumps="$jumps"/>
 
-                    <div class="has-text-centered mb-4">
-                        <table class="table mx-auto">
-                            <tbody>
-                                <tr>
-                                    <td>Security</td>
-                                    <td><span class="security">{{ round($system->security, 2) }}</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Region</td>
-                                    <td>{{ $system->regionName }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Constellation</td>
-                                    <td>{{ $system->constellationName }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Rats</td>
-                                    <td>{{ $system->rats }}</td>
-                                </tr>
-
-                                @if (isset($system->wormholeClass))
-                                    <tr>
-                                        <td>Wormhole Class</td>
-                                        <td>{{ $system->wormholeClass }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Wormhole Statics</td>
-                                        <td>
-                                            @if (isset($system->wormholeStatics))
-                                                @foreach ($system->wormholeStatics as $item)
-                                                    <span style="margin-right:.25rem">
-                                                        {{ $item->hole }}
-                                                        (<span class="class-type" data-in-class="{{ $item->inClass }}"></span>)
-                                                    </span>
-                                                @endforeach
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endif
-                            </tbody>
-                        </table>
-
-                        <div class="has-text-centered mb-4">
-                            <a class="button is-warning" target="_blank"
-                                href="https://evemaps.dotlan.net/map/{{ str_replace('+', '_', urlencode($system->regionName)) }}/{{ str_replace('+', '_', urlencode($system->solarSystemName)) }}#sec">
-                                DotLan Map <i class="fa-solid fa-arrow-up-right-from-square ml-1 fa-xs"></i>
-                            </a>
-                            <a class="button is-black" target="_blank"
-                                href="https://zkillboard.com/system/{{ urlencode($system->solarSystemID) }}">
-                                zKillboard <i class="fa-solid fa-arrow-up-right-from-square ml-1 fa-xs"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="columns">
-                        <div class="column has-text-centered">
-                            <h5 class="title">Nearest Trade Hubs</h5>
-                            @foreach ($jumps as $hubName => $jumps)
-                                <span class="tag is-medium is-info m-1">{{ $hubName }}: {{ $jumps }}
-                                    <a href="/route?waypoints={{ $system->solarSystemName }},{{ $hubName }}"
-                                        class="has-text-warning"><i class="fa-solid fa-route ml-1"></i></a>
-                                </span>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <div class="columns">
-                        <div class="column has-text-centered">
-                            <h5 class="title">Cosmic Signatures</h5>
-
-                            <div class="table-container p-5">
-                                <table id="signatureTable" class="table is-fullwidth is-bordered is-size-7">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Group</th>
-                                            <th>Name</th>
-                                            <th>Created</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-
-                            <div class="m-5">
-                                <a id="updateSignatures" href="#" class="button">update</a>
-                                <a id="replaceSignatures" href="#" class="button">replace</a>
-                            </div>
-                        </div>
-                    </div>
+                    <x-locator.signatures/>
                 @else
                     <div class="columns">
                         <h5 class="column has-text-warning">
@@ -144,24 +25,7 @@
                 @endunless
             </div>
 
-            <div class="column is-one-third is-dark-half" style="height:100%">
-                <h5 class="subtitle has-text-white">Locations History</h5>
-                <div class="scrollable">
-                    <table id="historyTable" class="table is-striped">
-                        <tbody>
-                            @foreach ($history as $record)
-                                <tr>
-                                    <td>{{ $record->createdAt }}</td>
-                                    <th><a href="#" class="solar-system-link">{{ $record->solarSystemName }}</a>
-                                    </th>
-                                    <td class="security">{{ round($record->solarSystemSecurity, 1) }}</td>
-                                    <td>{{ $record->wormholeClass ?? null }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <x-locator.history :history="$history"/>
         </div>
 
     </div>
@@ -182,8 +46,8 @@
     <script>
         const currenSolarSystem = "{{ $system->solarSystemName ?? '' }}";
 
-        const seedSignaturesTable = (data, highlight = false) => {
-            const oldSignatures = $('#signatureTable td:nth-child(1)').
+        const seedSignaturesTable = (data, highlight = true) => {
+            const oldSignatures = $('#signatureTable tbody td:nth-child(1)').
             map(function() {
                 return $(this).text();
             }).get();
@@ -196,19 +60,19 @@
                 row.append(`<td>${element.signatureId}</td>`);
                 row.append(`<td>${element.groupName}</td>`);
                 row.append(`<td>${element.signatureName}</td>`);
-                row.append(`<td>${element.created_at}</td>`);
+                row.append(`<td title="${hdate.prettyPrint(element.created_at, {showTime: true})}">${hdate.relativeTime(element.created_at)}</td>`);
                 row.append(`<td><button class="delete"></button></td>`);
                 tableBody.append(row);
             });
         };
 
-        const getSignatures = () => {
+        const getSignatures = (highlight = true) => {
             $.get({
                     url: "{{ route('api.getSignatures', ['system' => $system->solarSystemName ?? '']) }}"
                 })
                 .done(response => {
-                    if (response.signatures) {
-                        seedSignaturesTable(response.signatures);
+                    if (response.data) {
+                        seedSignaturesTable(response.data, highlight);
                     }
                 });
         };
@@ -227,15 +91,10 @@
                                 replace: replace,
                             }
                         })
-                        .done(response => {
-                            if (response.signatures) {
-                                seedSignaturesTable(response.signatures, true);
-                            }
-                            if (response.updated) {
-                                Toastify({
-                                    text: `Updated ${response.updated} signatures`,
-                                    duration: 3000
-                                }).showToast();
+                        .done(response => {                           
+                            if (response) {
+                                toast(`${response.updated ?? 0} added and ${response.created ?? 0} updated signatures`);
+                                getSignatures();
                             }
                         });
 
@@ -255,12 +114,9 @@
                     }
                 })
                 .done(response => {
-                    if (response.deleted) {
+                    if (response) {
+                        toast(`Deleted signature ${signatureId}`);
                         getSignatures();
-                        Toastify({
-                            text: `Deleted signature ${signatureId}`,
-                            duration: 3000
-                        }).showToast();
                     }
                 });
         };
@@ -268,8 +124,6 @@
         $(document).on("click", ".delete", (e) => {
             e.preventDefault();
             const id = $(e.currentTarget).parents('tr').children('td').first().text();
-            console.log(e);
-            console.log(id);
             if (id) {
                 deleteSignature(id);
             }
@@ -351,10 +205,7 @@
             const currentState = getAutoLocationState();
             setAutoLocation(!currentState);
 
-            Toastify({
-                text: "Autolocation " + (!currentState ? "on" : "off"),
-                duration: 3000
-            }).showToast();
+            toast("Autolocation " + (!currentState ? "on" : "off"));
 
             $(this).blur();
         });
@@ -383,7 +234,7 @@
                 getAutoLocationState()
             );
 
-            getSignatures();
+            getSignatures(false);
         });
 
         $(document).on('click', '#updateSignatures', function(e) {

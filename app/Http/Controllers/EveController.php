@@ -6,7 +6,6 @@ use App\Core\Exceptions\EveApiTokenExpiredException;
 use App\Core\EveAuth;
 use App\Core\EveLocationApi;
 use App\Core\EveLocationHistory;
-use App\Core\EveSignatures;
 use App\Core\EveSolarSystem;
 use App\Core\EveWormholeClasses;
 use App\Mail\ContactMessage;
@@ -182,64 +181,5 @@ class EveController extends Controller
                 return view('contact-thanks');
             }
         }
-    }
-
-    public function getSignatures(string $system)
-    {
-        $signatures = [];
-
-        if ($system) {
-            $signatures = (new EveSignatures())
-                ->get(Auth::id(), $system);
-        }
-
-        return response()->json([
-            'signatures' => $signatures
-        ]);
-    }
-
-    public function updateSignatures(Request $request)
-    {
-        $api = new EveSignatures();
-
-        if ($request->boolean('replace')) {
-            $api->deleteAll(
-                Auth::id(),
-                $request->input('solarSystemName')
-            );
-        }
-
-        $updated = $api->updateFromString(
-            Auth::id(),
-            $request->input('solarSystemName'),
-            $request->input('text')
-        );
-
-        return response()->json([
-            'signatures' => $updated,
-            'updated' => count($updated)
-        ]);
-    }
-
-    public function deleteSignatures(Request $request)
-    {
-        $api = new EveSignatures();
-
-        if ($request->input('signatureId') !== '*') {
-            $result = $api->delete(
-                Auth::id(),
-                $request->input('solarSystemName'),
-                $request->input('signatureId'),
-            );
-        } else {
-            $result = $api->deleteAll(
-                Auth::id(),
-                $request->input('solarSystemName'),
-            );
-        }
-
-        return response()->json([
-            'deleted' => $result
-        ]);
     }
 }
