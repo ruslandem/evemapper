@@ -69,6 +69,8 @@ class CosmicSignatures
             return self::SIG_UNCHAGED;
         }
 
+        
+
         $found = Signature::where([
             'characterId' => $signature['characterId'],
             'solarSystemName' => $signature['solarSystemName'],
@@ -109,10 +111,10 @@ class CosmicSignatures
     {
         $signatures = [];
 
-        $lines = explode(PHP_EOL, $text);
+        $lines = explode(PHP_EOL, trim($text));
         foreach ($lines as $line) {
 
-            list($id,, $group, $name) = str_getcsv(trim($line), "\t");
+            list($id,, $name, $group) = str_getcsv(trim($line), "\t");
 
             if ($id) {
                 $signatures[] = [

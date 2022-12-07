@@ -3,7 +3,6 @@
 use App\Http\Controllers\EveController;
 use App\Http\Controllers\RoutesController;
 use App\Http\Controllers\LocatorController;
-use App\Http\Controllers\SignatureController;
 use App\Http\Controllers\SignaturesController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,12 +35,12 @@ Route::get('/locator/{id}', [LocatorController::class, 'show'])->middleware('aut
 Route::get('/route', [RoutesController::class, 'route'])->name('route')->middleware('auth');
 
 // ajax
-Route::prefix('api')->group(function () {
-    Route::get('/locate', [EveController::class, 'locate'])->name('api.locate')->middleware('auth');
-    Route::post('/waypoint', [EveController::class, 'waypoint'])->name('api.waypoint')->middleware('auth');
+Route::prefix('api')->middleware('auth')->group(function () {
+    Route::get('/locate', [EveController::class, 'locate'])->name('api.locate');
+    Route::post('/waypoint', [EveController::class, 'waypoint'])->name('api.waypoint');
     Route::post('/route', [RoutesController::class, 'buildRoute'])->name('api.route');
     Route::post('/systems', [LocatorController::class, 'list'])->name('api.systems');
-
+    // signatures
     Route::get('/signatures', [SignaturesController::class, 'index'])->name('api.getSignatures');
     Route::post('/signatures', [SignaturesController::class, 'update'])->name('api.updateSignatures');
     Route::delete('/signatures', [SignaturesController::class, 'destroy'])->name('api.deleteSignatures');
