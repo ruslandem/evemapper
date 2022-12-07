@@ -40,6 +40,11 @@ return [
             'database' => env('DB_APP', null),
         ],
 
+        'test' => [
+            'driver' => 'sqlite',
+            'database' => env('DB_APP_TEST', null),
+        ],
+
         'eve' => [
             'driver' => 'sqlite',
             'database' => env('DB_EVE', null),

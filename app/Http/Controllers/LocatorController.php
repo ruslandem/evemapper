@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Core\EveLocationHistory;
 use App\Core\EveRoute;
-use App\Core\EveSignatures;
 use App\Core\EveSolarSystem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

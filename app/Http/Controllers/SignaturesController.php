@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\ApiResponseReport;
-use App\Core\SignaturesHelper;
+use App\Core\ResponseReport;
 use App\Http\Resources\SignatureResource;
 use App\Models\Signature;
+use App\Services\CosmicSignatures;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class SignaturesController extends Controller
 {
@@ -33,76 +33,46 @@ class SignaturesController extends Controller
      * Updates signatures for the specified solar system.
      * 
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param CosmicSignatures $service
+     * @return JsonResponse
      */
-    public function update(Request $request)
+    public function update(Request $request, CosmicSignatures $service): JsonResponse
     {
-        $result = new ApiResponseReport();
-
-        $validated = $request->validate([
-            'solarSystemName' => 'required|string',
-            'text' => 'required|string',
-        ]);
-
-        // deleting existing signatures (if needed)
-        if ($request->boolean('replace')) {
-            Signature::where([
-                'characterId' => Auth::id(),
-                'solarSystemName' => $validated['solarSystemName']
-            ])->delete();
-        }
-
-        // getting array of inserting signatures
-        $signatures = SignaturesHelper::decodeClipboardText(
+        $result = $service->updateFromClipboardText(
             Auth::id(),
-            $validated['solarSystemName'],
-            $validated['text']
+            $request->input('solarSystemName'),
+            $request->input('text'),
+            $request->boolean('replace')
         );
-
-        // updating/inserting signatures
-        foreach ($signatures as $signature) {
-            $existing = Signature::where([
-                'characterId' => Auth::id(),
-                'solarSystemName' => $validated['solarSystemName'],
-                'signatureId' => $signature['signatureId']
-            ])->first();
-
-            $existing
-                ? $existing->updateData($signature)->save()
-                : Signature::create($signature);
-
-            $result->increment($existing ? 'updated' : 'created');
-        }
 
         return response()->json(
             $result->output()
         );
     }
 
-    public function destroy(Request $request)
+   
+    /**
+     * Deletes signature with the specified id and solar system.
+     * 
+     * @param Request $request Must contain solarSystemName and signatureId parameters
+     * @param CosmicSignatures $service
+     * @return JsonResponse
+     */
+    public function destroy(Request $request, CosmicSignatures $service): JsonResponse
     {
-        $result = new ApiResponseReport();
-
         $validated = $request->validate([
             'solarSystemName' => 'required|string',
             'signatureId' => 'required|string',
         ]);
 
-        if ($validated['signatureId'] === '*') {
-            $deleted = Signature::where([
-                'characterId' => Auth::id(),
-                'solarSystemName' => $validated['solarSystemName']
-            ])->delete();
-        } else {
-            $deleted = Signature::where([
-                'characterId' => Auth::id(),
-                'solarSystemName' => $validated['solarSystemName'],
-                'signatureId' => $validated['signatureId']
-            ])->delete();
-        }
+        $deleted = $service->deleteSignature(
+            Auth::id(),
+            $validated['solarSystemName'],
+            $validated['signatureId'],
+        );
 
         return response()->json(
-            $result->increment('deleted', intval($deleted))->output()
+            (new ResponseReport())->increment('deleted', $deleted)->output()
         );
     }
 }

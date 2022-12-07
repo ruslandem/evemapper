@@ -23,6 +23,12 @@ class Signature extends Model
         'updated_at'
     ];
 
+    /**
+     * Updates signature only if the new data contains information.
+     * 
+     * @param array $attributes
+     * @return $this
+     */
     public function updateData(array $attributes)
     {
         foreach (['signatureName', 'groupName'] as $value) {

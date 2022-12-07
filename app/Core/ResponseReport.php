@@ -2,9 +2,9 @@
 
 namespace App\Core;
 
-class ApiResponseReport
+class ResponseReport
 {
-    protected array $counters;
+    protected array $counters = [];
 
     protected array $attributes;
 
