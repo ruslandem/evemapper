@@ -20,3 +20,4 @@ database/whident.db
 whident-428d795297d2.json
 database/*_test.db
 storage/debugbar/*.json
+_ide_helper.php
