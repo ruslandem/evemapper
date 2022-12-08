@@ -34,7 +34,7 @@ class CosmicSignatures
         // updating/inserting signatures
         foreach ($signatures as $signature) {
             $upserted = $this->upsertSignature($signature);
-            
+
             switch ($upserted) {
                 case self::SIG_CREATED:
                     $report->increment('created');
@@ -69,7 +69,7 @@ class CosmicSignatures
             return self::SIG_UNCHAGED;
         }
 
-        
+
 
         $found = Signature::where([
             'characterId' => $signature['characterId'],
@@ -88,12 +88,12 @@ class CosmicSignatures
 
     public function removeAbsentSignatures(int $characterId, string $solarSystem, array $signatures)
     {
-        $ids = array_column($signatures, 'sigantureId');
+        $ids = array_column($signatures, 'signatureId');
 
         return Signature::where([
-                'characterId' => Auth::id(),
-                'solarSystemName' => $solarSystem,
-            ])
+            'characterId' => $characterId,
+            'solarSystemName' => $solarSystem,
+        ])
             ->whereNotIn('signatureId', $ids)
             ->delete();
     }

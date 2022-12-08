@@ -177,7 +177,7 @@ class CosmicSignaturesTest extends TestCase
             false
         );
 
-        // updating with a signature with more data
+        // updating with a signature with less data
         $text = "ROJ-096	Cosmic Signature			0.0%	6.78 AU";
         $service->updateFromClipboardText(
             $this->user->characterId,
@@ -201,6 +201,73 @@ class CosmicSignaturesTest extends TestCase
             'signatureName' => $result->signatureName,
             'groupName' => $result->groupName,
         ]);
+    }
+
+    public function test_replace_signatures()
+    {
+        // deleting signatures before insertion
+        Signature::query()->delete();
+        // seeding sample signatures
+        $service = new CosmicSignatures();
+        $service->updateFromClipboardText(
+            $this->user->characterId,
+            self::SOLAR_SYSTEM,
+            $this->getSampleSignaturesClipboardText(),
+            false
+        );
+
+        // replacing signatures with new
+        $text = implode("\n", [
+            "KTQ-024	Cosmic Signature			0.0%	3.73 AU",
+            "QPI-926	Cosmic Signature	Data Site	Regional Guristas Command Center	0.0%	29.53 AU",
+            "KOL-024	Cosmic Signature			0.0%	3.73 AU",
+            "PSE-324	Cosmic Signature	Data Site	Regional Guristas Command Center	0.0%	1.79 AU",
+        ]);
+
+        $report = $service->updateFromClipboardText(
+            $this->user->characterId,
+            self::SOLAR_SYSTEM,
+            $text,
+            true
+        );
+
+        $this->assertEqualsCanonicalizing(
+            [
+                'error' => null,
+                'deleted' => 4,
+                'created' => 2,
+                'updated' => 2,
+            ],
+            $report->output()
+        );
+
+        $result = Signature::where([
+            'characterId' => $this->user->characterId,
+            'solarSystemName' => self::SOLAR_SYSTEM,
+        ])->get();
+
+        $this->assertCount(4, $result);
+
+        $signature = $result->where('signatureId', '=', 'QPI-926')->first();
+        $this->assertEquals([
+            'signatureName' => 'Regional Guristas Command Center',
+            'groupName' => 'Data Site'
+        ], [
+            'signatureName' => $signature->signatureName,
+            'groupName' => $signature->groupName,
+        ]);
+
+        $signature = $result->where('signatureId', '=', 'KOL-024')->first();
+        $this->assertEquals([
+            'signatureName' => 'Regional Guristas Command Center',
+            'groupName' => 'Data Site'
+        ], [
+            'signatureName' => $signature->signatureName,
+            'groupName' => $signature->groupName,
+        ]);
+
+        $signature = $result->where('signatureId', '=', 'KTQ-024')->first();
+        $this->assertNotNull($signature);
     }
 
     protected function getSampleSignaturesClipboardText(): string
