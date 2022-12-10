@@ -9,6 +9,8 @@ window.tippy = tippy;
 window.cookieconsent = initCookieConsent();
 window.hdate = require("human-date");
 
+require ("./signatures");
+
 window.toast = (message) => {
     return Toastify({
         text: message,

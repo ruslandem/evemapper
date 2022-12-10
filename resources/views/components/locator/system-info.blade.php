@@ -45,11 +45,15 @@
     </table>
 
     <div class="has-text-centered mb-4">
-        <a class="button is-warning" target="_blank"
+        <a class="button is-warning" 
+            target="_blank"
+            rel="nofollow noopener noreferrer"
             href="https://evemaps.dotlan.net/map/{{ str_replace('+', '_', urlencode($system->regionName)) }}/{{ str_replace('+', '_', urlencode($system->solarSystemName)) }}#sec">
             DotLan Map <i class="fa-solid fa-arrow-up-right-from-square ml-1 fa-xs"></i>
         </a>
-        <a class="button is-black" target="_blank"
+        <a class="button is-black" 
+            target="_blank"
+            rel="nofollow noopener noreferrer"
             href="https://zkillboard.com/system/{{ urlencode($system->solarSystemID) }}">
             zKillboard <i class="fa-solid fa-arrow-up-right-from-square ml-1 fa-xs"></i>
         </a>

@@ -7,23 +7,15 @@ use Illuminate\View\Component;
 class Hubs extends Component
 {
     public $system;
-    
     public $jumps;
-    /**
-     * Create a new component instance.
-     *
-     * @return void
-     */
-    public function __construct($jumps)
+
+
+    public function __construct($system, $jumps)
     {
+        $this->system = $system;
         $this->jumps = $jumps;
     }
 
-    /**
-     * Get the view / contents that represent the component.
-     *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
-     */
     public function render()
     {
         return view('components.locator.hubs');

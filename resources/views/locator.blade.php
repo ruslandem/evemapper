@@ -5,27 +5,26 @@
     <div class="container main-content">
         <h1 class="title is-1 has-text-centered m-3">Locator</h1>
 
-        <x-locator.search-bar system="{{ $system->solarSystemName ?? '' }}"/>
+        <x-locator.search-bar system="{{ $system->solarSystemName ?? '' }}" />
 
         <div class="columns has-text-white p-3">
             <div class="column auto is-dark-half mr-2">
                 @unless($system === null)
-                    <x-locator.systemInfo :system="$system"/>
+                    <x-locator.systemInfo :system="$system" />
 
-                    <x-locator.hubs system="{{ $system->solarSystemName }}" :jumps="$jumps"/>
+                    <x-locator.hubs system="{{ $system->solarSystemName ?? '' }}" :jumps="$jumps" />
 
-                    <x-locator.signatures/>
+                    <x-locator.signatures />
                 @else
                     <div class="columns">
                         <h5 class="column has-text-warning">
                             {{ $errorMessage }}
                         </h5>
                     </div>
-
                 @endunless
             </div>
 
-            <x-locator.history :history="$history"/>
+            <x-locator.history :history="$history" />
         </div>
 
     </div>
@@ -45,92 +44,32 @@
 @push('scripts')
     <script>
         const currenSolarSystem = "{{ $system->solarSystemName ?? '' }}";
+        const autoLocationInterval = 20000;
 
-        const seedSignaturesTable = (data, highlight = true) => {
-            const oldSignatures = $('#signatureTable tbody td:nth-child(1)').
-            map(function() {
-                return $(this).text();
-            }).get();
-
-            let tableBody = $('#signatureTable tbody');
-            tableBody.text("");
-            data.forEach(element => {
-                let row = $("<tr" + (highlight && !oldSignatures.includes(element.signatureId) ?
-                    ' class="new-signature"' : "") + "></tr>");
-                row.append(`<td>${element.signatureId}</td>`);
-                row.append(`<td>${element.groupName}</td>`);
-                row.append(`<td>${element.signatureName}</td>`);
-                row.append(`<td title="${hdate.prettyPrint(element.created_at, {showTime: true})}">${hdate.relativeTime(element.created_at)}</td>`);
-                row.append(`<td><button class="delete"></button></td>`);
-                tableBody.append(row);
-            });
-        };
-
-        const getSignatures = (highlight = true) => {
-            $.get({
-                    url: "{{ route('api.getSignatures', ['system' => $system->solarSystemName ?? '']) }}"
-                })
-                .done(response => {
-                    if (response.data) {
-                        seedSignaturesTable(response.data, highlight);
-                    }
-                });
-        };
-
-        const updateSignatures = (replace = false) => {
-            navigator.clipboard.readText()
-                .then(text => {
-                    $.post({
-                            url: "{{ route('api.updateSignatures') }}",
-                            headers: {
-                                "X-CSRF-TOKEN": getCsrfToken(),
-                            },
-                            data: {
-                                solarSystemName: currenSolarSystem,
-                                text: text,
-                                replace: replace,
-                            }
-                        })
-                        .done(response => {                           
-                            if (response) {
-                                toast(`${response.updated ?? 0} added and ${response.created ?? 0} updated signatures`);
-                                getSignatures();
-                            }
-                        });
-
-                });
-        };
-
-        const deleteSignature = (signatureId) => {
-            $.post({
-                    type: "delete",
-                    url: "{{ route('api.deleteSignatures') }}",
-                    headers: {
-                        "X-CSRF-TOKEN": getCsrfToken(),
-                    },
-                    data: {
-                        solarSystemName: currenSolarSystem,
-                        signatureId: signatureId,
-                    }
-                })
-                .done(response => {
-                    if (response) {
-                        toast(`Deleted signature ${signatureId}`);
-                        getSignatures();
-                    }
-                });
-        };
+        const signaturesTable = $('#signatureTable').signaturesTable({
+            url: {
+                get: "{{ route('api.getSignatures', ['system' => $system->solarSystemName ?? '']) }}",
+                update: "{{ route('api.updateSignatures') }}",
+                delete: "{{ route('api.deleteSignatures') }}",
+            }
+        });
 
         $(document).on("click", ".delete", (e) => {
             e.preventDefault();
+
             const id = $(e.currentTarget).parents('tr').children('td').first().text();
+
             if (id) {
-                deleteSignature(id);
+                signaturesTable.delete({
+                    solarSystem: currenSolarSystem,
+                    id: id
+                });
             }
         });
 
         const updateLocation = () => {
             $('#searchBar a').attr('disabled', true);
+            $('#searchBar i.fa-rotate').addClass('fa-spin');
 
             $.get('{{ route('api.locate') }}')
                 .done(function(response) {
@@ -141,6 +80,7 @@
                         return openSystemPage(response.solarSystemName);
                     }
                     $('#searchBar a').attr('disabled', false);
+                    $('#searchBar i.fa-rotate').removeClass('fa-spin');
                 })
                 .fail(function(response) {
                     throw 'Failed to get location (' + response + ')';
@@ -153,7 +93,6 @@
         };
 
         // Auto-location
-        const autoLocationInterval = 10000;
         window.sessionStorage.removeItem('autolocateInterval');
 
         const getAutoLocationState = () => {
@@ -234,17 +173,25 @@
                 getAutoLocationState()
             );
 
-            getSignatures(false);
+            signaturesTable.show({
+                highlightNewSignatures: false
+            });
         });
 
         $(document).on('click', '#updateSignatures', function(e) {
             e.preventDefault();
-            updateSignatures();
+            signaturesTable.update({
+                solarSystem: currenSolarSystem
+            });
+
         });
 
         $(document).on('click', '#replaceSignatures', function(e) {
             e.preventDefault();
-            updateSignatures(true);
+            signaturesTable.update({
+                solarSystem: currenSolarSystem,
+                replace: true
+            });
         });
     </script>
 @endpush
