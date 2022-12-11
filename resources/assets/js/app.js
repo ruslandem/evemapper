@@ -12,19 +12,25 @@ window.hdate = require("human-date");
 require ("./signatures");
 require ("./locator");
 
-window.toast = (message) => {
+var toast = (message) => {
     return Toastify({
         text: message,
         duration: 3000,
     }).showToast();
 };
 
+/**
+ * Dropdown animation.
+ */
 $(document).on("click", ".dropdown", function (e) {
     e.stopPropagation();
     $(this).toggleClass("is-active");
 });
 
-window.formatValues = () => {
+/**
+ * Post-format HTML data with classes: `security` and `class-type`.
+ */
+var formatValues = () => {
     // security status color
     $(".security").each(function () {
         let security = parseFloat($(this).text());
@@ -69,18 +75,21 @@ window.formatValues = () => {
     });
 };
 
-window.toast = (message) => {
-    return Toastify({
-        text: message,
-        duration: 3000,
-    }).showToast();
-};
-
-window.getCsrfToken = () => {
+/**
+ * Gets CSRF token from meta tag.
+ * @returns {String}
+ */
+var getCsrfToken = () => {
     return $('meta[name="csrf-token"]').attr("content");
 };
 
-window.getFromTemplate = (templateClass, replaces = {}) => {
+/**
+ * Gets HTML template by given class name and returns HTML with replaced fields.
+ * @param {String} templateClass 
+ * @param {Array} replaces 
+ * @returns {String}
+ */
+var getFromTemplate = (templateClass, replaces = {}) => {
     const template = $("#templates " + templateClass).html();
     if (template) {
         let content = template;
@@ -102,7 +111,6 @@ window.getFromTemplate = (templateClass, replaces = {}) => {
 
         if (listObject.length) {
             self.on("keyup", () => {
-                console.log(url);
                 $.post({
                     url: url,
                     headers: {

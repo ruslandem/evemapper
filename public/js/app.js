@@ -3196,31 +3196,67 @@ function withinMaxClamp(min, value, max) {
     var settings = $.extend({
       interval: 20000
     }, options);
+
+    /**
+     * Initialization of plugin.
+     * @returns this
+     */
     this.init = function () {
-      if (!settings.requestUrl || !settings.callbackUrl || !settings.currenSolarSystem || !settings.interval) {
+      if (!settings.requestUrl || !settings.callbackUrl || settings.currenSolarSystem === "undefined" || !settings.interval) {
         throw "insufficient data";
       }
-      updateAutoLocationButton();
+      _this.setAutoLocation(_this.isAutoLocationEnabled());
       return _this;
     };
+
+    /**
+     * Update location and redirect page if neccessary.
+     * @returns void
+     */
     this.update = function () {
       beforeUpdate();
-      $.get(settings.requestUrl).done(function (response) {
+      _this.getLocation().done(function (response) {
+        handleUpdate(response);
+      }).fail(function () {
+        throw "Failed to get location";
+      }).always(function () {
         afterUpdate();
-        handleUpdate(response.solarSystemName);
-      }).fail(function (response) {
-        throw "Failed to get location (" + response + ")";
       });
     };
+
+    /**
+     * Get solar system name of current location.
+     * @returns {Promise} Resolve a Deferred object and call any doneCallbacks with the given
+     */
+    this.getLocation = function () {
+      var dfd = jQuery.Deferred();
+      $.get(settings.requestUrl).done(function (response) {
+        dfd.resolve(response.solarSystemName);
+      }).fail(function () {
+        dfd.fail();
+      });
+      return dfd.promise();
+    };
+
+    /**
+     * Checks if auto-location is enabled.
+     * @returns boolean
+     */
     this.isAutoLocationEnabled = function () {
       return window.sessionStorage.getItem("autolocate") === "true";
     };
+
+    /**
+     * Sets auto-location enabled/disabled.
+     * @param {boolean} status
+     * @returns {boolean} Status
+     */
     this.setAutoLocation = function (status) {
       window.sessionStorage.setItem("autolocate", status ? "true" : "false");
       if (status === true) {
-        window.sessionStorage.setItem("autoLocationInterval", setInterval(function () {
+        window.sessionStorage.autoLocationInterval = setInterval(function () {
           _this.update();
-        }, settings.interval));
+        }, 20000);
       } else {
         if (window.sessionStorage.autoLocationInterval) {
           clearInterval(window.sessionStorage.autoLocationInterval);
@@ -3234,20 +3270,42 @@ function withinMaxClamp(min, value, max) {
       }).showToast();
       return status;
     };
+
+    /**
+     * Toggles auto-location enabled/disabled.
+     */
     this.toggleAutoLocation = function () {
-      _this.setAutoLocation(!_this.isAutoLocationEnabled);
+      _this.setAutoLocation(!_this.isAutoLocationEnabled());
     };
+
+    /**
+     * Update CSS classes for auto-location buttons.
+     */
     var updateAutoLocationButton = function updateAutoLocationButton() {
       _this.isAutoLocationEnabled() ? $("#autolocate").removeClass("has-background-danger").addClass("has-background-success") : $("#autolocate").removeClass("has-background-success").addClass("has-background-danger");
     };
+
+    /**
+     * Before update event.
+     */
     var beforeUpdate = function beforeUpdate() {
       $(_this).find("a").attr("disabled", true);
       $(_this).find("i.fa-rotate").addClass("fa-spin");
     };
+
+    /**
+     * After update event.
+     */
     var afterUpdate = function afterUpdate() {
       $(_this).find("a").attr("disabled", false);
       $(_this).find("i.fa-rotate").removeClass("fa-spin");
     };
+
+    /**
+     * Checks if we need to redirect to a page with new solar system.
+     * @param {string} solarSystemName
+     * @returns
+     */
     var handleUpdate = function handleUpdate(solarSystemName) {
       if (solarSystemName && solarSystemName != settings.currenSolarSystem) {
         window.location.href = settings.callbackUrl + "/" + solarSystemName;
@@ -3278,6 +3336,10 @@ function withinMaxClamp(min, value, max) {
       }
       return _this;
     };
+
+    /**
+     * Gets signatures and populates them in the table.
+     */
     this.show = function () {
       $.get({
         url: settings.url.get
@@ -3285,9 +3347,15 @@ function withinMaxClamp(min, value, max) {
         if (response.data) {
           populate(response.data);
         }
+      }).fail(function () {
+        throw "failed to get signatures";
       });
-      return;
     };
+
+    /**
+     * Updates cosmic signatures using clipboard data.
+     * @param {Object} options Options should contain `solarSystem` and `replace` properties
+     */
     this.update = function (options) {
       navigator.clipboard.readText().then(function (text) {
         var _options$replace;
@@ -3310,9 +3378,16 @@ function withinMaxClamp(min, value, max) {
             }).showToast();
             _this.show();
           }
+        }).fail(function () {
+          throw "failed to update signatures";
         });
       });
     };
+
+    /**
+     * Deletes signature by id.
+     * @param {Object} options Options contains `solarSystem` and `id`.
+     */
     this["delete"] = function (options) {
       $.post({
         type: "delete",
@@ -3334,6 +3409,11 @@ function withinMaxClamp(min, value, max) {
         }
       });
     };
+
+    /**
+     * Populates table with the array of fetched signatures.
+     * @param {Array} data
+     */
     var populate = function populate(data) {
       var body = $(_this).find("tbody").first();
       var oldSignatures = body.find("td:nth-child(1)").map(function () {
@@ -17534,17 +17614,25 @@ window.cookieconsent = initCookieConsent();
 window.hdate = __webpack_require__(/*! human-date */ "./node_modules/human-date/humandate.js");
 __webpack_require__(/*! ./signatures */ "./resources/assets/js/signatures.js");
 __webpack_require__(/*! ./locator */ "./resources/assets/js/locator.js");
-window.toast = function (message) {
+var toast = function toast(message) {
   return toastify_js__WEBPACK_IMPORTED_MODULE_1___default()({
     text: message,
     duration: 3000
   }).showToast();
 };
+
+/**
+ * Dropdown animation.
+ */
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on("click", ".dropdown", function (e) {
   e.stopPropagation();
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).toggleClass("is-active");
 });
-window.formatValues = function () {
+
+/**
+ * Post-format HTML data with classes: `security` and `class-type`.
+ */
+var formatValues = function formatValues() {
   // security status color
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(".security").each(function () {
     var security = parseFloat(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).text());
@@ -17586,16 +17674,22 @@ window.formatValues = function () {
     });
   });
 };
-window.toast = function (message) {
-  return toastify_js__WEBPACK_IMPORTED_MODULE_1___default()({
-    text: message,
-    duration: 3000
-  }).showToast();
-};
-window.getCsrfToken = function () {
+
+/**
+ * Gets CSRF token from meta tag.
+ * @returns {String}
+ */
+var getCsrfToken = function getCsrfToken() {
   return jquery__WEBPACK_IMPORTED_MODULE_0___default()('meta[name="csrf-token"]').attr("content");
 };
-window.getFromTemplate = function (templateClass) {
+
+/**
+ * Gets HTML template by given class name and returns HTML with replaced fields.
+ * @param {String} templateClass 
+ * @param {Array} replaces 
+ * @returns {String}
+ */
+var getFromTemplate = function getFromTemplate(templateClass) {
   var replaces = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var template = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#templates " + templateClass).html();
   if (template) {
@@ -17613,7 +17707,6 @@ window.getFromTemplate = function (templateClass) {
     var listObject = self.siblings(".suggestions");
     if (listObject.length) {
       self.on("keyup", function () {
-        console.log(url);
         $.post({
           url: url,
           headers: {

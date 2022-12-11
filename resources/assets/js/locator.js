@@ -7,38 +7,74 @@
             options
         );
 
+        /**
+         * Initialization of plugin.
+         * @returns this
+         */
         this.init = () => {
             if (
                 !settings.requestUrl ||
                 !settings.callbackUrl ||
-                !settings.currenSolarSystem ||
+                settings.currenSolarSystem === "undefined" ||
                 !settings.interval
             ) {
                 throw "insufficient data";
             }
 
-            updateAutoLocationButton();
+            this.setAutoLocation(this.isAutoLocationEnabled());
 
             return this;
         };
 
+        /**
+         * Update location and redirect page if neccessary.
+         * @returns void
+         */
         this.update = () => {
             beforeUpdate();
-
-            $.get(settings.requestUrl)
-                .done(function (response) {
-                    afterUpdate();
-                    handleUpdate(response.solarSystemName);
+            this.getLocation()
+                .done((response) => {
+                    handleUpdate(response);
                 })
-                .fail(function (response) {
-                    throw "Failed to get location (" + response + ")";
+                .fail(() => {
+                    throw "Failed to get location";
+                })
+                .always(() => {
+                    afterUpdate();
                 });
         };
 
+        /**
+         * Get solar system name of current location.
+         * @returns {Promise} Resolve a Deferred object and call any doneCallbacks with the given
+         */
+        this.getLocation = () => {
+            var dfd = jQuery.Deferred();
+
+            $.get(settings.requestUrl)
+                .done((response) => {
+                    dfd.resolve(response.solarSystemName);
+                })
+                .fail(() => {
+                    dfd.fail();
+                });
+
+            return dfd.promise();
+        };
+
+        /**
+         * Checks if auto-location is enabled.
+         * @returns boolean
+         */
         this.isAutoLocationEnabled = () => {
             return window.sessionStorage.getItem("autolocate") === "true";
         };
 
+        /**
+         * Sets auto-location enabled/disabled.
+         * @param {boolean} status
+         * @returns {boolean} Status
+         */
         this.setAutoLocation = (status) => {
             window.sessionStorage.setItem(
                 "autolocate",
@@ -46,12 +82,9 @@
             );
 
             if (status === true) {
-                window.sessionStorage.setItem(
-                    "autoLocationInterval",
-                    setInterval(() => {
-                        this.update();
-                    }, settings.interval)
-                );
+                window.sessionStorage.autoLocationInterval = setInterval(() => {
+                    this.update();
+                }, 20000);
             } else {
                 if (window.sessionStorage.autoLocationInterval) {
                     clearInterval(window.sessionStorage.autoLocationInterval);
@@ -69,10 +102,16 @@
             return status;
         };
 
+        /**
+         * Toggles auto-location enabled/disabled.
+         */
         this.toggleAutoLocation = () => {
-            this.setAutoLocation(!this.isAutoLocationEnabled);
+            this.setAutoLocation(!this.isAutoLocationEnabled());
         };
 
+        /**
+         * Update CSS classes for auto-location buttons.
+         */
         const updateAutoLocationButton = () => {
             this.isAutoLocationEnabled()
                 ? $("#autolocate")
@@ -83,16 +122,27 @@
                       .addClass("has-background-danger");
         };
 
+        /**
+         * Before update event.
+         */
         const beforeUpdate = () => {
             $(this).find("a").attr("disabled", true);
             $(this).find("i.fa-rotate").addClass("fa-spin");
         };
 
+        /**
+         * After update event.
+         */
         const afterUpdate = () => {
             $(this).find("a").attr("disabled", false);
             $(this).find("i.fa-rotate").removeClass("fa-spin");
         };
 
+        /**
+         * Checks if we need to redirect to a page with new solar system.
+         * @param {string} solarSystemName
+         * @returns
+         */
         const handleUpdate = (solarSystemName) => {
             if (
                 solarSystemName &&

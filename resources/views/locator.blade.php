@@ -113,7 +113,7 @@
             locator = $('#searchBar').locator({
                 requestUrl: "{{ route('api.locate') }}",
                 callbackUrl: "{{ route('locate') }}",
-                currenSolarSystem: currenSolarSystem
+                currenSolarSystem: currenSolarSystem,
             });
 
             signaturesTable = $('#signatureTable').signaturesTable({

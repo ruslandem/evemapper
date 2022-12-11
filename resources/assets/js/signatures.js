@@ -14,17 +14,27 @@
             return this;
         };
 
+        /**
+         * Gets signatures and populates them in the table.
+         */
         this.show = () => {
             $.get({
                 url: settings.url.get,
-            }).done((response) => {
-                if (response.data) {
-                    populate(response.data);
-                }
-            });
-            return;
+            })
+                .done((response) => {
+                    if (response.data) {
+                        populate(response.data);
+                    }
+                })
+                .fail(() => {
+                    throw "failed to get signatures";
+                });
         };
 
+        /**
+         * Updates cosmic signatures using clipboard data.
+         * @param {Object} options Options should contain `solarSystem` and `replace` properties
+         */
         this.update = (options) => {
             navigator.clipboard.readText().then((text) => {
                 $.post({
@@ -39,20 +49,28 @@
                         text: text,
                         replace: options.replace ?? false,
                     },
-                }).done((response) => {
-                    if (response) {
-                        Toastify({
-                            text: `${response.updated ?? 0} added and ${
-                                response.created ?? 0
-                            } updated signatures`,
-                            duration: 3000,
-                        }).showToast();
-                        this.show();
-                    }
-                });
+                })
+                    .done((response) => {
+                        if (response) {
+                            Toastify({
+                                text: `${response.updated ?? 0} added and ${
+                                    response.created ?? 0
+                                } updated signatures`,
+                                duration: 3000,
+                            }).showToast();
+                            this.show();
+                        }
+                    })
+                    .fail(() => {
+                        throw "failed to update signatures";
+                    });
             });
         };
 
+        /**
+         * Deletes signature by id.
+         * @param {Object} options Options contains `solarSystem` and `id`.
+         */
         this.delete = (options) => {
             $.post({
                 type: "delete",
@@ -77,6 +95,10 @@
             });
         };
 
+        /**
+         * Populates table with the array of fetched signatures.
+         * @param {Array} data
+         */
         var populate = (data) => {
             const body = $(this).find("tbody").first();
             const oldSignatures = body
