@@ -3184,6 +3184,82 @@ function withinMaxClamp(min, value, max) {
 
 /***/ }),
 
+/***/ "./resources/assets/js/locator.js":
+/*!****************************************!*\
+  !*** ./resources/assets/js/locator.js ***!
+  \****************************************/
+/***/ (() => {
+
+(function ($) {
+  $.fn.locator = function (options) {
+    var _this = this;
+    var settings = $.extend({
+      interval: 20000
+    }, options);
+    this.init = function () {
+      if (!settings.requestUrl || !settings.callbackUrl || !settings.currenSolarSystem || !settings.interval) {
+        throw "insufficient data";
+      }
+      updateAutoLocationButton();
+      return _this;
+    };
+    this.update = function () {
+      beforeUpdate();
+      $.get(settings.requestUrl).done(function (response) {
+        afterUpdate();
+        handleUpdate(response.solarSystemName);
+      }).fail(function (response) {
+        throw "Failed to get location (" + response + ")";
+      });
+    };
+    this.isAutoLocationEnabled = function () {
+      return window.sessionStorage.getItem("autolocate") === "true";
+    };
+    this.setAutoLocation = function (status) {
+      window.sessionStorage.setItem("autolocate", status ? "true" : "false");
+      if (status === true) {
+        window.sessionStorage.setItem("autoLocationInterval", setInterval(function () {
+          _this.update();
+        }, settings.interval));
+      } else {
+        if (window.sessionStorage.autoLocationInterval) {
+          clearInterval(window.sessionStorage.autoLocationInterval);
+          window.sessionStorage.removeItem("autoLocationInterval");
+        }
+      }
+      updateAutoLocationButton();
+      Toastify({
+        text: "Auto-location ".concat(status ? "on" : "off"),
+        duration: 3000
+      }).showToast();
+      return status;
+    };
+    this.toggleAutoLocation = function () {
+      _this.setAutoLocation(!_this.isAutoLocationEnabled);
+    };
+    var updateAutoLocationButton = function updateAutoLocationButton() {
+      _this.isAutoLocationEnabled() ? $("#autolocate").removeClass("has-background-danger").addClass("has-background-success") : $("#autolocate").removeClass("has-background-success").addClass("has-background-danger");
+    };
+    var beforeUpdate = function beforeUpdate() {
+      $(_this).find("a").attr("disabled", true);
+      $(_this).find("i.fa-rotate").addClass("fa-spin");
+    };
+    var afterUpdate = function afterUpdate() {
+      $(_this).find("a").attr("disabled", false);
+      $(_this).find("i.fa-rotate").removeClass("fa-spin");
+    };
+    var handleUpdate = function handleUpdate(solarSystemName) {
+      if (solarSystemName && solarSystemName != settings.currenSolarSystem) {
+        window.location.href = settings.callbackUrl + "/" + solarSystemName;
+        return false;
+      }
+    };
+    return this.init();
+  };
+})(jQuery);
+
+/***/ }),
+
 /***/ "./resources/assets/js/signatures.js":
 /*!*******************************************!*\
   !*** ./resources/assets/js/signatures.js ***!
@@ -17457,6 +17533,7 @@ window.tippy = tippy_js__WEBPACK_IMPORTED_MODULE_3__["default"];
 window.cookieconsent = initCookieConsent();
 window.hdate = __webpack_require__(/*! human-date */ "./node_modules/human-date/humandate.js");
 __webpack_require__(/*! ./signatures */ "./resources/assets/js/signatures.js");
+__webpack_require__(/*! ./locator */ "./resources/assets/js/locator.js");
 window.toast = function (message) {
   return toastify_js__WEBPACK_IMPORTED_MODULE_1___default()({
     text: message,
@@ -17585,6 +17662,7 @@ window.getFromTemplate = function (templateClass) {
   };
 })(jQuery);
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(function () {
+  formatValues();
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(".navbar-burger").on("click", function () {
     jquery__WEBPACK_IMPORTED_MODULE_0___default()(".navbar-burger").toggleClass("is-active");
     jquery__WEBPACK_IMPORTED_MODULE_0___default()(".navbar-menu").toggleClass("is-active");

@@ -10,6 +10,7 @@ window.cookieconsent = initCookieConsent();
 window.hdate = require("human-date");
 
 require ("./signatures");
+require ("./locator");
 
 window.toast = (message) => {
     return Toastify({
@@ -134,6 +135,8 @@ window.getFromTemplate = (templateClass, replaces = {}) => {
 })(jQuery);
 
 $(function () {
+    formatValues();
+    
     $(".navbar-burger").on("click", function () {
         $(".navbar-burger").toggleClass("is-active");
         $(".navbar-menu").toggleClass("is-active");

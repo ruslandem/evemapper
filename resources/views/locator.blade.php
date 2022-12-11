@@ -44,21 +44,12 @@
 @push('scripts')
     <script>
         const currenSolarSystem = "{{ $system->solarSystemName ?? '' }}";
-        const autoLocationInterval = 20000;
-
-        const signaturesTable = $('#signatureTable').signaturesTable({
-            url: {
-                get: "{{ route('api.getSignatures', ['system' => $system->solarSystemName ?? '']) }}",
-                update: "{{ route('api.updateSignatures') }}",
-                delete: "{{ route('api.deleteSignatures') }}",
-            }
-        });
+        var signaturesTable, locator;
 
         $(document).on("click", ".delete", (e) => {
             e.preventDefault();
 
             const id = $(e.currentTarget).parents('tr').children('td').first().text();
-
             if (id) {
                 signaturesTable.delete({
                     solarSystem: currenSolarSystem,
@@ -67,115 +58,37 @@
             }
         });
 
-        const updateLocation = () => {
-            $('#searchBar a').attr('disabled', true);
-            $('#searchBar i.fa-rotate').addClass('fa-spin');
-
-            $.get('{{ route('api.locate') }}')
-                .done(function(response) {
-                    if (
-                        response.solarSystemName &&
-                        response.solarSystemName != currenSolarSystem
-                    ) {
-                        return openSystemPage(response.solarSystemName);
-                    }
-                    $('#searchBar a').attr('disabled', false);
-                    $('#searchBar i.fa-rotate').removeClass('fa-spin');
-                })
-                .fail(function(response) {
-                    throw 'Failed to get location (' + response + ')';
-                });
-        };
-
-        const openSystemPage = (systemName) => {
-            window.location.href = '{{ route('locate') }}/' + systemName;
-            return false;
-        };
-
-        // Auto-location
-        window.sessionStorage.removeItem('autolocateInterval');
-
-        const getAutoLocationState = () => {
-            if (window.sessionStorage.key)
-                if (!window.sessionStorage.hasOwnProperty("autolocate")) {
-                    window.sessionStorage.autolocate = 'false';
-                    return false;
-                }
-            return window.sessionStorage.autolocate === 'true';
-        };
-
-        const setAutoLocationState = (state) => {
-            window.sessionStorage.autolocate = (state ? 'true' : 'false');
-            if (state) {
-                $('#autolocate')
-                    .removeClass("has-background-danger	")
-                    .addClass("has-background-success");
-            } else {
-                $('#autolocate')
-                    .removeClass("has-background-success")
-                    .addClass("has-background-danger");
-            }
-        };
-
-        const setAutoLocation = (state) => {
-            if (state === true) {
-                window.sessionStorage.autolocateInterval = setInterval(() => {
-                    updateLocation();
-                }, autoLocationInterval);
-            } else {
-                if (window.sessionStorage.autolocateInterval) {
-                    clearInterval(window.sessionStorage.autolocateInterval);
-                    window.sessionStorage.removeItem('autolocateInterval');
-                }
-            }
-            setAutoLocationState(state);
-        };
-
-        $('#search').solarSystemSelector('{{ route('api.systems') }}');
-
         $(document).on('click', '#locate', function(e) {
             e.preventDefault();
-            updateLocation();
+            locator.update();
         });
 
         $(document).on("click", "#autolocate", function(e) {
             e.preventDefault();
 
-            const currentState = getAutoLocationState();
-            setAutoLocation(!currentState);
-
-            toast("Autolocation " + (!currentState ? "on" : "off"));
+            locator.toggleAutoLocation();
 
             $(this).blur();
         });
 
         $(document).on('click', '.solar-system-link', function(e) {
             e.preventDefault();
+
             window.location.href = '{{ route('locate') }}/' + $(this).text();
+
+            return false;
         });
 
         $(document).on("keypress", "#search", function(e) {
             if (e.which == 13) {
-                return openSystemPage($(this).val());
+                window.location.href = '{{ route('locate') }}/' + $(this).val();
+                return false;
             }
         });
 
         $(document).on("click", "#searchBtn", function(e) {
-            return openSystemPage($('#search').val());
-        });
-
-        $(function() {
-            $('[data-menu-item="system"]').addClass('active');
-
-            formatValues();
-
-            setAutoLocation(
-                getAutoLocationState()
-            );
-
-            signaturesTable.show({
-                highlightNewSignatures: false
-            });
+            window.location.href = '{{ route('locate') }}/' + $('#search').val();
+            return false;
         });
 
         $(document).on('click', '#updateSignatures', function(e) {
@@ -191,6 +104,28 @@
             signaturesTable.update({
                 solarSystem: currenSolarSystem,
                 replace: true
+            });
+        });
+
+        $(function() {
+            $('#search').solarSystemSelector('{{ route('api.systems') }}');
+
+            locator = $('#searchBar').locator({
+                requestUrl: "{{ route('api.locate') }}",
+                callbackUrl: "{{ route('locate') }}",
+                currenSolarSystem: currenSolarSystem
+            });
+
+            signaturesTable = $('#signatureTable').signaturesTable({
+                url: {
+                    get: "{{ route('api.getSignatures', ['system' => $system->solarSystemName ?? '']) }}",
+                    update: "{{ route('api.updateSignatures') }}",
+                    delete: "{{ route('api.deleteSignatures') }}",
+                }
+            });
+
+            signaturesTable.show({
+                highlightNewSignatures: false
             });
         });
     </script>
