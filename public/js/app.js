@@ -3409,6 +3409,22 @@ function withinMaxClamp(min, value, max) {
         }
       });
     };
+    var getSignatureIcon = function getSignatureIcon(groupName) {
+      console.log(groupName);
+      switch (groupName) {
+        case "Data Site":
+          return '<img src="/img/eve/items/Brackets/data_Site_16.png">';
+        case "Relic Site":
+          return '<img src="/img/eve/items/Brackets/relic_Site_16.png">';
+        case "Combat Site":
+          return '<img src="/img/eve/items/Brackets/combatSite_16.png">';
+        case "Wormhole":
+          return '<img src="/img/eve/items/Brackets/wormhole.png">';
+      }
+
+      // transparent image
+      return '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">';
+    };
 
     /**
      * Populates table with the array of fetched signatures.
@@ -3425,12 +3441,13 @@ function withinMaxClamp(min, value, max) {
           showTime: true
         });
         var relativeTime = window.hdate.relativeTime(element.created_at);
+        var groupIcon = getSignatureIcon(element.groupName);
         var row = $("<tr></tr>");
         if (settings.highlightNewSigantures && !oldSignatures.includes(element.signatureId)) {
           row.addClass("new-signature");
         }
         row.append("<td>".concat(element.signatureId, "</td>"));
-        row.append("<td>".concat(element.groupName, "</td>"));
+        row.append("<td><span style=\"float:left\" class=\"is-pulled-left my-0 mr-1\">".concat(groupIcon, "</span> ").concat(element.groupName, "</td>"));
         row.append("<td>".concat(element.signatureName, "</td>"));
         row.append("<td title=\"".concat(createdTime, "\">").concat(relativeTime, "</td>"));
         row.append("<td><button class=\"delete\"></button></td>");

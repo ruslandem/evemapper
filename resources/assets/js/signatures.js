@@ -95,6 +95,23 @@
             });
         };
 
+        var getSignatureIcon = (groupName) => {
+            console.log(groupName);
+            switch (groupName) {
+                case "Data Site":
+                    return '<img src="/img/eve/items/Brackets/data_Site_16.png">';
+                case "Relic Site":
+                    return '<img src="/img/eve/items/Brackets/relic_Site_16.png">';
+                case "Combat Site":
+                    return '<img src="/img/eve/items/Brackets/combatSite_16.png">';
+                case "Wormhole":
+                    return '<img src="/img/eve/items/Brackets/wormhole.png">';
+            }
+
+            // transparent image
+            return '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">';
+        };
+
         /**
          * Populates table with the array of fetched signatures.
          * @param {Array} data
@@ -118,6 +135,7 @@
                 const relativeTime = window.hdate.relativeTime(
                     element.created_at
                 );
+                const groupIcon = getSignatureIcon(element.groupName);
 
                 let row = $(`<tr></tr>`);
                 if (
@@ -127,12 +145,14 @@
                     row.addClass("new-signature");
                 }
                 row.append(`<td>${element.signatureId}</td>`);
-                row.append(`<td>${element.groupName}</td>`);
+                row.append(`<td><span style="float:left" class="is-pulled-left my-0 mr-1">${groupIcon}</span> ${element.groupName}</td>`);
                 row.append(`<td>${element.signatureName}</td>`);
                 row.append(`<td title="${createdTime}">${relativeTime}</td>`);
                 row.append(`<td><button class="delete"></button></td>`);
                 body.append(row);
             });
+
+            
         };
 
         return this.init();
