@@ -137,7 +137,6 @@
                 const groupIcon = getSignatureIcon(element.groupName);
 
                 if (element.linkName) {
-                    console.log(element.linkName);
                     element.signatureName += 
                         ` <a target="_blank" title="Wiki Info" href="https://wiki.eveuniversity.org/${element.linkName.replace(' ', '_')}"><i class="fa-regular fa-window-restore"></i></a>`
                 }

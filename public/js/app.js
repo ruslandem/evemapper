@@ -3442,7 +3442,6 @@ function withinMaxClamp(min, value, max) {
         var relativeTime = window.hdate.relativeTime(element.created_at);
         var groupIcon = getSignatureIcon(element.groupName);
         if (element.linkName) {
-          console.log(element.linkName);
           element.signatureName += " <a target=\"_blank\" title=\"Wiki Info\" href=\"https://wiki.eveuniversity.org/".concat(element.linkName.replace(' ', '_'), "\"><i class=\"fa-regular fa-window-restore\"></i></a>");
         }
         var row = $("<tr></tr>");
