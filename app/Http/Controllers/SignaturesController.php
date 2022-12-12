@@ -21,10 +21,23 @@ class SignaturesController extends Controller
     public function index(Request $request)
     {
         return SignatureResource::collection(
-            Signature::where([
-                'characterId' => Auth::id(),
-                'solarSystemName' => $request->input('system')
-            ])->orderBy('signatureId')->get()
+            Signature::select([
+                'signatures.id as id',
+                'signatures.solarSystemName as solarSystemName',
+                'signatures.signatureId as signatureId',
+                'signatures.signatureName as signatureName',
+                'signatures.groupName as groupName',
+                'signatures.created_at as created_at',
+                'signatures.updated_at as updated_at',
+                'extLinks.name as linkName',
+                'extLinks.url as linkUrl',
+            ])
+            ->where([
+                'signatures.characterId' => Auth::id(),
+                'signatures.solarSystemName' => $request->input('system')
+            ])
+            ->leftJoin('extLinks', 'extLinks.name', '=', 'signatures.signatureName')
+            ->orderBy('signatures.signatureId')->get()
         );
     }
 

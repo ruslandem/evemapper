@@ -3410,7 +3410,6 @@ function withinMaxClamp(min, value, max) {
       });
     };
     var getSignatureIcon = function getSignatureIcon(groupName) {
-      console.log(groupName);
       switch (groupName) {
         case "Data Site":
           return '<img src="/img/eve/items/Brackets/data_Site_16.png">';
@@ -3442,6 +3441,10 @@ function withinMaxClamp(min, value, max) {
         });
         var relativeTime = window.hdate.relativeTime(element.created_at);
         var groupIcon = getSignatureIcon(element.groupName);
+        if (element.linkName) {
+          console.log(element.linkName);
+          element.signatureName += " <a target=\"_blank\" title=\"Wiki Info\" href=\"https://wiki.eveuniversity.org/".concat(element.linkName.replace(' ', '_'), "\"><i class=\"fa-regular fa-window-restore\"></i></a>");
+        }
         var row = $("<tr></tr>");
         if (settings.highlightNewSigantures && !oldSignatures.includes(element.signatureId)) {
           row.addClass("new-signature");

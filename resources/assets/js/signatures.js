@@ -96,7 +96,6 @@
         };
 
         var getSignatureIcon = (groupName) => {
-            console.log(groupName);
             switch (groupName) {
                 case "Data Site":
                     return '<img src="/img/eve/items/Brackets/data_Site_16.png">';
@@ -136,6 +135,12 @@
                     element.created_at
                 );
                 const groupIcon = getSignatureIcon(element.groupName);
+
+                if (element.linkName) {
+                    console.log(element.linkName);
+                    element.signatureName += 
+                        ` <a target="_blank" title="Wiki Info" href="https://wiki.eveuniversity.org/${element.linkName.replace(' ', '_')}"><i class="fa-regular fa-window-restore"></i></a>`
+                }
 
                 let row = $(`<tr></tr>`);
                 if (
