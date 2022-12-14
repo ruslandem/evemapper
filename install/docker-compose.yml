@@ -1,33 +1,35 @@
 version: "3.7"
+name: evemapper
+
 services:
   app:
     build:
       args:
         user: admin
         uid: 1000
-      context: ./
-      dockerfile: Dockerfile
-    image: whident
-    container_name: whident-app
+      context: ../
+      dockerfile: install/Dockerfile
+    image: evemapper
+    container_name: evemapper-app
     restart: unless-stopped
     working_dir: /var/www/
     volumes:
-      - ./:/var/www
+      - ../:/var/www
     networks:
-      - whident
+      - evemapper
 
   nginx:
     image: nginx:alpine
-    container_name: whident-nginx
+    container_name: evemapper-nginx
     restart: unless-stopped
     ports:
       - 8080:80
     volumes:
-      - ./:/var/www
-      - ./docker-compose/nginx:/etc/nginx/conf.d/
+      - ../:/var/www
+      - ./nginx:/etc/nginx/conf.d/
     networks:
-      - whident
+      - evemapper
 
 networks:
-  whident:
+  evemapper:
     driver: bridge
