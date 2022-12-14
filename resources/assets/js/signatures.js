@@ -105,6 +105,8 @@
                     return '<img src="/img/eve/items/Brackets/combatSite_16.png">';
                 case "Wormhole":
                     return '<img src="/img/eve/items/Brackets/wormhole.png">';
+                case "Gas Site":
+                    return '<img src="/img/eve/items/Brackets/harvestableCloud.png">';
             }
 
             // transparent image
