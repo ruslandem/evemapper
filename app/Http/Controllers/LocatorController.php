@@ -39,7 +39,7 @@ class LocatorController extends Controller
             'system' => null,
             'jumps' => [],
             'errorMessage' => null,
-            'history' => [],
+            'history' => (new EveLocationHistory())->get(Auth::id()),
             'signatures' => [],
         ];
 
@@ -56,8 +56,6 @@ class LocatorController extends Controller
                 $result['jumps'][$tradeHub] = count($eveRoute->getRoute($result['system']->solarSystemName, $tradeHub));
             }
             @asort($result['jumps']);
-
-            $result['history'] = (new EveLocationHistory())->get(Auth::id());
         }
 
         return view('locator', $result);
