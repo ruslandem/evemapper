@@ -18,21 +18,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 // website
-Route::get('/', [EveController::class, 'main']);
-Route::view('/privacy', 'privacy')->name('privacy');
-Route::view('/legal', 'legal')->name('legal');
-Route::view('/contact', 'contact')->name('contact');
-Route::post('/contact', [EveController::class, 'contact']);
+Route::get('/', static fn () => view('index'));
+// Route::get('/', [EveController::class, 'main']);
+// Route::view('/privacy', 'privacy')->name('privacy');
+// Route::view('/legal', 'legal')->name('legal');
+// Route::view('/contact', 'contact')->name('contact');
+// Route::post('/contact', [EveController::class, 'contact']);
 
 // auth
-Route::get('/auth', [EveController::class, 'auth'])->name('auth');
-Route::get('/callback', [EveController::class, 'callback']);
-Route::get('/logout', [EveController::class, 'logout'])->name('logout');
+// Route::get('/auth', [EveController::class, 'auth'])->name('auth');
+// Route::get('/callback', [EveController::class, 'callback']);
+// Route::get('/logout', [EveController::class, 'logout'])->name('logout');
 
 // solar system search
-Route::get('/locator', [LocatorController::class, 'show'])->name('locate')->middleware('auth');
-Route::get('/locator/{id}', [LocatorController::class, 'show'])->middleware('auth');
-Route::get('/route', [RoutesController::class, 'route'])->name('route')->middleware('auth');
+// Route::get('/locator', [LocatorController::class, 'show'])->name('locate')->middleware('auth');
+// Route::get('/locator/{id}', [LocatorController::class, 'show'])->middleware('auth');
+// Route::get('/route', [RoutesController::class, 'route'])->name('route')->middleware('auth');
 
 // ajax
 Route::prefix('api')->middleware('auth')->group(function () {
