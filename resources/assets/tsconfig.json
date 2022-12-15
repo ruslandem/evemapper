@@ -15,5 +15,6 @@
       "@/*": ["js/*"]
     }
   },
-  "include": ["js/**/*"]
+  "include": ["js/**/*"],
+  "exclude": ["js/_old/**"],
 }
