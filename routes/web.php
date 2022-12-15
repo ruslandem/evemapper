@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EveController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoutesController;
 use App\Http\Controllers\LocatorController;
 use App\Http\Controllers\SignaturesController;
@@ -19,6 +20,8 @@ use Illuminate\Support\Facades\Route;
 
 // website
 Route::get('/', static fn () => view('index'));
+Route::get('/route', static fn () => view('index'));
+Route::get('/locate', static fn () => view('index'));
 // Route::get('/', [EveController::class, 'main']);
 // Route::view('/privacy', 'privacy')->name('privacy');
 // Route::view('/legal', 'legal')->name('legal');
@@ -37,6 +40,11 @@ Route::get('/', static fn () => view('index'));
 
 // ajax
 Route::prefix('api')->middleware('auth')->group(function () {
+
+    Route::get('/getWormholeClasses', [HomeController::class, 'getWormholeClasses']);
+    Route::get('/getRatsDamages', [HomeController::class, 'getRatsDamages']);
+
+
     Route::get('/locate', [EveController::class, 'locate'])->name('api.locate');
     Route::post('/waypoint', [EveController::class, 'waypoint'])->name('api.waypoint');
     Route::post('/route', [RoutesController::class, 'buildRoute'])->name('api.route');

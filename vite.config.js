@@ -4,13 +4,6 @@ import laravel from "laravel-vite-plugin";
 import path from "path";
 
 export default defineConfig({
-  plugins: [
-    vue(),
-    laravel({
-      input: ["resources/assets/js/app.ts"],
-      refresh: true,
-    }),
-  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./resources/assets/js"),
@@ -18,4 +11,11 @@ export default defineConfig({
       "@modules": path.resolve(__dirname, "./node_modules"),
     },
   },
+  plugins: [
+    vue(),
+    laravel({
+      input: ["./resources/assets/js/app.ts"],
+      refresh: true,
+    }),
+  ],
 });
