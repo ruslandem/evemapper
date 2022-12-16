@@ -10,14 +10,11 @@
     <meta property="og:description" content="EveMapper is an online routing tool and resource database for Eve Online" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="/css/fontawesome.min.css">
-    <link rel="stylesheet" href="/css/bulma.min.css">
-    <link rel="stylesheet" href="/css/toastify.css">
-    <link rel="stylesheet" href="/css/tippy/tippy.css">
-    <link rel="stylesheet" href="/css/tippy/themes/light.css">
-    <link rel="stylesheet" href="/css/bulmaswatch.min.css">
-    <link rel="stylesheet" href="/css/cookieconsent.css">
-    <link rel="stylesheet" href="/css/app.css">
+    @if (Auth::check())
+        <meta name="character-id" content="{{ Auth::id() }}">
+        <meta name="character-name" content="{{ Auth::user()->characterName }}">
+    @endif
+    <base href="{{ asset('') }}">
 </head>
 
 <body>

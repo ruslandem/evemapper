@@ -29,9 +29,9 @@ Route::get('/locate', static fn () => view('index'));
 // Route::post('/contact', [EveController::class, 'contact']);
 
 // auth
-// Route::get('/auth', [EveController::class, 'auth'])->name('auth');
-// Route::get('/callback', [EveController::class, 'callback']);
-// Route::get('/logout', [EveController::class, 'logout'])->name('logout');
+Route::get('/auth', [EveController::class, 'auth'])->name('auth');
+Route::get('/callback', [EveController::class, 'callback']);
+Route::get('/logout', [EveController::class, 'logout'])->name('logout');
 
 // solar system search
 // Route::get('/locator', [LocatorController::class, 'show'])->name('locate')->middleware('auth');
@@ -39,18 +39,20 @@ Route::get('/locate', static fn () => view('index'));
 // Route::get('/route', [RoutesController::class, 'route'])->name('route')->middleware('auth');
 
 // ajax
-Route::prefix('api')->middleware('auth')->group(function () {
-
+Route::prefix('api')->group(function () {
+    // Routing without Auth
     Route::get('/getWormholeClasses', [HomeController::class, 'getWormholeClasses']);
     Route::get('/getRatsDamages', [HomeController::class, 'getRatsDamages']);
 
-
-    Route::get('/locate', [EveController::class, 'locate'])->name('api.locate');
-    Route::post('/waypoint', [EveController::class, 'waypoint'])->name('api.waypoint');
-    Route::post('/route', [RoutesController::class, 'buildRoute'])->name('api.route');
-    Route::post('/systems', [LocatorController::class, 'list'])->name('api.systems');
-    // signatures
-    Route::get('/signatures', [SignaturesController::class, 'index'])->name('api.getSignatures');
-    Route::post('/signatures', [SignaturesController::class, 'update'])->name('api.updateSignatures');
-    Route::delete('/signatures', [SignaturesController::class, 'destroy'])->name('api.deleteSignatures');
+    Route::middleware('auth')->group(function(){
+        Route::get('/locate', [EveController::class, 'locate'])->name('api.locate');
+        Route::post('/waypoint', [EveController::class, 'waypoint'])->name('api.waypoint');
+        Route::post('/route', [RoutesController::class, 'buildRoute'])->name('api.route');
+        Route::post('/systems', [LocatorController::class, 'list'])->name('api.systems');
+        // signatures
+        Route::get('/signatures', [SignaturesController::class, 'index'])->name('api.getSignatures');
+        Route::post('/signatures', [SignaturesController::class, 'update'])->name('api.updateSignatures');
+        Route::delete('/signatures', [SignaturesController::class, 'destroy'])->name('api.deleteSignatures');
+    });
+    
 });

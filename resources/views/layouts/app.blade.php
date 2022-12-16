@@ -10,6 +10,7 @@
     <meta property="og:description" content="EveMapper is an online routing tool and resource database for Eve Online" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <base href="{{ asset('') }}">
     <link rel="stylesheet" href="/css/fontawesome.min.css">
     <link rel="stylesheet" href="/css/bulma.min.css">
     <link rel="stylesheet" href="/css/toastify.css">
