@@ -1,6 +1,6 @@
 /node_modules
 /vendor
-/public/build
+/public/build/**
 /public/phpliteadmin.php
 /public/phpliteadmin.config.php
 /storage/*.key.env
