@@ -22,3 +22,4 @@ database/*_test.db
 storage/debugbar/*.json
 _ide_helper.php
 /.tmp-dev
+/public/build
