@@ -1,23 +1,3 @@
-<script>
-export default {
-  data() {
-    return {
-      characterId: document.querySelector('meta[name="character-id"]').content,
-      characterName: document.querySelector('meta[name="character-name"]').content,
-      dropdownActive: false,
-    };
-  },
-  methods: {
-    authenticated: function() {
-      return this.characterId > 0;
-    },
-    toggleDropdown: function() {
-      this.dropdownActive = !this.dropdownActive;
-    },
-  },
-};
-</script>
-
 <template>
   <!-- Navbar start -->
   <nav class="navbar">
@@ -45,8 +25,11 @@ export default {
         </div>
         <div class="navbar-end">
           <span v-if="authenticated()">
-            <div @click="toggleDropdown()" class="navbar-item dropdown is-right" :class="{'is-active': dropdownActive}">
-
+            <div
+              @click="toggleDropdown()"
+              class="navbar-item dropdown is-right"
+              :class="{ 'is-active': dropdownActive }"
+            >
               <div class="dropdown-trigger">
                 <button
                   class="button"
@@ -66,7 +49,7 @@ export default {
               </div>
               <div class="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="#" class="dropdown-item"> Logout </a>
+                  <a href="/logout" class="dropdown-item"> Logout </a>
                 </div>
               </div>
             </div>
@@ -85,3 +68,25 @@ export default {
   </nav>
   <!-- Navbar end -->
 </template>
+
+<script setup>
+import { ref } from "vue";
+
+const dropdownActive = ref(false);
+const characterId = ref(null);
+const characterName = ref(null);
+
+var meta = document.getElementsByTagName("meta");
+const authenticated = () => {
+  return meta["character-id"] != null;
+};
+
+if (meta["character-id"] != null) {
+  characterId.value = meta["character-id"].content;
+  characterName.value = meta["character-name"].content;
+}
+
+const toggleDropdown = () => {
+  dropdownActive.value = !dropdownActive.value;
+};
+</script>
