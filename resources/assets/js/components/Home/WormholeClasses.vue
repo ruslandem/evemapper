@@ -23,33 +23,18 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import axios from "axios";
+import { WormholeClass } from "../../structures/WormholeClass";
 
-interface wormholeClass {
-  name: string;
-  classes: string[];
-  highlightColor: string;
-}
+var wormholeClasses = ref([] as WormholeClass[]);
 
-export default defineComponent({
-  name: "wormholeClasses",
-  data() {
-    return {
-      wormholeClasses: [] as wormholeClass[],
-    };
-  },
-  methods: {
-    async fetchWormholeClasses() {
-      const response = await axios.get<wormholeClass[]>(
-        "/api/getWormholeClasses"
-      );
-      this.wormholeClasses = response.data;
-    },
-  },
-  async mounted() {
-    await this.fetchWormholeClasses();
-  },
+onMounted(async () => {
+  await axios
+    .get<Array<WormholeClass>>("/api/getWormholeClasses")
+    .then((response) => {
+      wormholeClasses.value = response.data;
+    });
 });
 </script>

@@ -1,15 +1,3 @@
-<script>
-import Navbar from "@/components/ui/Navbar.vue";
-import Footer from "@/components/ui/Footer.vue";
-
-export default {
-  components: {
-    Navbar,
-    Footer,
-  },
-};
-</script>
-
 <template>
   <Navbar />
   <div class="container">
@@ -27,3 +15,8 @@ export default {
 @import "@/../css/bulmaswatch.min.css";
 @import "@/../css/app.css";
 </style>
+
+<script setup>
+import Navbar from "@/components/ui/Navbar.vue";
+import Footer from "@/components/ui/Footer.vue";
+</script>

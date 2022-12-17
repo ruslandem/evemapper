@@ -33,7 +33,7 @@ class LocatorController extends Controller
         ]);
     }
 
-    public function show($system = null)
+    public function get($system = null)
     {
         $result = [
             'system' => null,
@@ -45,7 +45,7 @@ class LocatorController extends Controller
 
         if (empty($system)) {
             $result['errorMessage'] = 'No system specified';
-            return view('locator', $result);
+            return $result;
         }
 
         $result['system'] = (new EveSolarSystem())->getByName($system);
@@ -53,11 +53,13 @@ class LocatorController extends Controller
         if ($result['system']) {
             $eveRoute = new EveRoute();
             foreach ($this->tradeHubs as $tradeHub) {
-                $result['jumps'][$tradeHub] = count($eveRoute->getRoute($result['system']->solarSystemName, $tradeHub));
+                $result['jumps'][$tradeHub] = count(
+                    $eveRoute->getRoute($result['system']->solarSystemName, $tradeHub)
+                );
             }
             @asort($result['jumps']);
         }
 
-        return view('locator', $result);
+        return $result;
     }
 }

@@ -43,6 +43,7 @@ Route::prefix('api')->group(function () {
     // Routing without Auth
     Route::get('/getWormholeClasses', [HomeController::class, 'getWormholeClasses']);
     Route::get('/getRatsDamages', [HomeController::class, 'getRatsDamages']);
+    Route::get('/getSolarSystemInfo/{system}', [LocatorController::class, 'get']);
 
     Route::middleware('auth')->group(function(){
         Route::get('/locate', [EveController::class, 'locate'])->name('api.locate');

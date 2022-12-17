@@ -5,14 +5,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import WormholeClasses from "./WormholeClasses.vue";
 import RatsDamages from "./RatsDamages.vue";
-
-export default {
-  components: {
-    WormholeClasses,
-    RatsDamages,
-  },
-};
 </script>
