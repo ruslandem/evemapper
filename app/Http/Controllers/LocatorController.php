@@ -18,19 +18,17 @@ class LocatorController extends Controller
         'Hek'
     ];
 
-    public function list(Request $request)
+    public function list($search = null)
     {
         $systems = [];
 
-        $searchText = trim($request->input('search'));
+        $searchText = trim($search);
 
         if (!empty($searchText)) {
             $systems = (new EveSolarSystem())->search($searchText);
         }
 
-        return response()->json([
-            'systems' => array_column($systems, 'solarSystemName')
-        ]);
+        return array_column($systems, 'solarSystemName');
     }
 
     public function get($system = null)

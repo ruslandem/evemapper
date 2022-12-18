@@ -24,7 +24,7 @@
           <router-link class="navbar-item" to="/route">Route</router-link>
         </div>
         <div class="navbar-end">
-          <span v-if="authenticated()">
+          <span v-if="authData?.characterId !== null">
             <div
               @click="toggleDropdown()"
               class="navbar-item dropdown is-right"
@@ -39,9 +39,9 @@
                   <span
                     ><img
                       class="mt-2 mr-3"
-                      :src="`https://image.eveonline.com/Character/${characterId}_32.png`"
+                      :src="`https://image.eveonline.com/Character/${authData?.characterId}_32.png`"
                   /></span>
-                  <span>{{ characterName }}</span>
+                  <span>{{ authData?.characterName }}</span>
                   <span class="icon is-small">
                     <font-awesome-icon icon="fa-solid fa-caret-down" />
                   </span>
@@ -69,23 +69,13 @@
   <!-- Navbar end -->
 </template>
 
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { ref, inject } from "vue";
+import { AuthData } from "@/structures/AuthData";
+
+const authData: AuthData | undefined = inject("authData");
 
 const dropdownActive = ref(false);
-const characterId = ref(null);
-const characterName = ref(null);
-
-var meta = document.getElementsByTagName("meta");
-const authenticated = () => {
-  return meta["character-id"] != null;
-};
-
-if (meta["character-id"] != null) {
-  characterId.value = meta["character-id"].content;
-  characterName.value = meta["character-name"].content;
-}
-
 const toggleDropdown = () => {
   dropdownActive.value = !dropdownActive.value;
 };
