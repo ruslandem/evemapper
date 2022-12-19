@@ -8,7 +8,7 @@
         <x-locator.search-bar system="{{ $system->solarSystemName ?? '' }}" />
 
         <div class="columns has-text-white p-3">
-            <div class="column auto is-dark-half mr-2">
+            <div class="column auto is-dark-1 mr-2">
                 @unless($system === null)
                     <x-locator.systemInfo :system="$system" />
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="is-dark-half p-5 my-3">
+  <div class="is-dark-1 p-5 my-3">
     <div class="content">
       <h3 class="title has-text-white">Rats Damage Types</h3>
 

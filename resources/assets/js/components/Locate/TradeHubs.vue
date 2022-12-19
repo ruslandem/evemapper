@@ -1,5 +1,5 @@
 <template>
-  <div class="is-dark-half p-4 my-1 has-text-centered">
+  <div class="is-dark-1 p-4 my-1 has-text-centered">
     <h5 class="title">Nearest Trade Hubs</h5>
     <span
       v-for="(value, index) in jumps"

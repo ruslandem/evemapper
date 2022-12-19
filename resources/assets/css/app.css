@@ -11,7 +11,7 @@ body {
     height: 100vh;
     width: 100vw;
     font-family: 'Noto Sans', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #ffffff;
+    background-color: #040d14;
 }
 
 * {
@@ -24,7 +24,10 @@ body {
     background-image: url('../img/bg.jpg');
     background-repeat: repeat-y;
     background-position: top;
-    margin-bottom: 40px;
+}
+
+.navbar {
+    height: 60px;
 }
 
 .footer {
@@ -36,19 +39,37 @@ body {
     border-top: 1px solid gray;
 }
 
+.content-block {
+    height: calc(100% - 100px);
+}
+
+.search-bar {
+    height: 150px;
+}
+
+.locator {
+    height: calc(100% - 150px);
+}
+
+.scrollable {
+    overflow-y: auto;
+    height: calc(100% - 4rem);
+}
+
 .logo {
     font-family: 'Orbitron';
+    font-size: 30px;
 }
 
-.main-content {
-    min-height: 89vh;
+.h-100 {
+    height:100%;
 }
 
-.is-dark-half {
+.is-dark-1 {
     background-color: rgba(54, 54, 54, .5) !important;
 }
 
-.is-darker {
+.is-dark-2 {
     background-color: rgba(54, 54, 54, .8) !important;
 }
 

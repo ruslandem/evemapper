@@ -1,5 +1,5 @@
 <template>
-  <div class="is-dark-half p-4 my-1">
+  <div class="is-dark-1 p-4 my-1">
     <div class="has-text-centered is-size-1 mb-2">
       {{ system?.solarSystemName }}
     </div>
@@ -49,7 +49,7 @@
       <!-- Link Buttons -->
       <div class="has-text-centered">
         <a
-          class="button is-warning"
+          class="button is-warning is-small mx-1"
           target="_blank"
           rel="nofollow noopener noreferrer"
           :href="`https://evemaps.dotlan.net/map/${system?.regionName?.replace(
@@ -61,7 +61,7 @@
           <i class="fa-solid fa-arrow-up-right-from-square ml-1 fa-xs"></i>
         </a>
         <a
-          class="button is-black"
+          class="button is-black is-small mx-1"
           target="_blank"
           rel="nofollow noopener noreferrer"
           :href="`https://zkillboard.com/system/${system?.solarSystemName}`"

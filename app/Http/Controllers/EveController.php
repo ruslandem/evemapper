@@ -115,9 +115,7 @@ class EveController extends Controller
         // logging location
         (new EveLocationHistory())->write($user->characterId, $data->solarSystemName);
 
-        return response()->json([
-            'solarSystemName' => $data->solarSystemName
-        ]);
+        return $data->solarSystemName;
     }
 
     public function update(User $user)

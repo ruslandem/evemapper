@@ -1,4 +1,4 @@
-<div class="column is-one-third is-dark-half" style="height:100%">
+<div class="column is-one-third is-dark-1" style="height:100%">
     <h5 class="subtitle has-text-white">Locations History</h5>
     <div class="scrollable">
         <table id="historyTable" class="table is-striped">

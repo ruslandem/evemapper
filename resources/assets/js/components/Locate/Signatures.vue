@@ -1,29 +1,34 @@
 <template>
-  <div class="is-dark-half p-4 my-1 has-text-centered">
-      <h5 class="title">Cosmic Signatures</h5>
+  <div class="is-dark-1 p-4 my-1 has-text-centered">
+    <h5 class="title">Cosmic Signatures</h5>
 
-      <div class="table-container">
-        <table class="table is-fullwidth is-bordered is-size-7">
-          <thead>
-            <tr class="has-background-dark">
-              <th>ID</th>
-              <th>Group</th>
-              <th>Name</th>
-              <th>Created</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="signature in signatures" class="">
-              <td>{{ signature.signatureId }}</td>
-              <td>{{ signature.groupName }}</td>
-              <td>{{ signature.signatureName }}</td>
-              <td>{{ signature.created_at }}</td>
-              <td><button class="delete"></button></td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="table-container">
+      <table class="table is-fullwidth is-bordered is-size-7">
+        <thead>
+          <tr class="has-background-dark">
+            <th>ID</th>
+            <th>Group</th>
+            <th>Name</th>
+            <th>Created</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="signature in signatures" class="">
+            <td>{{ signature.signatureId }}</td>
+            <td>{{ signature.groupName }}</td>
+            <td>{{ signature.signatureName }}</td>
+            <td>{{ getRelativeTime(signature.created_at) }}</td>
+            <td><button class="delete"></button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div>
+        <a id="updateSignatures" href="#" class="button mx-1">update</a>
+        <a id="replaceSignatures" href="#" class="button mx-1">replace</a>
       </div>
+    </div>
   </div>
 </template>
 
@@ -40,10 +45,11 @@ td:last-child {
 </style>
 
 <script setup lang="ts">
-import { defineProps, PropType } from "vue";
+import { defineProps } from "vue";
 import { Signature } from "@/structures/Signature";
+import { getRelativeTime } from "@/services/utils";
 
-const props = defineProps({
+defineProps({
   signatures: Array<Signature>,
 });
 </script>

@@ -1,5 +1,5 @@
 <div class="columns has-text-white p-3">
-    <div class="column is-dark-half">
+    <div class="column is-dark-1">
         <div class="content">
             <p class="title is-3 has-text-white">Solar System</p>
             <p class="subtitle is-6 has-text-white">Search for a solar system and track your character location:</p>

@@ -3,7 +3,7 @@
   <nav class="navbar">
     <div class="container">
       <div class="navbar-brand">
-        <a class="navbar-item is-size-3 has-text-weight-bold logo" href="/">
+        <a class="navbar-item logo" href="/">
           Eve Mapper
         </a>
         <a
@@ -55,7 +55,7 @@
             </div>
           </span>
           <span v-else>
-            <a class="navbar-item" href="/auth">
+            <a class="navbar-item" href="/auth" title="Log in with EVE Online">
               <img
                 src="@/../img/eve-sso-login-white-large.png"
                 alt="Log in with EVE Online"

@@ -4,7 +4,7 @@
 @section('content')
     <div class="container main-content">
         <h1 class="title is-1 has-text-centered mt-3 mb-5">Privacy Policy</h1>
-        <div class="content p-6 is-darker scrolling">
+        <div class="content p-6 is-dark-2 scrolling">
             <p><em>Last updated: November 29, 2022</em></p>
             <p>This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your
                 information

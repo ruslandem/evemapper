@@ -1,5 +1,5 @@
 <div class="columns has-text-white p-3">
-    <div class="column is-dark-half p-5">
+    <div class="column is-dark-1 p-5">
         <div class="content">
             <h3 class="title has-text-white">Damage Types</h3>
 

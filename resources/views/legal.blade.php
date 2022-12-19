@@ -4,7 +4,7 @@
 @section('content')
     <div class="container main-content">
         <h1 class="title is-1 has-text-centered mt-3 mb-5">Legal Notice & Information</h1>
-        <div class="p-6 is-darker scrolling">
+        <div class="p-6 is-dark-2 scrolling">
 
             <div class="content">
                 <h3 class="title">About EveMapper</h3>

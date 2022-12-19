@@ -1,4 +1,4 @@
-<div class="column is-one-third is-dark-half mr-2">
+<div class="column is-one-third is-dark-1 mr-2">
 
     <div class="content">
         <p class="title is-3 has-text-white">Waypoints</p>

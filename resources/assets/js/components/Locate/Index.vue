@@ -1,7 +1,7 @@
 <template>
-  <div class="has-text-white">
+  <div class="template has-text-white" style="height: 100%">
     <SearchBar @updateSystem="updateSystem" />
-    <div class="columns">
+    <div class="locator columns">
       <div
         class="column is-two-thirds"
         :class="{ 'is-invisible': !system.solarSystemName }"
@@ -11,7 +11,7 @@
         <Signatures :signatures="signatures" />
       </div>
       <div class="column">
-        <History :locations="locations" />
+        <History :locations="locations" @updateSystem="updateSystem" />
       </div>
     </div>
   </div>
@@ -56,5 +56,4 @@ const fetchHistory = async () => {
 onMounted(() => {
   fetchHistory();
 });
-
 </script>
