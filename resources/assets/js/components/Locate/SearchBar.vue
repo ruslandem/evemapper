@@ -1,6 +1,5 @@
 <template>
-  <div class="columns has-text-white p-3 my-2">
-    <div class="column is-dark-half">
+  <div class="is-dark-half p-4 my-1">
       <div class="content">
         <p class="title is-3 has-text-white">Solar System</p>
         <p class="subtitle is-6 has-text-white">
@@ -27,7 +26,7 @@
               class="button is-primary"
               id="searchBtn"
               title="Find solar system"
-              @click="$emit('updateSolarSystem', systemSearch)"
+              @click="$emit('updateSystem', systemSearch)"
               ><i class="fa-solid fa-search mr-2"></i>search</a
             >
           </div>
@@ -51,7 +50,6 @@
           </div>
         </div>
       </div>
-    </div>
   </div>
 </template>
 

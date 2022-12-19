@@ -43,18 +43,20 @@ Route::prefix('api')->group(function () {
     // Routing without Auth
     Route::get('/getWormholeClasses', [HomeController::class, 'getWormholeClasses']);
     Route::get('/getRatsDamages', [HomeController::class, 'getRatsDamages']);
-    Route::get('/getSolarSystemInfo/{system}', [LocatorController::class, 'get']);
     Route::get('/getSolarSystems/{search}', [LocatorController::class, 'list']);
+    Route::get('/getSolarSystemInfo/{system}', [LocatorController::class, 'get']);
+    Route::get('/getSignatures/{system}', [SignaturesController::class, 'index']);
+    Route::get('/getLocation', [EveController::class, 'locate']);
+    Route::get('/getLocationsHistory', [LocatorController::class, 'getLocationsHistory']);
 
-    Route::middleware('auth')->group(function(){
-        Route::get('/locate', [EveController::class, 'locate'])->name('api.locate');
-        Route::post('/waypoint', [EveController::class, 'waypoint'])->name('api.waypoint');
-        Route::post('/route', [RoutesController::class, 'buildRoute'])->name('api.route');
-        Route::post('/systems', [LocatorController::class, 'list'])->name('api.systems');
-        // signatures
-        Route::get('/signatures', [SignaturesController::class, 'index'])->name('api.getSignatures');
-        Route::post('/signatures', [SignaturesController::class, 'update'])->name('api.updateSignatures');
-        Route::delete('/signatures', [SignaturesController::class, 'destroy'])->name('api.deleteSignatures');
+    Route::middleware('auth')->group(function () {
+        // Route::get('/locate', [EveController::class, 'locate'])->name('api.locate');
+        // Route::post('/waypoint', [EveController::class, 'waypoint'])->name('api.waypoint');
+        // Route::post('/route', [RoutesController::class, 'buildRoute'])->name('api.route');
+        // Route::post('/systems', [LocatorController::class, 'list'])->name('api.systems');
+        // // signatures
+        // Route::get('/signatures', [SignaturesController::class, 'index'])->name('api.getSignatures');
+        // Route::post('/signatures', [SignaturesController::class, 'update'])->name('api.updateSignatures');
+        // Route::delete('/signatures', [SignaturesController::class, 'destroy'])->name('api.deleteSignatures');
     });
-    
 });

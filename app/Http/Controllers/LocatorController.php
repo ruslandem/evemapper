@@ -60,4 +60,9 @@ class LocatorController extends Controller
 
         return $result;
     }
+
+    public function getLocationsHistory()
+    {
+        return (new EveLocationHistory())->get(Auth::id());
+    }
 }
