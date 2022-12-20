@@ -48,3 +48,20 @@ export const getCosmicSignatureIcon = (groupName: string | null): string => {
   // transparent image
   return "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 };
+/**
+ * Get congiuration for axios post, put, delete requests.
+ * @param  {object} options
+ * @returns object
+ */
+export const getAxiosPostConfig = (options: object = {}): object => {
+  let headers: {[k: string]: any} = {};
+  const token: HTMLMetaElement|null = document.head.querySelector('meta[name="csrf-token"]');
+  if (token) {
+    headers["X-CSRF-TOKEN"] = token.content;
+  }
+  const config = {
+    headers: headers
+  };
+
+  return {...config, ...options};
+}

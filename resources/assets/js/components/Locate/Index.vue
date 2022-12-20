@@ -11,7 +11,10 @@
       >
         <SystemInfo :system="system" />
         <TradeHubs :jumps="jumps" :systemName="system.solarSystemName" />
-        <Signatures :signatures="signatures" />
+        <Signatures
+          :signatures="signatures"
+          @delete-signature="deleteSignature"
+        />
       </div>
       <div class="column">
         <History :locations="locations" @updateSystem="updateSystem" />
@@ -21,14 +24,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, inject } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
+import { getAxiosPostConfig } from "@/services/utils";
+import { toast } from "bulma-toast";
 // Types
 import { SolarSystem } from "@/structures/SolarSystem";
 import { HubsJump } from "@/structures/HubsJump";
 import { Signature } from "@/structures/Signature";
 import { VisitedLocation } from "@/structures/VisitedLocation";
-import { AuthData } from "@/structures/AuthData";
 // Components
 import SearchBar from "./SearchBar.vue";
 import SystemInfo from "./SystemInfo.vue";
@@ -40,24 +44,47 @@ const system = ref({} as SolarSystem);
 const jumps = ref({} as HubsJump);
 const signatures = ref([] as Array<Signature>);
 const locations = ref([] as Array<VisitedLocation>);
-const authData: AuthData | undefined = inject("authData");
 
-const updateSystem = async (name: String) => {
+const updateSystem = async (name: string) => {
   if (name.length > 2) {
     await axios.get(`/api/getSolarSystemInfo/${name}`).then((response) => {
       system.value = response.data.system || {};
       jumps.value = (response.data.jumps as HubsJump) || {};
     });
-    await axios.get(`/api/getSignatures/${name}`).then((response) => {
-      signatures.value = (response.data.data as Array<Signature>) || [];
-    });
+    await fetchSignatures(name);
+    await fetchHistory();
   }
+};
+
+const fetchSignatures = async (systemName: string) => {
+  await axios.get(`/api/getSignatures/${systemName}`).then((response) => {
+    signatures.value = (response.data.data as Array<Signature>) || [];
+  });
 };
 
 const fetchHistory = async () => {
   await axios.get(`/api/getLocationsHistory`).then((response) => {
     locations.value = (response.data as Array<VisitedLocation>) || [];
   });
+};
+
+const deleteSignature = (id: string, systemName: string): void => {
+  axios
+    .post(
+      "/api/deleteSignature",
+      {
+        id: id,
+        systemName: systemName,
+      },
+      getAxiosPostConfig()
+    )
+    .then(() => {
+      fetchSignatures(systemName);
+      toast({
+        message: `Signature ${id} deleted`,
+        type: "is-success",
+      });
+    });
 };
 
 onMounted(() => {

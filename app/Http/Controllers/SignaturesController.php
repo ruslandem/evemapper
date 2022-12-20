@@ -71,21 +71,21 @@ class SignaturesController extends Controller
     /**
      * Deletes signature with the specified id and solar system.
      * 
-     * @param Request $request Must contain solarSystemName and signatureId parameters
+     * @param Request $request Must contain systemName and id parameters
      * @param CosmicSignatures $service
      * @return JsonResponse
      */
     public function destroy(Request $request, CosmicSignatures $service): JsonResponse
     {
         $validated = $request->validate([
-            'solarSystemName' => 'required|string',
-            'signatureId' => 'required|string',
+            'systemName' => 'required|string',
+            'id' => 'required|string',
         ]);
 
         $deleted = $service->deleteSignature(
             Auth::id(),
-            $validated['solarSystemName'],
-            $validated['signatureId'],
+            $validated['systemName'],
+            $validated['id'],
         );
 
         return response()->json(
