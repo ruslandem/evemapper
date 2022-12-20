@@ -16,7 +16,7 @@
         <tbody>
           <tr v-for="signature in signatures" class="">
             <td>{{ signature.signatureId }}</td>
-            <td>{{ signature.groupName }}</td>
+            <td><i :class="`c-icon ${ getCosmicSignatureIcon(signature.groupName) }`"></i> {{ signature.groupName }}</td>
             <td>{{ signature.signatureName }}</td>
             <td>{{ getRelativeTime(signature.created_at) }}</td>
             <td><button class="delete"></button></td>
@@ -45,9 +45,8 @@ td:last-child {
 </style>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
 import { Signature } from "@/structures/Signature";
-import { getRelativeTime } from "@/services/utils";
+import { getRelativeTime, getCosmicSignatureIcon } from "@/services/utils";
 
 defineProps({
   signatures: Array<Signature>,

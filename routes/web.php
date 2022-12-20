@@ -29,6 +29,7 @@ Route::get('/locate', static fn () => view('index'));
 // Route::post('/contact', [EveController::class, 'contact']);
 
 // auth
+Route::get('/login', static fn () => view('index'));
 Route::get('/auth', [EveController::class, 'auth'])->name('auth');
 Route::get('/callback', [EveController::class, 'callback']);
 Route::get('/logout', [EveController::class, 'logout'])->name('logout');

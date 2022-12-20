@@ -56,10 +56,7 @@
           </span>
           <span v-else>
             <a class="navbar-item" href="/auth" title="Log in with EVE Online">
-              <img
-                src="@/../img/eve-sso-login-white-large.png"
-                alt="Log in with EVE Online"
-              />
+              <span class="c-icon c-icon-eve-sso-login"></span>
             </a>
           </span>
         </div>

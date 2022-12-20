@@ -23,3 +23,7 @@ export const authData: AuthData = {
   characterId: toNumberOrNull(getMetaTagContent("character-id")),
   characterName: getMetaTagContent("character-name"),
 };
+
+export const isAuthenticated = (): boolean => {
+  return authData.characterId !== null;
+};

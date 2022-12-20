@@ -62,7 +62,11 @@ body {
 }
 
 .h-100 {
-    height:100%;
+    height: 100%;
+}
+
+.w-100 {
+    width: 100%;
 }
 
 .is-dark-1 {
@@ -88,4 +92,45 @@ body {
 
 .new-signature {
     background-color: rgb(60 80 60);
+}
+
+/* Custom Icons */
+.c-icon {
+    display: inline-block;
+    position: relative;
+    width: 16px;
+    height: 16px;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    padding: 0;
+    margin: 0 3px 0 0;
+}
+
+.c-icon-data-site {
+    background-image: url("../img/eve/items/Brackets/data_Site_16.png");
+}
+
+.c-icon-relic-site {
+    background-image: url("../img/eve/items/Brackets/relic_Site_16.png");
+}
+
+.c-icon-combat-site {
+    background-image: url("../img/eve/items/Brackets/combatSite_16.png");
+}
+
+.c-icon-wormhole {
+    background-image: url("../img/eve/items/Brackets/wormhole.png");
+}
+
+.c-icon-gas-site {
+    background-image: url("../img/eve/items/Brackets/harvestableCloud.png");
+}
+
+.c-icon-eve-sso-login {
+    background-image: url("../img/eve-sso-login-white-large.png");
+    width: 270px;
+    height: 45px;
+    margin: 0;
+    padding: 0;
 }

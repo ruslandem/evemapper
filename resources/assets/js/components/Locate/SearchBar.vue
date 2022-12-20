@@ -27,7 +27,8 @@
           id="searchBtn"
           title="Find solar system"
           @click.prevent="$emit('updateSystem', systemSearch)"
-          ><i class="fa-solid fa-search mr-2"></i>search</a
+        >
+          <font-awesome-icon icon="fa-solid fa-search" class="mr-2" /> search</a
         >
       </div>
       <div class="control">
@@ -44,14 +45,15 @@
           />
         </a>
       </div>
-      <div class="control">
-        <a
-          id="autolocate"
-          href="#"
-          class="button is-danger"
-          title="Auto-refresh current location"
-          ><i class="fa-solid fa-rotate"></i
-        ></a>
+      <div class="control ml-5 my-2">
+        <input
+          id="autoRefreshSwitch"
+          type="checkbox"
+          class="switch"
+          :checked="autoRefresh"
+          @click="autoRefresh = !autoRefresh"
+        />
+        <label for="autoRefreshSwitch">Auto-refresh</label>
       </div>
     </div>
   </div>
@@ -60,19 +62,38 @@
 
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
+import { ref, watch } from "vue";
+
+const props = defineProps({
+  systemName: String,
+});
 
 const systemSearch = ref("Jita");
 const isGettingLocation = ref(false);
-
 const emit = defineEmits(["updateSystem"]);
 
 const updateWithCurrentLocation = () => {
+  if (isGettingLocation.value === true) {
+    return;
+  }
+
   isGettingLocation.value = true;
   axios.get(`/api/getLocation`).then((response) => {
-    emit("updateSystem", response.data);
+    if (response.data !== props.systemName) {
+      emit("updateSystem", response.data);
+    }
     isGettingLocation.value = false;
   });
 };
 
+// Auto-refresh
+const autoRefresh = ref(false);
+let refreshTimer = null;
+watch(autoRefresh, (value) => {
+  value
+    ? (refreshTimer = setInterval(updateWithCurrentLocation, 15000))
+    : refreshTimer
+    ? clearInterval(refreshTimer)
+    : (refreshTimer = null);
+});
 </script>

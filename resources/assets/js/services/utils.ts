@@ -31,3 +31,20 @@ export const getSecurityStatusStyle = (value: number | undefined): any => {
 export const getRelativeTime = (time: string): string => {
   return dayjs().to(dayjs(time));
 };
+
+export const getCosmicSignatureIcon = (groupName: string | null): string => {
+  switch (groupName) {
+    case "Data Site":
+      return 'c-icon-data-site';
+    case "Relic Site":
+      return "c-icon-relic-site";
+    case "Combat Site":
+      return "c-icon-combat-site";
+    case "Wormhole":
+      return "c-icon-wormhole";
+    case "Gas Site":
+      return "c-icon-gas-site";
+  }
+  // transparent image
+  return "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+};

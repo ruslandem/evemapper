@@ -1,6 +1,9 @@
 <template>
   <div class="template has-text-white" style="height: 100%">
-    <SearchBar @updateSystem="updateSystem" />
+    <SearchBar
+      @updateSystem="updateSystem"
+      :systemName="system.solarSystemName"
+    />
     <div class="locator columns">
       <div
         class="column is-two-thirds"
@@ -18,13 +21,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, inject } from "vue";
 import axios from "axios";
 // Types
 import { SolarSystem } from "@/structures/SolarSystem";
 import { HubsJump } from "@/structures/HubsJump";
 import { Signature } from "@/structures/Signature";
 import { VisitedLocation } from "@/structures/VisitedLocation";
+import { AuthData } from "@/structures/AuthData";
 // Components
 import SearchBar from "./SearchBar.vue";
 import SystemInfo from "./SystemInfo.vue";
@@ -36,15 +40,18 @@ const system = ref({} as SolarSystem);
 const jumps = ref({} as HubsJump);
 const signatures = ref([] as Array<Signature>);
 const locations = ref([] as Array<VisitedLocation>);
+const authData: AuthData | undefined = inject("authData");
 
 const updateSystem = async (name: String) => {
-  await axios.get(`/api/getSolarSystemInfo/${name}`).then((response) => {
-    system.value = response.data.system || {};
-    jumps.value = (response.data.jumps as HubsJump) || {};
-  });
-  await axios.get(`/api/getSignatures/${name}`).then((response) => {
-    signatures.value = (response.data.data as Array<Signature>) || [];
-  });
+  if (name.length > 2) {
+    await axios.get(`/api/getSolarSystemInfo/${name}`).then((response) => {
+      system.value = response.data.system || {};
+      jumps.value = (response.data.jumps as HubsJump) || {};
+    });
+    await axios.get(`/api/getSignatures/${name}`).then((response) => {
+      signatures.value = (response.data.data as Array<Signature>) || [];
+    });
+  }
 };
 
 const fetchHistory = async () => {
