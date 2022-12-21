@@ -42,14 +42,22 @@ class CosmicSignaturesTest extends TestCase
     public function test_request_to_get_signatures()
     {
         $response = $this->actingAs($this->user)
-            ->getJson(route('api.getSignatures') . '?system=' . self::SOLAR_SYSTEM);
-
+            ->getJson(
+                route('api.get-signatures', [
+                    'system' => self::SOLAR_SYSTEM
+                ])
+            );
         $response->assertStatus(200)->assertJsonCount(10, 'data');
     }
 
+
     public function test_request_to_get_signatures_as_unauthenticated_user()
     {
-        $response = $this->getJson(route('api.getSignatures') . '?system=' . self::SOLAR_SYSTEM);
+        $response = $this->getJson(
+            route('api.get-signatures', [
+                'system' => self::SOLAR_SYSTEM
+            ])
+        );
 
         $response->assertStatus(401);
     }
@@ -268,6 +276,44 @@ class CosmicSignaturesTest extends TestCase
 
         $signature = $result->where('signatureId', '=', 'KTQ-024')->first();
         $this->assertNotNull($signature);
+    }
+
+    public function test_replace_with_invalid_clipboard_data()
+    {
+        // deleting signatures before insertion
+        Signature::query()->delete();
+        // seeding sample signatures
+        $service = new CosmicSignatures();
+        $service->updateFromClipboardText(
+            $this->user->characterId,
+            self::SOLAR_SYSTEM,
+            $this->getSampleSignaturesClipboardText(),
+            false
+        );
+
+        // invalid clipboard data
+        $text = "Lorem ipsum dolor sit amet	consectetur adipisicing	elit";
+
+        $report = $service->updateFromClipboardText(
+            $this->user->characterId,
+            self::SOLAR_SYSTEM,
+            $text,
+            true
+        );
+
+        $this->assertEqualsCanonicalizing(
+            [
+                'error' => null,
+            ],
+            $report->output()
+        );
+
+        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'ISN-720']);
+        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'KOA-124']);
+        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'QPI-926']);
+        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'ROJ-096']);
+        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'XCO-255']);
+        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'KOL-024']);
     }
 
     protected function getSampleSignaturesClipboardText(): string

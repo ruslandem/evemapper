@@ -21,7 +21,7 @@ class CosmicSignatures
         $signatures = $this->getArrayFromClipboardText($characterId, $solarSystem, $text);
 
         // deleting absent signatures
-        if ($replace) {
+        if (count($signatures) > 0 && $replace) {
             $removed = $this->removeAbsentSignatures(
                 $characterId,
                 $solarSystem,
@@ -112,18 +112,23 @@ class CosmicSignatures
         $signatures = [];
 
         $lines = explode(PHP_EOL, trim($text));
-        foreach ($lines as $line) {
 
-            list($id,, $group, $name) = str_getcsv(trim($line), "\t");
+        if ($lines !== false) {
+            foreach ($lines as $line) {
+                $items = str_getcsv(trim($line), "\t");
+                if (count($items) >= 4) {
+                    list($id,, $group, $name) =  $items;
 
-            if ($id) {
-                $signatures[] = [
-                    'characterId' => $characterId,
-                    'solarSystemName' => $solarSystem,
-                    'signatureId' => $id,
-                    'signatureName' => $name,
-                    'groupName' => $group ?? '',
-                ];
+                    if (!empty($id)) {
+                        $signatures[] = [
+                            'characterId' => $characterId,
+                            'solarSystemName' => $solarSystem,
+                            'signatureId' => $id,
+                            'signatureName' => $name,
+                            'groupName' => $group ?? '',
+                        ];
+                    }
+                }
             }
         }
 

@@ -18,13 +18,13 @@ use App\Http\Controllers\SignaturesController;
 |
 */
 
-Route::withoutMiddleware(App::environment('local') ? ['ajax.only'] : [])
+Route::withoutMiddleware(!App::environment('production') ? ['ajax.only'] : [])
     ->group(function () {
         Route::get('/getWormholeClasses', [HomeController::class, 'getWormholeClasses']);
         Route::get('/getRatsDamages', [HomeController::class, 'getRatsDamages']);
         Route::get('/getSolarSystems/{search}', [LocatorController::class, 'list']);
         Route::get('/getSolarSystemInfo/{system}', [LocatorController::class, 'get']);
-        Route::get('/getSignatures/{system}', [SignaturesController::class, 'index']);
+        Route::get('/getSignatures/{system}', [SignaturesController::class, 'index'])->name('api.get-signatures');
         Route::get('/getLocation', [EveController::class, 'locate']);
         Route::get('/getLocationsHistory', [LocatorController::class, 'getLocationsHistory']);
         Route::post('/deleteSignature', [SignaturesController::class, 'destroy']);
