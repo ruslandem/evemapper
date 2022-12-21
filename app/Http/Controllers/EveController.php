@@ -102,6 +102,12 @@ class EveController extends Controller
     {
         $user = Auth::user();
 
+        if ($user === null) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
         try {
             $locationApi = new EveLocationApi($user->token);
             $solarSystemId = $locationApi->getCharacterLocation($user->characterId);
