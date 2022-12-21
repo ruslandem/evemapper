@@ -12,6 +12,7 @@
 /.vscode
 /.tmp-dev
 /.dev
+.env
 /database/whident.db
 /database/*_test.db
 /storage/debugbar/*.json
