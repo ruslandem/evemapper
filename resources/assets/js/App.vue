@@ -1,6 +1,6 @@
 <template>
   <Navbar />
-  <div class="content-block container">
+  <div class="content-block container pb-5">
     <router-view></router-view>
   </div>
   <Footer />

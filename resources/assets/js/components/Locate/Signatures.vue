@@ -2,7 +2,7 @@
   <div class="is-dark-1 p-4 my-1 has-text-centered">
     <h5 class="title">Cosmic Signatures</h5>
 
-    <div class="table-container">
+    <div class="table-container mb-6">
       <table class="table is-fullwidth is-bordered is-size-7">
         <thead>
           <tr class="has-background-dark">

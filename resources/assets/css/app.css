@@ -135,6 +135,9 @@ body {
     padding: 0;
 }
 
+/* 
+vue-select dropdown
+*/
 .search-dropdown .vs__search {
     padding-top: 2px;
     padding-bottom: 2px;
@@ -156,4 +159,8 @@ body {
 
 .select:not(.is-multiple):not(.is-loading)::after {
     display: none;
+}
+
+.router-link-active {
+    color: rgb(255, 128, 0) !important;
 }

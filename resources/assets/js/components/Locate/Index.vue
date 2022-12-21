@@ -4,13 +4,29 @@
       @update-system="updateSystem"
       :system-name="system.solarSystemName"
     />
-    <div class="locator columns">
+    <div class="locator columns is-desktop" >
       <div
-        class="column is-two-thirds"
-        :class="{ 'is-invisible': !system.solarSystemName }"
+        class="column is-two-thirds-desktop"
+        :class="{ 'is-hidden': system.solarSystemName }"
+      >
+        <div class="is-dark-1 p-4 my-1">
+          <div class="has-text-centered is-size-3 m-5 has-text-info">
+            No system selected.
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="column is-two-thirds-desktop"
+        :class="{ 'is-hidden': !system.solarSystemName }"
+        style=""
       >
         <SystemInfo :system="system" />
-        <TradeHubs v-if="!system?.wormholeClass" :jumps="jumps" :systemName="system.solarSystemName" />
+        <TradeHubs
+          v-if="!system?.wormholeClass"
+          :jumps="jumps"
+          :systemName="system.solarSystemName"
+        />
         <Signatures
           :signatures="signatures"
           :system-name="system.solarSystemName"

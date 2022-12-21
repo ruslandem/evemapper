@@ -1,9 +1,9 @@
 <template>
   <!-- History -->
-  <div class="is-dark-1 p-4 my-1 has-text-centered" style="height: 100%">
+  <div class="is-dark-1 p-4 my-1 has-text-centered h-100">
     <h5 class="title">Locations History</h5>
 
-    <div class="scrollable">
+    <div class="scrollable mb-5">
       <table class="table is-fullwidth is-bordered is-size-7">
         <thead>
           <tr class="has-background-dark">
