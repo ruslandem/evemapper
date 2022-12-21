@@ -1,6 +1,6 @@
 import { AuthData } from "@/structures/AuthData";
 
-const getMetaTagContent = (name: string): string | null => {
+export const getMetaTagContent = (name: string): string | null => {
   const element: HTMLElement | null = document.querySelector(
     `meta[name=\"${name}\"]`
   );
@@ -12,7 +12,7 @@ const getMetaTagContent = (name: string): string | null => {
   return null;
 };
 
-const toNumberOrNull = (value: string | null): number | null => {
+export const toNumberOrNull = (value: string | null): number | null => {
   if (value !== null) {
     return parseInt(value);
   }

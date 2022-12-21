@@ -27,7 +27,12 @@
             <td>
               <button
                 class="delete"
-                @click="deleteSignature(signature.signatureId, signature.solarSystemName)"
+                @click="
+                  deleteSignature(
+                    signature.signatureId,
+                    signature.solarSystemName
+                  )
+                "
               ></button>
             </td>
           </tr>
@@ -35,8 +40,12 @@
       </table>
 
       <div>
-        <a id="updateSignatures" href="#" class="button mx-1">update</a>
-        <a id="replaceSignatures" href="#" class="button mx-1">replace</a>
+        <a href="#" class="button mx-1" @click.prevent="updateSignatures(false)"
+          >update</a
+        >
+        <a href="#" class="button mx-1" @click.prevent="updateSignatures(true)"
+          >replace</a
+        >
       </div>
     </div>
   </div>
@@ -55,16 +64,64 @@ td:last-child {
 </style>
 
 <script setup lang="ts">
+/**
+ * Imports
+ */
 import { Signature } from "@/structures/Signature";
-import { getRelativeTime, getCosmicSignatureIcon } from "@/services/utils";
-
-defineProps({
+import {
+  getRelativeTime,
+  getCosmicSignatureIcon,
+  getAxiosPostConfig,
+} from "@/services/utils";
+import axios from "axios";
+import { toast } from "bulma-toast";
+/**
+ * Props
+ */
+const props = defineProps({
   signatures: Array<Signature>,
+  systemName: String,
 });
+/**
+ * Emits
+ */
+const emit = defineEmits(["delete-signature", "update-signatures"]);
 
-const emit = defineEmits(["deleteSignature"]);
-
+/**
+ * Emits event to delete a signature.
+ * @param {string} id - Signature Id.
+ * @param {string} systemName  - Solar system name.
+ * @emits delete-signature
+ */
 const deleteSignature = (id: string, systemName: string): void => {
-  emit("deleteSignature", id, systemName);
+  emit("delete-signature", id, systemName);
+};
+
+/**
+ * Handle `update` and  `replace` button click events.
+ * Uses clipboard text to update signatures list.
+ * @param {Boolean} replace - Replace signatures trigger.
+ * @emits update-signatures
+ */
+const updateSignatures = (replace: Boolean): void => {
+  navigator.clipboard.readText().then((value) => {
+    axios
+      .post(
+        "/api/updateSignatures",
+        {
+          solarSystemName: props.systemName,
+          text: value,
+          replace: replace,
+        },
+        getAxiosPostConfig()
+      )
+      .then(() => {
+        emit("update-signatures");
+        toast({
+          message: "Signatures updated",
+          type: "is-success",
+        });
+      });
+  });
 };
 </script>

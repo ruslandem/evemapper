@@ -134,3 +134,26 @@ body {
     margin: 0;
     padding: 0;
 }
+
+.search-dropdown .vs__search {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-size: 15px;
+}
+
+.search-dropdown .vs__search::placeholder,
+.search-dropdown .vs__dropdown-toggle,
+.search-dropdown .vs__dropdown-menu {
+    background: #efefef;
+    color: #3298dc;
+
+}
+
+.search-dropdown .vs__clear,
+.search-dropdown .vs__open-indicator {
+    fill: #3298dc;
+}
+
+.select:not(.is-multiple):not(.is-loading)::after {
+    display: none;
+}

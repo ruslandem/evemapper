@@ -14,6 +14,7 @@
 @import "@modules/vanilla-cookieconsent/dist/cookieconsent.css";
 @import "@/../css/bulmaswatch.min.css";
 @import "@modules/bulma-extensions/dist/css/bulma-extensions.min.css";
+@import "@modules/vue-select/dist/vue-select.css";
 @import "@/../css/app.css";
 </style>
 

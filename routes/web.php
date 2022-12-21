@@ -50,6 +50,7 @@ Route::prefix('api')->group(function () {
     Route::get('/getLocation', [EveController::class, 'locate']);
     Route::get('/getLocationsHistory', [LocatorController::class, 'getLocationsHistory']);
     Route::post('/deleteSignature', [SignaturesController::class, 'destroy']);
+    Route::post('/updateSignatures', [SignaturesController::class, 'update']);
 
     Route::middleware('auth')->group(function () {
         // Route::get('/locate', [EveController::class, 'locate'])->name('api.locate');

@@ -1,8 +1,8 @@
 <template>
   <div class="template has-text-white" style="height: 100%">
     <SearchBar
-      @updateSystem="updateSystem"
-      :systemName="system.solarSystemName"
+      @update-system="updateSystem"
+      :system-name="system.solarSystemName"
     />
     <div class="locator columns">
       <div
@@ -13,7 +13,9 @@
         <TradeHubs :jumps="jumps" :systemName="system.solarSystemName" />
         <Signatures
           :signatures="signatures"
+          :system-name="system.solarSystemName"
           @delete-signature="deleteSignature"
+          @update-signatures="updateSystem"
         />
       </div>
       <div class="column">
@@ -24,29 +26,47 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+/**
+ * Imports: funcs
+ */
 import axios from "axios";
+import { ref, onMounted } from "vue";
 import { getAxiosPostConfig } from "@/services/utils";
 import { toast } from "bulma-toast";
-// Types
+/**
+ * Imports: structures
+ */
 import { SolarSystem } from "@/structures/SolarSystem";
 import { HubsJump } from "@/structures/HubsJump";
 import { Signature } from "@/structures/Signature";
 import { VisitedLocation } from "@/structures/VisitedLocation";
-// Components
+/**
+ * Imports: components
+ */
 import SearchBar from "./SearchBar.vue";
 import SystemInfo from "./SystemInfo.vue";
 import Signatures from "./Signatures.vue";
 import TradeHubs from "./TradeHubs.vue";
 import History from "./History.vue";
-
+/**
+ * References
+ */
 const system = ref({} as SolarSystem);
 const jumps = ref({} as HubsJump);
 const signatures = ref([] as Array<Signature>);
 const locations = ref([] as Array<VisitedLocation>);
 
-const updateSystem = async (name: string) => {
-  if (name.length > 2) {
+/**
+ * Update system information including signatures and history list.
+ * @async
+ * @param {string|null} name
+ * @returns {Promise<void>}
+ */
+const updateSystem = async (name: string | null = null): Promise<void> => {
+  if (name === null) {
+    name = system.value.solarSystemName;
+  }
+  if (name !== null && name.length > 2) {
     await axios.get(`/api/getSolarSystemInfo/${name}`).then((response) => {
       system.value = response.data.system || {};
       jumps.value = (response.data.jumps as HubsJump) || {};
@@ -56,6 +76,11 @@ const updateSystem = async (name: string) => {
   }
 };
 
+/**
+ * Fetch signatures for specific solar system and updates `signatures` object.
+ * @async
+ * @param systemName - Solar system name.
+ */
 const fetchSignatures = async (systemName: string) => {
   await axios.get(`/api/getSignatures/${systemName}`).then((response) => {
     signatures.value = (response.data.data as Array<Signature>) || [];
