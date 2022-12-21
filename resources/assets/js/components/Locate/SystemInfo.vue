@@ -28,7 +28,7 @@
 
           <tr v-if="system?.wormholeClass">
             <td>Wormhole Class</td>
-            <td></td>
+            <td>{{ system?.wormholeClass }}</td>
           </tr>
           <tr v-if="system?.wormholeClass">
             <td>Wormhole Statics</td>
@@ -36,10 +36,12 @@
               <span
                 v-for="(value, index) in system?.wormholeStatics"
                 :key="index"
-                style="margin-right: 0.25rem"
+                class="mr-2"
               >
-                (<span class="class-type" data-in-class="">{{ value }}</span
-                >)
+                {{ index }}
+                <span :style="getWormholeStaticColor(+value.inClass)">
+                  ({{ getWormholeStaticType(+value.inClass) }})
+                </span>
               </span>
             </td>
           </tr>
@@ -82,11 +84,15 @@ td:nth-child(1) {
 </style>
 
 <script setup lang="ts">
-import { defineProps, PropType } from "vue";
-import { getSecurityStatusStyle } from "@/services/utils";
+import { defineProps, PropType, StyleValue } from "vue";
+import {
+  getSecurityStatusStyle,
+  getWormholeStaticColor,
+  getWormholeStaticType,
+} from "@/services/utils";
 import { SolarSystem } from "@/structures/SolarSystem";
 
-const props = defineProps({
+defineProps({
   system: {} as PropType<SolarSystem>,
 });
 </script>

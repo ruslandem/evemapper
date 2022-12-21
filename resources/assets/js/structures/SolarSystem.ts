@@ -1,3 +1,5 @@
+import { WormholeStatic } from "./WormholeStatic";
+
 export interface SolarSystem {
   solarSystemID: number;
   solarSystemName: string;
@@ -6,5 +8,5 @@ export interface SolarSystem {
   security: number;
   rats: string;
   wormholeClass?: string;
-  wormholeStatics?: string[];
+  wormholeStatics?: WormholeStatic[];
 }

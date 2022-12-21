@@ -10,7 +10,7 @@
         :class="{ 'is-invisible': !system.solarSystemName }"
       >
         <SystemInfo :system="system" />
-        <TradeHubs :jumps="jumps" :systemName="system.solarSystemName" />
+        <TradeHubs v-if="!system?.wormholeClass" :jumps="jumps" :systemName="system.solarSystemName" />
         <Signatures
           :signatures="signatures"
           :system-name="system.solarSystemName"
