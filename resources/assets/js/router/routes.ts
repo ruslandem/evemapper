@@ -1,4 +1,4 @@
-import { isAuthenticated } from "@/services/auth";
+import { useAuthStore } from "@/stores/auth";
 import {
   NavigationGuardNext,
   RouteLocationNormalized,
@@ -10,7 +10,8 @@ const checkAuth = (
   from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
-  if (!isAuthenticated()) {
+  const auth = useAuthStore();
+  if (!auth.isAuthenticated) {
     next("login");
     return false;
   }

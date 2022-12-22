@@ -103,3 +103,19 @@ export const getAxiosPostConfig = (options: object = {}): object => {
 
   return { ...config, ...options };
 };
+/**
+ * Get value of meta tag content or null if tag is not found.
+ * @param  {string} name - Meta tag name
+ * @returns string | null
+ */
+export const getMetaTagContent = (name: string): string | null => {
+  const element: HTMLElement | null = document.querySelector(
+    `meta[name=\"${name}\"]`
+  );
+
+  if (element instanceof HTMLMetaElement) {
+    return element.content;
+  }
+
+  return null;
+};

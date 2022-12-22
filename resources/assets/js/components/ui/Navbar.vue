@@ -24,7 +24,7 @@
           <router-link class="navbar-item" to="/route">Route</router-link>
         </div>
         <div class="navbar-end">
-          <span v-if="authData?.characterId !== null">
+          <span v-if="auth.isAuthenticated">
             <div
               @click="toggleDropdown()"
               class="navbar-item dropdown is-right"
@@ -39,9 +39,9 @@
                   <span
                     ><img
                       class="mt-2 mr-3"
-                      :src="`https://image.eveonline.com/Character/${authData?.characterId}_32.png`"
+                      :src="`https://image.eveonline.com/Character/${auth.character?.id}_32.png`"
                   /></span>
-                  <span>{{ authData?.characterName }}</span>
+                  <span>{{ auth.character?.name }}</span>
                   <span class="icon is-small">
                     <font-awesome-icon icon="fa-solid fa-caret-down" />
                   </span>
@@ -67,10 +67,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject } from "vue";
-import { AuthData } from "@/structures/AuthData";
+import { ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
-const authData: AuthData | undefined = inject("authData");
+const auth = useAuthStore();
 
 const dropdownActive = ref(false);
 const toggleDropdown = () => {

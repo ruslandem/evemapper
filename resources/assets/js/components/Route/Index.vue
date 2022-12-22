@@ -4,6 +4,5 @@
   </div>
 </template>
 <script setup>
-import { inject } from "vue";
-const authData = inject("authData");
+
 </script>

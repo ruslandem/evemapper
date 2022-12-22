@@ -19,11 +19,9 @@
 </style>
 
 <script setup>
-import { provide } from "vue";
-import { authData } from "@/services/auth";
-
+import { useAuthStore } from "@/stores/auth";
 import Navbar from "@/components/ui/Navbar.vue";
 import Footer from "@/components/ui/Footer.vue";
 
-provide("authData", authData);
+useAuthStore().getAuthentication();
 </script>

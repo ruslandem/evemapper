@@ -2,6 +2,8 @@ import { createApp } from "vue";
 import router from "@/router";
 import App from "./App.vue";
 import vSelect from "vue-select";
+import { createPinia } from "pinia";
+// FontAwesome
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
@@ -13,6 +15,7 @@ library.add(far);
 dom.watch();
 
 createApp(App)
+  .use(createPinia())
   .use(router)
   .component("font-awesome-icon", FontAwesomeIcon)
   .component("v-select", vSelect)
