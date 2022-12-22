@@ -58,7 +58,6 @@
 
 <script setup lang="ts">
 import { VisitedLocation } from "@/structures/VisitedLocation";
-import { defineProps } from "vue";
 import { getSecurityStatusStyle } from "@/services/utils";
 import { getRelativeTime } from "@/services/utils";
 

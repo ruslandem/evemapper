@@ -18,9 +18,8 @@
 
 <script setup lang="ts">
 import { HubsJump } from "@/structures/HubsJump";
-import { defineProps } from "vue";
 
-const props = defineProps({
+defineProps({
   jumps: {} as HubsJump,
   systemName: String,
 });

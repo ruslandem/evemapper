@@ -84,7 +84,7 @@ td:nth-child(1) {
 </style>
 
 <script setup lang="ts">
-import { defineProps, PropType, StyleValue } from "vue";
+import { PropType } from "vue";
 import {
   getSecurityStatusStyle,
   getWormholeStaticColor,
