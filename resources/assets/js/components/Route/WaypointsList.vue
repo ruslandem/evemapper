@@ -18,7 +18,7 @@
       <span class="is-pulled-right">
         <a
           href="#"
-          @click.prevent="deleteWaypoint(waypoint)"
+          @click.prevent="wp.remove(waypoint)"
           title="Delete waypoint"
         >
           <font-awesome-icon
@@ -65,9 +65,5 @@
 import { useWaypointsStore } from "@/stores/waypoints";
 
 const wp = useWaypointsStore();
-wp.waypoints = ["Jita", "Amarr", "Hek", "Ohmahailen", "Rens"];
 
-const deleteWaypoint = (waypoint: string): void => {
-  wp.remove(waypoint);
-};
 </script>

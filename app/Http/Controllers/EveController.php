@@ -157,12 +157,16 @@ class EveController extends Controller
 
     public function waypoint(Request $request)
     {
+        $validated = $request->validate([
+            'system' => 'required|string',
+        ]);
+
         $user = Auth::user();
 
         try {
             $api = new EveLocationApi($user->token);
             $api->addAutopilotWaypoint(
-                $request->input('system')
+                $validated['system']
             );
         } catch (EveApiTokenExpiredException $e) {
             return $this->update($user);

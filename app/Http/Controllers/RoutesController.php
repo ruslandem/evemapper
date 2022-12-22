@@ -15,36 +15,39 @@ class RoutesController extends Controller
         if ($request->input('waypoints')) {
             $waypoints = explode(',', $request->input('waypoints'));
         }
-        
+
         return view('route', compact('waypoints'));
     }
 
     public function buildRoute(Request $request)
     {
+        $route = [];
         $waypoints = $request->input('waypoints', []);
 
-        $api = new EveRoute();
-
         try {
-            $route = $api->getWaypointsRoute($waypoints);
+            $route = (new EveRoute())->getWaypointsRoute($waypoints);
         } catch (EveRouteNotFoundException $e) {
-            return response()->json(
-                [
-                    'route' => [],
-                    'info' => [],
-                    'error' => $e->getMessage()
-                ]
-            );
+            return response()->json([
+                'message' => 'Failed to build route'
+            ], 401);
         }
 
-        $info = [];
         $api = new EveSolarSystem();
-        foreach ($route as $key => $value) {
-            $info[$key] = $api->getByNames($route[$key]);
+
+        foreach ($route as &$waypointRoute) {
+            foreach ($waypointRoute as &$waypoint) {
+                $info = $api->getByName($waypoint);
+                $waypoint = [
+                    'solarSystemID' => $info->solarSystemID,
+                    'solarSystemName' => $info->solarSystemName,
+                    'constellationName' => $info->constellationName,
+                    'regionName' => $info->regionName,
+                    'security' => $info->security,
+                    'rats' => $info->rats,
+                ];
+            }
         }
 
-        return response()->json(
-            ['route' => $route, 'info' => $info]
-        );
+        return response()->json($route);
     }
 }

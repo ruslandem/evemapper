@@ -31,7 +31,6 @@ Route::withoutMiddleware(!App::environment('production') ? ['ajax.only'] : [])
         Route::post('/deleteSignature', [SignaturesController::class, 'destroy']);
         Route::post('/updateSignatures', [SignaturesController::class, 'update']);
         Route::post('/getRoute', [RoutesController::class, 'buildRoute']);
-
-        // Route::post('/waypoint', [EveController::class, 'waypoint'])->name('api.waypoint');
+        Route::post('/addAutopilotWaypoint', [EveController::class, 'waypoint']);
         // Route::post('/route', [RoutesController::class, 'buildRoute'])->name('api.route');
     });

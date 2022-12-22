@@ -5,14 +5,15 @@
       <WaypointsList />
 
       <div class="my-4 has-text-centered w-100">
-        <button class="button is-primary" @click="buildRoute">
+        <button class="button mx-2 is-primary" @click="buildRoute" :disabled="wp.waypoints.length < 2">
           <font-awesome-icon icon="fa-solid fa-route" class="mr-2" />
           get route
         </button>
+        <button class="button mx-2" @click.prevent="clearWaypoints">clear</button>
       </div>
     </div>
     <div class="column is-dark-1 p-4 mx-1">
-      <pre>{{ route }}</pre>
+      <Route :route="route" />
     </div>
   </div>
 </template>
@@ -20,14 +21,15 @@
 <script setup lang="ts">
 import WaypointsForm from "./WaypointsForm.vue";
 import WaypointsList from "./WaypointsList.vue";
+import Route from "./Route.vue";
 import { useWaypointsStore } from "@/stores/waypoints";
 import { getAxiosPostConfig } from "@/services/utils";
-import { RouteWaypoints } from "@/structures/RouteWaypoints";
 import axios from "axios";
 import { ref } from "vue";
+import { SolarSystem } from "@/structures/SolarSystem";
 
 const wp = useWaypointsStore();
-const route = ref({} as RouteWaypoints);
+const route = ref([] as SolarSystem[][]);
 
 const buildRoute = () => {
   axios
@@ -39,10 +41,15 @@ const buildRoute = () => {
       getAxiosPostConfig()
     )
     .then((response) => {
-      const routeResponse: RouteWaypoints | null = response.data;
-      if (routeResponse !== null) {
-        route.value = routeResponse;
+      if (response.status == 200) {
+        // @ts-ignore
+        route.value = response.data as SolarSystem[][];
       }
     });
+};
+
+const clearWaypoints = () => {
+  wp.waypoints = [];
+  route.value = [];
 };
 </script>
