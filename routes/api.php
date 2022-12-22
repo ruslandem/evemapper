@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EveController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocatorController;
+use App\Http\Controllers\RoutesController;
 use App\Http\Controllers\SignaturesController;
 
 /*
@@ -29,6 +30,7 @@ Route::withoutMiddleware(!App::environment('production') ? ['ajax.only'] : [])
         Route::get('/getLocationsHistory', [LocatorController::class, 'getLocationsHistory']);
         Route::post('/deleteSignature', [SignaturesController::class, 'destroy']);
         Route::post('/updateSignatures', [SignaturesController::class, 'update']);
+        Route::post('/getRoute', [RoutesController::class, 'buildRoute']);
 
         // Route::post('/waypoint', [EveController::class, 'waypoint'])->name('api.waypoint');
         // Route::post('/route', [RoutesController::class, 'buildRoute'])->name('api.route');
