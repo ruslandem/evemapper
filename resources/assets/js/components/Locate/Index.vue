@@ -1,5 +1,5 @@
 <template>
-  <div class="template has-text-white" style="height: 100%">
+  <div class="template has-text-white h-100">
     <SearchBar
       @update-system="updateSystem"
       :system-name="system.solarSystemName"

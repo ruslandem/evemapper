@@ -38,6 +38,21 @@ const routes: RouteRecordRaw[] = [
     path: "/login",
     component: () => import("@/components/Auth/Login.vue"),
   },
+  {
+    name: "privacy",
+    path: "/privacy",
+    component: () => import("@/components/Misc/Privacy.vue"),
+  },
+  {
+    name: "legal",
+    path: "/legal",
+    component: () => import("@/components/Misc/Legal.vue"),
+  },
+  {
+    name: "contacts",
+    path: "/contacts",
+    component: () => import("@/components/Misc/Contacts.vue"),
+  },
 ];
 
 export default routes;
