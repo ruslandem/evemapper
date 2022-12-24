@@ -12,13 +12,17 @@ use Illuminate\Support\Facades\Auth;
 
 class SignaturesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth.eveonline');
+    }
     /**
      * Lists signatures for the specific solar system.
      * 
      * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index(string $system)
     {
         return SignatureResource::collection(
             Signature::select([
@@ -32,12 +36,12 @@ class SignaturesController extends Controller
                 'extLinks.name as linkName',
                 'extLinks.url as linkUrl',
             ])
-            ->where([
-                'signatures.characterId' => Auth::id(),
-                'signatures.solarSystemName' => $request->input('system')
-            ])
-            ->leftJoin('extLinks', 'extLinks.name', '=', 'signatures.signatureName')
-            ->orderBy('signatures.signatureId')->get()
+                ->where([
+                    'signatures.characterId' => Auth::id(),
+                    'signatures.solarSystemName' => $system
+                ])
+                ->leftJoin('extLinks', 'extLinks.name', '=', 'signatures.signatureName')
+                ->orderBy('signatures.signatureId')->get()
         );
     }
 
@@ -51,11 +55,17 @@ class SignaturesController extends Controller
      */
     public function update(Request $request, CosmicSignatures $service): JsonResponse
     {
+        $validated = $request->validate([
+            'solarSystemName' => 'required|string',
+            'text' => 'required|string',
+            'replace' => 'boolean',
+        ]);
+
         $result = $service->updateFromClipboardText(
             Auth::id(),
-            $request->input('solarSystemName'),
-            $request->input('text'),
-            $request->boolean('replace')
+            $validated['solarSystemName'],
+            $validated['text'],
+            $validated['replace']
         );
 
         return response()->json(
@@ -63,25 +73,25 @@ class SignaturesController extends Controller
         );
     }
 
-   
+
     /**
      * Deletes signature with the specified id and solar system.
      * 
-     * @param Request $request Must contain solarSystemName and signatureId parameters
+     * @param Request $request Must contain systemName and id parameters
      * @param CosmicSignatures $service
      * @return JsonResponse
      */
     public function destroy(Request $request, CosmicSignatures $service): JsonResponse
     {
         $validated = $request->validate([
-            'solarSystemName' => 'required|string',
-            'signatureId' => 'required|string',
+            'systemName' => 'required|string',
+            'id' => 'required|string',
         ]);
 
         $deleted = $service->deleteSignature(
             Auth::id(),
-            $validated['solarSystemName'],
-            $validated['signatureId'],
+            $validated['systemName'],
+            $validated['id'],
         );
 
         return response()->json(

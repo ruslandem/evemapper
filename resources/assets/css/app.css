@@ -1,29 +1,79 @@
 @import url('https://fonts.googleapis.com/css?family=Orbitron&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans&display=swap');
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
 
 body {
-    background-image: url('/img/bg.jpg');
-    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100vw;
+    font-family: 'Noto Sans', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #040d14;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+#app {
+    height: 100%;
+    width: 100%;
+    background-image: url('../img/bg.jpg');
+    background-repeat: repeat-y;
     background-position: top;
+}
+
+.navbar {
+    height: 60px;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    height: 40px;
+    width: 100%;
+    padding: .5rem;
+    border-top: 1px solid gray;
+}
+
+.content-block {
+    height: calc(100% - 100px);
+}
+
+.search-bar {
+    height: 150px;
+}
+
+.locator {
+    height: calc(100% - 150px);
+}
+
+.scrollable {
+    overflow-y: auto;
+    height: calc(100% - 4rem);
 }
 
 .logo {
     font-family: 'Orbitron';
+    font-size: 30px;
 }
 
-.footer {
-    padding: 1rem;
+.h-100 {
+    height: 100%;
+}
+
+.w-100 {
     width: 100%;
 }
 
-.main-content {
-    min-height: 89vh;
-}
-
-.is-dark-half {
+.is-dark-1 {
     background-color: rgba(54, 54, 54, .5) !important;
 }
 
-.is-darker {
+.is-dark-2 {
     background-color: rgba(54, 54, 54, .8) !important;
 }
 
@@ -42,4 +92,80 @@ body {
 
 .new-signature {
     background-color: rgb(60 80 60);
+}
+
+/* Custom Icons */
+.c-icon {
+    display: inline-block;
+    position: relative;
+    width: 16px;
+    height: 16px;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    padding: 0;
+    margin: 0 3px 0 0;
+}
+
+.c-icon-data-site {
+    background-image: url("../img/eve/items/Brackets/data_Site_16.png");
+}
+
+.c-icon-relic-site {
+    background-image: url("../img/eve/items/Brackets/relic_Site_16.png");
+}
+
+.c-icon-combat-site {
+    background-image: url("../img/eve/items/Brackets/combatSite_16.png");
+}
+
+.c-icon-wormhole {
+    background-image: url("../img/eve/items/Brackets/wormhole.png");
+}
+
+.c-icon-gas-site {
+    background-image: url("../img/eve/items/Brackets/harvestableCloud.png");
+}
+
+.c-icon-eve-sso-login {
+    background-image: url("../img/eve-sso-login-white-large.png");
+    width: 270px;
+    height: 45px;
+    margin: 0;
+    padding: 0;
+}
+
+/* 
+vue-select dropdown
+*/
+.search-dropdown .vs__search {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-size: 15px;
+}
+
+.search-dropdown .vs__search::placeholder,
+.search-dropdown .vs__dropdown-toggle,
+.search-dropdown .vs__dropdown-menu {
+    background: #efefef;
+    color: #3298dc;
+
+}
+
+.search-dropdown .vs__clear,
+.search-dropdown .vs__open-indicator {
+    fill: #3298dc;
+}
+
+.select:not(.is-multiple):not(.is-loading)::after {
+    display: none;
+}
+
+.router-link-active {
+    color: rgb(255, 128, 0) !important;
+}
+
+li.nostyle {
+    list-style-type: none;
+    list-style-position: inside;
 }

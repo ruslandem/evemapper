@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es2021",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "lib": ["es2021", "dom", "dom.iterable"],
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "allowJs": true,
+    "noImplicitAny": false,
+    "paths": {
+      "@/*": ["js/*"]
+    }
+  },
+  "include": ["js/**/*"],
+  "exclude": ["node_modules", "js/_old"]
+}

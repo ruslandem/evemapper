@@ -18,22 +18,20 @@ class LocatorController extends Controller
         'Hek'
     ];
 
-    public function list(Request $request)
+    public function list($search = null)
     {
         $systems = [];
 
-        $searchText = trim($request->input('search'));
+        $searchText = trim($search);
 
         if (!empty($searchText)) {
             $systems = (new EveSolarSystem())->search($searchText);
         }
 
-        return response()->json([
-            'systems' => array_column($systems, 'solarSystemName')
-        ]);
+        return array_column($systems, 'solarSystemName');
     }
 
-    public function show($system = null)
+    public function get($system = null)
     {
         $result = [
             'system' => null,
@@ -45,7 +43,7 @@ class LocatorController extends Controller
 
         if (empty($system)) {
             $result['errorMessage'] = 'No system specified';
-            return view('locator', $result);
+            return $result;
         }
 
         $result['system'] = (new EveSolarSystem())->getByName($system);
@@ -53,11 +51,18 @@ class LocatorController extends Controller
         if ($result['system']) {
             $eveRoute = new EveRoute();
             foreach ($this->tradeHubs as $tradeHub) {
-                $result['jumps'][$tradeHub] = count($eveRoute->getRoute($result['system']->solarSystemName, $tradeHub));
+                $result['jumps'][$tradeHub] = count(
+                    $eveRoute->getRoute($result['system']->solarSystemName, $tradeHub)
+                );
             }
             @asort($result['jumps']);
         }
 
-        return view('locator', $result);
+        return $result;
+    }
+
+    public function getLocationsHistory()
+    {
+        return (new EveLocationHistory())->get(Auth::id());
     }
 }

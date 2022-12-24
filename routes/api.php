@@ -1,7 +1,12 @@
 <?php
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EveController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LocatorController;
+use App\Http\Controllers\RoutesController;
+use App\Http\Controllers\SignaturesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +19,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::withoutMiddleware(!App::environment('production') ? ['ajax.only'] : [])
+    ->group(function () {
+        Route::get('/getWormholeClasses', [HomeController::class, 'getWormholeClasses']);
+        Route::get('/getRatsDamages', [HomeController::class, 'getRatsDamages']);
+        Route::get('/getSolarSystems/{search}', [LocatorController::class, 'list']);
+        Route::get('/getSolarSystemInfo/{system}', [LocatorController::class, 'get']);
+        Route::get('/getSignatures/{system}', [SignaturesController::class, 'index'])->name('api.get-signatures');
+        Route::get('/getLocation', [EveController::class, 'locate']);
+        Route::get('/getLocationsHistory', [LocatorController::class, 'getLocationsHistory']);
+        Route::post('/deleteSignature', [SignaturesController::class, 'destroy']);
+        Route::post('/updateSignatures', [SignaturesController::class, 'update']);
+        Route::post('/getRoute', [RoutesController::class, 'buildRoute']);
+        Route::post('/addAutopilotWaypoint', [EveController::class, 'waypoint']);
+        Route::post('/sendContactForm', [EveController::class, 'contact']);
+    });

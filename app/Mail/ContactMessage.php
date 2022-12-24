@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Http\Request;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
@@ -16,12 +15,14 @@ class ContactMessage extends Mailable
     public string $email;
     public string $body;
     public string $date;
+    public string $captchaScore;
 
-    public function __construct(Request $request)
+    public function __construct(array $input)
     {
-        $this->name = $request->name;
-        $this->email = $request->email;
-        $this->body = nl2br($request->message);
+        $this->name = $input['name'];
+        $this->email = $input['email'];
+        $this->body = nl2br($input['message']);
+        $this->captchaScore = $input['captchaScore'] ?? null;
         $this->date = date("c");
     }
 
