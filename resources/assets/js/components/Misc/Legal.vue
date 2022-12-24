@@ -63,7 +63,7 @@
           You are welcome to contact me in-game by sending evemail to
           <span class="tag has-text-weight-bold">Khazad Tyori</span> or by
           sending your message on EveMapper contact page
-          <a href="/contact">here</a>.
+          <router-link to="/contacts">here</router-link>.
         </p>
       </div>
 
