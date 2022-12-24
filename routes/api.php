@@ -19,7 +19,7 @@ use App\Http\Controllers\SignaturesController;
 |
 */
 
-Route::withoutMiddleware(!App::environment('production') ? ['ajax.only'] : [])
+Route::withoutMiddleware(!App::environment('production') ? [] : [])
     ->group(function () {
         Route::get('/getWormholeClasses', [HomeController::class, 'getWormholeClasses']);
         Route::get('/getRatsDamages', [HomeController::class, 'getRatsDamages']);
