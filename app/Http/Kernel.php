@@ -44,7 +44,7 @@ class Kernel extends HttpKernel
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\EncryptCookies::class,
-            \App\Http\Middleware\AjaxOnly::class,
+            // \App\Http\Middleware\AjaxOnly::class,
         ],
     ];
 
@@ -65,7 +65,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'ajax.only' => \App\Http\Middleware\AjaxOnly::class,
+        // 'ajax.only' => \App\Http\Middleware\AjaxOnly::class,
         'auth.eveonline' => \App\Http\Middleware\EveAuth::class,
     ];
 }
