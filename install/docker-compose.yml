@@ -30,6 +30,16 @@ services:
     networks:
       - evemapper
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    restart: unless-stopped
+    ports:
+      - 8025:8025
+      - 1025:1025
+    networks:
+      - evemapper
+
 networks:
   evemapper:
     driver: bridge

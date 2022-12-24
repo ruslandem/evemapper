@@ -1,14 +1,20 @@
-<template>
-  <button @click="recaptcha">Execute recaptcha</button>
-</template>
+<template></template>
 
-<script setup>
-import { load } from 'recaptcha-v3';
+<script setup lang="ts">
+import { load } from "recaptcha-v3";
 
-// const { executeRecaptcha, recaptchaLoaded } = useReCaptcha();
-// const recaptcha = async () => {
-//   await recaptchaLoaded();
-//   const token = await executeRecaptcha("contacts");
-//   console.log(token);
-// };
+const props = defineProps({
+  siteKey: {
+    type: String,
+  },
+});
+const emit = defineEmits(["set-token"]);
+
+if (props.siteKey) {
+  load(props.siteKey).then((recaptcha) => {
+    recaptcha.execute("contacts").then((token) => {
+      emit("set-token", token);
+    });
+  });
+}
 </script>

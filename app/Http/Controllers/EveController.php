@@ -175,19 +175,36 @@ class EveController extends Controller
 
     public function contact(Request $request)
     {
-        $captchaValidated = GoogleReCaptchaV3::verifyResponse(
-            $request->input('g-recaptcha-response'),
+        $validated = $request->validate([
+            'name' => 'string|required',
+            'email' => 'email|required',
+            'message' => 'string|required',
+            'g-recaptcha-response' => 'string|required'
+        ]);
+
+        $captcha = GoogleReCaptchaV3::verifyResponse(
+            $validated['g-recaptcha-response'],
             $request->getClientIp()
-        )->isSuccess();
+        );
 
-        if ($captchaValidated) {
-            $recipient = Config::get('mail.admin');
-            $message = new ContactMessage($request);
-
-            if ($recipient) {
-                Mail::to($recipient)->send($message);
-                return view('contact-thanks');
-            }
+        if (!$captcha->isSuccess()) {
+            $error = $captcha->getMessage();
+            return response()->json([
+                'message' => "Invalid captcha ({$error})"
+            ], 400);
         }
+        $validated['captchaScore'] = $captcha->getScore();
+
+        $recipient = Config::get('mail.admin');
+
+        if ($recipient) {
+            Mail::to($recipient)->send(
+                new ContactMessage($validated)
+            );
+        }
+
+        return response()->json([
+            'message' => 'Message sent'
+        ]);
     }
 }
