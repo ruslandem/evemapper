@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\EveLocationApi;
 use App\Core\EveLocationHistory;
 use App\Core\EveRoute;
 use App\Core\EveSolarSystem;
-use Illuminate\Http\Request;
+use App\Core\Exceptions\EveApiTokenExpiredException;
 use Illuminate\Support\Facades\Auth;
 
 class LocatorController extends Controller
@@ -64,5 +65,31 @@ class LocatorController extends Controller
     public function getLocationsHistory()
     {
         return (new EveLocationHistory())->get(Auth::id());
+    }
+
+    public function locate()
+    {
+        $user = Auth::user();
+
+        if ($user === null) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        try {
+            $locationApi = new EveLocationApi($user->token);
+            $solarSystemId = $locationApi->getCharacterLocation($user->characterId);
+        } catch (EveApiTokenExpiredException $e) {
+            return redirect()->action([AuthController::class, 'update']);
+        }
+
+        $solarSystem = new EveSolarSystem();
+        $data = $solarSystem->getById($solarSystemId);
+
+        // logging location
+        (new EveLocationHistory())->write($user->characterId, $data->solarSystemName);
+
+        return $data->solarSystemName;
     }
 }

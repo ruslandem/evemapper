@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\EveLocationApi;
 use App\Core\EveRoute;
 use App\Core\EveSolarSystem;
+use App\Core\Exceptions\EveApiTokenExpiredException;
 use App\Core\Exceptions\EveRouteNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoutesController extends Controller
 {
@@ -49,5 +52,23 @@ class RoutesController extends Controller
         }
 
         return response()->json($route);
+    }
+
+    public function waypoint(Request $request)
+    {
+        $validated = $request->validate([
+            'system' => 'required|string',
+        ]);
+
+        $user = Auth::user();
+
+        try {
+            $api = new EveLocationApi($user->token);
+            $api->addAutopilotWaypoint(
+                $validated['system']
+            );
+        } catch (EveApiTokenExpiredException $e) {
+            return $this->update($user);
+        }
     }
 }

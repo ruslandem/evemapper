@@ -1,36 +1,33 @@
 <?php
 
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EveController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocatorController;
 use App\Http\Controllers\RoutesController;
 use App\Http\Controllers\SignaturesController;
+use App\Http\Controllers\SiteController;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
 */
 
-Route::withoutMiddleware(!App::environment('production') ? [] : [])
-    ->group(function () {
-        Route::get('/getWormholeClasses', [HomeController::class, 'getWormholeClasses']);
-        Route::get('/getRatsDamages', [HomeController::class, 'getRatsDamages']);
-        Route::get('/getSolarSystems/{search}', [LocatorController::class, 'list']);
-        Route::get('/getSolarSystemInfo/{system}', [LocatorController::class, 'get']);
-        Route::get('/getSignatures/{system}', [SignaturesController::class, 'index'])->name('api.get-signatures');
-        Route::get('/getLocation', [EveController::class, 'locate']);
-        Route::get('/getLocationsHistory', [LocatorController::class, 'getLocationsHistory']);
-        Route::post('/deleteSignature', [SignaturesController::class, 'destroy']);
-        Route::post('/updateSignatures', [SignaturesController::class, 'update']);
-        Route::post('/getRoute', [RoutesController::class, 'buildRoute']);
-        Route::post('/addAutopilotWaypoint', [EveController::class, 'waypoint']);
-        Route::post('/sendContactForm', [EveController::class, 'contact']);
-    });
+Route::group([], function () {
+    // Main website and static data requests
+    Route::post('/sendContactForm', [SiteController::class, 'contact']);
+    Route::get('/getWormholeClasses', [SiteController::class, 'getWormholeClasses']);
+    Route::get('/getRatsDamages', [SiteController::class, 'getRatsDamages']);
+    // Location and history
+    Route::get('/getSolarSystems/{search}', [LocatorController::class, 'list']);
+    Route::get('/getSolarSystemInfo/{system}', [LocatorController::class, 'get']);
+    Route::get('/getLocation', [LocatorController::class, 'locate']);
+    Route::get('/getLocationsHistory', [LocatorController::class, 'getLocationsHistory']);
+    // Signatures
+    Route::get('/getSignatures/{system}', [SignaturesController::class, 'index'])->name('api.get-signatures');
+    Route::post('/deleteSignature', [SignaturesController::class, 'destroy']);
+    Route::post('/updateSignatures', [SignaturesController::class, 'update']);
+    // Solar systems route
+    Route::post('/getRoute', [RoutesController::class, 'buildRoute']);
+    Route::post('/addAutopilotWaypoint', [RoutesController::class, 'waypoint']);
+});

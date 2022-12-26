@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Core\EveWormholeClasses;
+use App\Mail\ContactMessage;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
+use TimeHunter\LaravelGoogleReCaptchaV3\Facades\GoogleReCaptchaV3;
 
-class HomeController extends Controller
+class SiteController extends Controller
 {
     public function getWormholeClasses()
     {
@@ -111,5 +116,40 @@ class HomeController extends Controller
                 "damageToUse" => "Kinetic"
             ],
         ];
+    }
+
+    public function contact(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'string|required',
+            'email' => 'email|required',
+            'message' => 'string|required',
+            'g-recaptcha-response' => 'string|required'
+        ]);
+
+        $captcha = GoogleReCaptchaV3::verifyResponse(
+            $validated['g-recaptcha-response'],
+            $request->getClientIp()
+        );
+
+        if (!$captcha->isSuccess()) {
+            $error = $captcha->getMessage();
+            return response()->json([
+                'message' => "Invalid captcha ({$error})"
+            ], 400);
+        }
+        $validated['captchaScore'] = $captcha->getScore();
+
+        $recipient = Config::get('mail.admin');
+
+        if ($recipient) {
+            Mail::to($recipient)->send(
+                new ContactMessage($validated)
+            );
+        }
+
+        return response()->json([
+            'message' => 'Message sent'
+        ]);
     }
 }
