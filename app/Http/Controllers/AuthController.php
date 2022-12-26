@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -45,7 +46,7 @@ class AuthController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function callback()
+    public function callback(Request $request)
     {
         $eveUser = Socialite::driver('eveonline')->user();
 
@@ -96,7 +97,7 @@ class AuthController extends Controller
      */
     public function update()
     {
-        $user = Auth::user();
+        $user = session()->pull('user');
 
         if ($user === null) {
             return response()->json([

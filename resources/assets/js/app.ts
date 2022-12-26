@@ -2,7 +2,7 @@ import { createApp } from "vue";
 import router from "@/router";
 import App from "./App.vue";
 import vSelect from "vue-select";
-import VueGtag from "vue-gtag";
+import VueGtag from "vue-gtag-next";
 import { createPinia } from "pinia";
 // FontAwesome
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -19,8 +19,8 @@ createApp(App)
   .use(createPinia())
   .use(router)
   .use(VueGtag, {
-    config: {
-      id: "G-GPRF1TNFPB",
+    property: {
+      id: localStorage.getItem("GlowCookies") === "1" ? "G-GPRF1TNFPB" : null,
     },
   })
   .component("font-awesome-icon", FontAwesomeIcon)

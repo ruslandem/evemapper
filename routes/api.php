@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EveController;
 use App\Http\Controllers\LocatorController;
 use App\Http\Controllers\RoutesController;
 use App\Http\Controllers\SignaturesController;

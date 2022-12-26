@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Core\EveWormholeClasses;
 use App\Mail\ContactMessage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use TimeHunter\LaravelGoogleReCaptchaV3\Facades\GoogleReCaptchaV3;
