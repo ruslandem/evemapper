@@ -5,6 +5,8 @@ import {
   RouteRecordRaw,
 } from "vue-router";
 
+const admins: string[] = ["Khazad Tyori"];
+
 const checkAuth = (
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
@@ -12,6 +14,23 @@ const checkAuth = (
 ) => {
   const auth = useAuthStore();
   if (!auth.isAuthenticated) {
+    next("login");
+    return false;
+  }
+  next();
+};
+
+const checkAdmin = (
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) => {
+  const auth = useAuthStore();
+  if (!auth.isAuthenticated) {
+    next("login");
+    return false;
+  }
+  if (auth.character && !admins.includes(auth.character.name)) {
     next("login");
     return false;
   }
@@ -52,6 +71,12 @@ const routes: RouteRecordRaw[] = [
     name: "contacts",
     path: "/contacts",
     component: () => import("@/components/Misc/Contacts.vue"),
+  },
+  {
+    name: "admin",
+    path: "/admin",
+    beforeEnter: checkAdmin,
+    component: () => import("@/components/Admin/Index.vue"),
   },
 ];
 

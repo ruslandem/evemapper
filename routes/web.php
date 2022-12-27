@@ -18,6 +18,7 @@ Route::get('/login', static fn () => view('index'));
 Route::get('/privacy', static fn () => view('index'));
 Route::get('/legal', static fn () => view('index'));
 Route::get('/contacts', static fn () => view('index'));
+Route::get('/admin', static fn () => view('index'));
 
 // Routed in Laravel
 Route::get('/auth', [AuthController::class, 'auth'])->name('auth');

@@ -1,10 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LocatorController;
 use App\Http\Controllers\RoutesController;
 use App\Http\Controllers\SignaturesController;
 use App\Http\Controllers\SiteController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,4 +30,8 @@ Route::group([], function () {
     // Solar systems route
     Route::post('/getRoute', [RoutesController::class, 'buildRoute']);
     Route::post('/addAutopilotWaypoint', [RoutesController::class, 'waypoint']);
+});
+
+Route::prefix('admin')->group(function () {
+    Route::get('/getStatistics', [AdminController::class, 'getStatistics']);
 });

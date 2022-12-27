@@ -3,9 +3,7 @@
   <nav class="navbar">
     <div class="container">
       <div class="navbar-brand">
-        <a class="navbar-item logo" href="/">
-          Eve Mapper
-        </a>
+        <a class="navbar-item logo" href="/"> Eve Mapper </a>
         <a
           role="button"
           class="navbar-burger"

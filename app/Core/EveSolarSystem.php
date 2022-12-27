@@ -73,6 +73,23 @@ class EveSolarSystem
             $solarSystemName == 'Thera';
     }
 
+    public function getStatistics(): array
+    {
+        $data = $this->dbApp->table('signatures')
+            ->select(
+                'signatures.characterId',
+                'users.characterName',
+                DB::raw('COUNT(DISTINCT signatures.solarSystemName) as solarSystemsCount'),
+                DB::raw('COUNT(DISTINCT signatures.signatureId) as signaturesCount'),
+                DB::raw('MAX(signatures.updated_at) as updatedAt')
+            )
+            ->leftJoin('users', 'users.characterId', '=', 'signatures.characterId')
+            ->groupBy(['signatures.characterId'])
+            ->get();
+
+        return $data->toArray();
+    }
+
     protected function addWormholeSystemData(stdClass &$data): void
     {
         $wormholeData = $this->dbApp->table('wormholeSystems')
