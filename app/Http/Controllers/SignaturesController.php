@@ -14,7 +14,7 @@ class SignaturesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth.eveonline');
+        $this->middleware('eve.auth');
     }
     /**
      * Lists signatures for the specific solar system.

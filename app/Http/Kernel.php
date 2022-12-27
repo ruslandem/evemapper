@@ -66,6 +66,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         // 'ajax.only' => \App\Http\Middleware\AjaxOnly::class,
-        'auth.eveonline' => \App\Http\Middleware\EveAuth::class,
+        'eve.auth' => \App\Http\Middleware\EveAuth::class,
     ];
 }

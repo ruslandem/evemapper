@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Auth;
 
 class RoutesController extends Controller
 {
+    public function __construct() {
+        $this->middleware('eve.auth');
+    }
+    
     public function route(Request $request)
     {
         $waypoints = [];

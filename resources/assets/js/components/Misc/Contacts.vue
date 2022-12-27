@@ -1,9 +1,9 @@
 <template>
-  <div class="h-100">
+  <div class="h-100" style="max-width: 860px; margin: 0 auto">
     <h1 class="title is-1 has-text-centered mt-3 mb-5">Contact us</h1>
     <div v-if="!formSent" class="p-6 is-dark-1">
-      <div class="content">
-        <div>
+      <div class="content" v-if="CookieConsentState == '1'">
+        <form @submit.prevent="sendForm">
           <div id="contact_id"></div>
           <div class="field">
             <div class="control has-icons-left">
@@ -14,6 +14,7 @@
                 id="name"
                 class="input"
                 placeholder="Name"
+                required
                 autofocus
               />
               <span class="icon is-left">
@@ -30,6 +31,7 @@
                 id="email"
                 class="input"
                 placeholder="Email"
+                required
               />
               <span class="icon is-left">
                 <i class="fa fa-envelope"></i>
@@ -44,22 +46,37 @@
               rows="5"
               class="textarea"
               placeholder="Message"
+              required
             ></textarea>
           </div>
           <button
-            type="button"
+            type="submit"
             class="button is-success is-size-5"
-            @click.prevent="sendForm"
-            :disabled="formData.message?.length < 1"
+            :disabled="
+              formData.message?.length < 1 ||
+              formData.email?.length < 1 ||
+              formData.name?.length < 1
+            "
           >
             Submit
           </button>
-        </div>
+        </form>
 
         <Recaptcha
           site-key="6Ldm-EMjAAAAAB2O9CLGDONd1pa07TXjglX2hEfc"
           @set-token="setToken"
         />
+      </div>
+      <div v-else class="content">
+        <p>
+          Unfortunatelly we unable to provide the security of our website
+          because you have not accepted cookies usage. If you want to use our
+          contact form to send us the message, you should accept cookies usage and
+          refresh this page.
+          <a href="#" @click.prevent="showCookieConsent"
+            >Show cookie consent...</a
+          >
+        </p>
       </div>
     </div>
     <div v-else>
@@ -80,8 +97,9 @@ import { ContactFormData } from "@/structures/ContactFormData";
 import axios from "axios";
 import { toast } from "bulma-toast";
 import { ref } from "vue";
-import { event } from "vue-gtag";
+import { glowCookies } from "@/libs/glow-cookies/glowCookies";
 
+const CookieConsentState = localStorage.getItem("GlowCookies");
 const formSent = ref(false);
 const recaptchaToken = ref("");
 const setToken = (token: string) => {
@@ -99,6 +117,7 @@ const sendForm = () => {
   axios
     .post("/api/sendContactForm", formData.value, getAxiosPostConfig())
     .then((response) => {
+      console.log(response);
       if (response.status !== 200) {
         toast({
           message: `Error sending form (${response.statusText})`,
@@ -106,8 +125,12 @@ const sendForm = () => {
         });
       } else {
         formSent.value = true;
-        event('contactFormSent');
       }
     });
+};
+
+const showCookieConsent = () => {
+  localStorage.removeItem("GlowCookies");
+  window.location.href = '/contacts';
 };
 </script>

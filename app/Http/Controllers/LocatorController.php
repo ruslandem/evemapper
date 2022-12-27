@@ -8,6 +8,7 @@ use App\Core\EveRoute;
 use App\Core\EveSolarSystem;
 use App\Core\Exceptions\EveApiTokenExpiredException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LocatorController extends Controller
 {
@@ -18,6 +19,10 @@ class LocatorController extends Controller
         'Rens',
         'Hek'
     ];
+
+    public function __construct() {
+        $this->middleware('eve.auth');
+    }
 
     public function list($search = null)
     {
@@ -64,6 +69,9 @@ class LocatorController extends Controller
 
     public function getLocationsHistory()
     {
+        $debug = Auth::user()->toArray();
+        Log::debug(json_encode($debug, JSON_PRETTY_PRINT));
+        
         return (new EveLocationHistory())->get(Auth::id());
     }
 
