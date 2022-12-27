@@ -5,15 +5,8 @@ import vSelect from "vue-select";
 import VueGtag from "vue-gtag-next";
 import { createPinia } from "pinia";
 // FontAwesome
-import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { fas } from "@fortawesome/free-solid-svg-icons";
-import { far } from "@fortawesome/free-regular-svg-icons";
-import { dom } from "@fortawesome/fontawesome-svg-core";
-
-library.add(fas);
-library.add(far);
-dom.watch();
+import "@/libs/icons";
 
 createApp(App)
   .use(createPinia())
@@ -23,6 +16,6 @@ createApp(App)
       id: localStorage.getItem("GlowCookies") === "1" ? "G-GPRF1TNFPB" : null,
     },
   })
-  .component("font-awesome-icon", FontAwesomeIcon)
+  .component("fa-icon", FontAwesomeIcon)
   .component("v-select", vSelect)
   .mount("#app");

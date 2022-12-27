@@ -28,7 +28,7 @@
           title="Find solar system"
           @click.prevent="searchSystem"
         >
-          <font-awesome-icon icon="fa-solid fa-search" class="mr-2" /> search</a
+          <fa-icon icon="fas fa-search" class="mr-2" /> search</a
         >
       </div>
       <div class="control">
@@ -39,8 +39,8 @@
           title="Get current location"
           @click.prevent="updateWithCurrentLocation"
         >
-          <font-awesome-icon
-            icon="fa-solid fa-location-crosshairs"
+          <fa-icon
+            icon="fas fa-location-crosshairs"
             :class="{ 'fa-spin': isGettingLocation }"
           />
         </a>

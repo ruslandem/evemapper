@@ -41,7 +41,7 @@
                   /></span>
                   <span>{{ auth.character?.name }}</span>
                   <span class="icon is-small">
-                    <font-awesome-icon icon="fa-solid fa-caret-down" />
+                    <fa-icon icon="fas fa-caret-down" />
                   </span>
                 </button>
               </div>

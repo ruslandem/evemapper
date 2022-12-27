@@ -10,7 +10,7 @@
       <a
         :href="`/route?waypoints=${systemName},${index}`"
         class="has-text-warning"
-        ><i class="fa-solid fa-route ml-1"></i
+        ><i class="fas fa-route ml-1"></i
       ></a>
     </span>
   </div>

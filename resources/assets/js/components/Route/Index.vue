@@ -6,7 +6,7 @@
 
       <div class="my-4 has-text-centered w-100">
         <button class="button mx-2 is-primary" @click="buildRoute" :disabled="wp.waypoints.length < 2">
-          <font-awesome-icon icon="fa-solid fa-route" class="mr-2" />
+          <fa-icon icon="fas fa-route" class="mr-2" />
           get route
         </button>
         <button class="button mx-2" @click.prevent="clearWaypoints">clear</button>

@@ -12,10 +12,10 @@
             setWaypointAutopilot(waypointsRoute[0].solarSystemName)
           "
         >
-          <font-awesome-icon
-            icon="fa-solid fa-location"
+          <fa-icon
+            icon="fas fa-location"
             class="mx-1 has-text-warning"
-            mask="fa-solid fa-circle"
+            mask="fas fa-circle"
             transform="shrink-4"
           />
         </a>

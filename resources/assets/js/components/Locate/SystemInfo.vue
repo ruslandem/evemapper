@@ -60,7 +60,7 @@
           )}/${system?.solarSystemName}#sec`"
         >
           DotLan Map
-          <i class="fa-solid fa-arrow-up-right-from-square ml-1 fa-xs"></i>
+          <i class="fas fa-arrow-up-right-from-square ml-1 fa-xs"></i>
         </a>
         <a
           class="button is-black is-small mx-1"
@@ -69,7 +69,7 @@
           :href="`https://zkillboard.com/system/${system?.solarSystemName}`"
         >
           zKillboard
-          <i class="fa-solid fa-arrow-up-right-from-square ml-1 fa-xs"></i>
+          <i class="fas fa-arrow-up-right-from-square ml-1 fa-xs"></i>
         </a>
       </div>
       <!-- /Link Buttons -->

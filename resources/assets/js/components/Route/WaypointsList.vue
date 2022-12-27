@@ -21,10 +21,10 @@
           @click.prevent="wp.remove(waypoint)"
           title="Delete waypoint"
         >
-          <font-awesome-icon
-            icon="fa-solid fa-xmark"
+          <fa-icon
+            icon="fas fa-xmark"
             class="mx-1 has-text-danger"
-            mask="fa-solid fa-circle"
+            mask="fas fa-circle"
             transform="shrink-7"
           />
         </a>
@@ -36,10 +36,10 @@
           v-if="index != 0"
           @click.prevent="wp.setOrigin(waypoint)"
         >
-          <font-awesome-icon
-            icon="fa-solid fa-o"
+          <fa-icon
+            icon="fas fa-o"
             class="mx-1 has-text-warning"
-            mask="fa-solid fa-circle"
+            mask="fas fa-circle"
             transform="shrink-7"
           />
         </a>
@@ -49,10 +49,10 @@
           v-if="index != Object.keys(wp.waypoints).length - 1"
           @click.prevent="wp.setDestination(waypoint)"
         >
-          <font-awesome-icon
-            icon="fa-solid fa-d"
+          <fa-icon
+            icon="fas fa-d"
             class="mx-1 has-text-success"
-            mask="fa-solid fa-circle"
+            mask="fas fa-circle"
             transform="shrink-7"
           />
         </a>
