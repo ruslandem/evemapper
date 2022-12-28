@@ -64,13 +64,18 @@ import SystemInfo from './SystemInfo.vue';
 import CosmicSignatures from './CosmicSignatures.vue';
 import TradeHubs from './TradeHubs.vue';
 import LocationHistory from './LocationHistory.vue';
+import {
+  fetchSignatures,
+  fetchHistory,
+  fetchSolarSystemInfo
+} from '@/services/api';
 /**
  * References
  */
 const system = ref({} as SolarSystem);
 const jumps = ref({} as HubsJump);
-const signatures = ref([] as Array<Signature>);
-const locations = ref([] as Array<VisitedLocation>);
+const signatures = ref([] as Signature[]);
+const locations = ref([] as VisitedLocation[]);
 
 /**
  * Update system information including signatures and history list.
@@ -82,34 +87,23 @@ const updateSystem = async (name: string | null = null): Promise<void> => {
   if (name === null) {
     name = system.value.solarSystemName;
   }
-  if (name !== null && name.length > 2) {
-    // @ts-ignore
-    system.value = {} as SolarSystem;
-    await axios.get(`/api/getSolarSystemInfo/${name}`).then((response) => {
-      system.value = response.data.system || {};
-      jumps.value = (response.data.jumps as HubsJump) || {};
-    });
-    await fetchSignatures(name);
-    await fetchHistory();
+  if (name.length > 1) {
+    clearAll();
+
+    const solarSystemInfo = await fetchSolarSystemInfo(name);
+    system.value = solarSystemInfo.system;
+    jumps.value = solarSystemInfo.jumps;
+
+    signatures.value = await fetchSignatures(name);
+    locations.value = await fetchHistory();
   }
 };
 
-/**
- * Fetch signatures for specific solar system and updates `signatures` object.
- * @async
- * @param systemName - Solar system name.
- */
-const fetchSignatures = async (systemName: string) => {
-  await axios.get(`/api/getSignatures/${systemName}`).then((response) => {
-    signatures.value = (response.data.data as Array<Signature>) || [];
-  });
-};
-
-const fetchHistory = async () => {
-  locations.value = [];
-  await axios.get(`/api/getLocationsHistory`).then((response) => {
-    locations.value = (response.data as Array<VisitedLocation>) || [];
-  });
+const clearAll = () => {
+  system.value = {} as SolarSystem;
+  jumps.value = {} as HubsJump;
+  signatures.value = {} as Signature[];
+  locations.value = [] as VisitedLocation[];
 };
 
 const deleteSignature = (id: string, systemName: string): void => {

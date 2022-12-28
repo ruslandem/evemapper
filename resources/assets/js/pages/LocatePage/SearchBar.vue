@@ -12,8 +12,8 @@
           <v-select
             v-model="selectedSystem"
             style="min-width: 20rem"
-            @search="fetchSolarSystems"
-            :options="selectOptions"
+            @search="searchSolarSystemsList"
+            :options="searchSolarSystemsOptions"
             class="search-dropdown"
             ><template v-slot:no-options
               >Start typing to get systems list...</template
@@ -69,30 +69,48 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
+/**
+ * Imports
+ */
 import { ref, watch } from 'vue';
+import { fetchSolarSystems } from '@/services/api';
+import { fetchCurrentSystem } from '@/services/api';
 
-const props = defineProps({
+/**
+ * Props
+ */
+defineProps({
   systemName: String
 });
 
-const selectedSystem = ref('');
-const isLoading = ref(false);
+/**
+ * Emits
+ */
 const emit = defineEmits(['update-system']);
 
-const updateWithCurrentLocation = () => {
+/**
+ * Vars
+ */
+const selectedSystem = ref('');
+const isLoading = ref(false);
+
+/**
+ * Get current character location and updates current solar system accordingly.
+ * @async
+ * @returns Promise<void>
+ */
+const updateWithCurrentLocation = async (): Promise<void> => {
   if (isLoading.value == false) {
     isLoading.value = true;
-    axios.get(`/api/getLocation`).then((response) => {
-      if (response.data !== props.systemName) {
-        emit('update-system', response.data);
-      }
-      isLoading.value = false;
-    });
+    selectedSystem.value = await fetchCurrentSystem();
+    searchSystem();
+    isLoading.value = false;
   }
 };
 
-// Auto-refresh
+/**
+ * Auto-refresh
+ */
 const autoRefresh = ref(false);
 let refreshTimer: NodeJS.Timer | null = null;
 watch(autoRefresh, (value) => {
@@ -103,20 +121,24 @@ watch(autoRefresh, (value) => {
     : (refreshTimer = null);
 });
 
-// Solar systems search
-const selectOptions = ref([]);
-const fetchSolarSystems = (search: String, loading: Function) => {
-  if (search.length > 1) {
-    loading(true);
-    axios.get(`/api/getSolarSystems/${search}`).then((response) => {
-      selectOptions.value = response.data;
-      loading(false);
-    });
-  }
+/**
+ * Solar systems search selectbox
+ */
+const searchSolarSystemsOptions = ref(['']);
+const searchSolarSystemsList = async (
+  search: string,
+  loading: Function
+): Promise<void> => {
+  searchSolarSystemsOptions.value = await fetchSolarSystems(search, loading);
 };
-const searchSystem = () => {
+
+/**
+ * Search for selected solar system by emiting `update-system` event.
+ * @returns void
+ */
+const searchSystem = (): void => {
   emit('update-system', selectedSystem.value);
   selectedSystem.value = '';
-  selectOptions.value = [];
+  searchSolarSystemsOptions.value = [];
 };
 </script>
