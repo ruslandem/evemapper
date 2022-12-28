@@ -20,7 +20,8 @@ class LocatorController extends Controller
         'Hek'
     ];
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('eve.auth');
     }
 
@@ -71,7 +72,7 @@ class LocatorController extends Controller
     {
         $debug = Auth::user()->toArray();
         Log::debug(json_encode($debug, JSON_PRETTY_PRINT));
-        
+
         return (new EveLocationHistory())->get(Auth::id());
     }
 
@@ -90,8 +91,8 @@ class LocatorController extends Controller
             $solarSystemId = $locationApi->getCharacterLocation($user->characterId);
         } catch (EveApiTokenExpiredException $e) {
             return redirect()
-                ->action([AuthController::class, 'update'])
-                ->with('user', $user);
+                ->route('auth-update')
+                ->with('userData', $user);
         }
 
         $solarSystem = new EveSolarSystem();

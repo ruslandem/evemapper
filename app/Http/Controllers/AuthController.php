@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use App\Core\EveAuth;
 use App\Models\User;
 use Firebase\JWT\JWT;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -97,11 +94,12 @@ class AuthController extends Controller
      */
     public function update()
     {
-        $user = session()->pull('user');
+        $user = session()->pull('userData');
 
         if ($user === null) {
             return response()->json([
-                'message' => 'Unauthorized'
+                'message' => 'Unauthorized',
+                'error' => 'No user data.',
             ], 401);
         }
 

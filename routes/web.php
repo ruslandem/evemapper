@@ -21,7 +21,7 @@ Route::get('/contacts', static fn () => view('index'));
 Route::get('/admin', static fn () => view('index'));
 
 // Routed in Laravel
-Route::get('/auth', [AuthController::class, 'auth'])->name('auth');
-Route::get('/update', [AuthController::class, 'update'])->name('update');
-Route::get('/callback', [AuthController::class, 'callback']);
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/auth', [AuthController::class, 'auth'])->name('auth-get');
+Route::get('/update', [AuthController::class, 'update'])->name('auth-update');
+Route::get('/callback', [AuthController::class, 'callback'])->name('auth-callback');
+Route::get('/logout', [AuthController::class, 'logout'])->name('auth-logout');
