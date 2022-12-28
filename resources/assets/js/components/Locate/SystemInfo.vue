@@ -50,29 +50,11 @@
 
       <!-- Link Buttons -->
       <div class="has-text-centered">
-        <a
-          class="button is-warning is-small mx-1"
-          target="_blank"
-          rel="nofollow noopener noreferrer"
-          :href="`https://evemaps.dotlan.net/map/${system?.regionName?.replace(
-            ' ',
-            '_'
-          )}/${system?.solarSystemName}#sec`"
-        >
-          DotLan Map
-          <i class="fas fa-arrow-up-right-from-square ml-1 fa-xs"></i>
-        </a>
-        <a
-          class="button is-black is-small mx-1"
-          target="_blank"
-          rel="nofollow noopener noreferrer"
-          :href="`https://zkillboard.com/system/${system?.solarSystemName}`"
-        >
-          zKillboard
-          <i class="fas fa-arrow-up-right-from-square ml-1 fa-xs"></i>
-        </a>
+        <ButtonLink :href="linkDotlan" text="DotLan Map" class="is-warning" />
+        <ButtonLink :href="linkZkillboard" text="zKillboard" class="is-black" />
       </div>
       <!-- /Link Buttons -->
+
     </div>
   </div>
 </template>
@@ -84,15 +66,33 @@ td:nth-child(1) {
 </style>
 
 <script setup lang="ts">
-import { PropType } from "vue";
+import { PropType, computed } from "vue";
 import {
   getSecurityStatusStyle,
   getWormholeStaticColor,
   getWormholeStaticType,
 } from "@/services/utils";
 import { SolarSystem } from "@/structures/SolarSystem";
+import ButtonLink from "@/components/ui/ButtonLink.vue";
 
-defineProps({
+const props = defineProps({
   system: {} as PropType<SolarSystem>,
+});
+
+const linkDotlan = computed(() => {
+  return [
+    "https://evemaps.dotlan.net/map/",
+    props.system?.regionName?.replace(" ", "_"),
+    "/",
+    props.system?.solarSystemName,
+    "#sec",
+  ].join("");
+});
+
+const linkZkillboard = computed(() => {
+  return [
+    "https://zkillboard.com/system/", 
+    props.system?.solarSystemName
+  ].join("");
 });
 </script>

@@ -10,17 +10,17 @@
       <a
         :href="`/route?waypoints=${systemName},${index}`"
         class="has-text-warning"
-        ><i class="fas fa-route ml-1"></i
-      ></a>
+        ><fa-icon icon="fas fa-route" class="ml-1"
+      /></a>
     </span>
   </div>
 </template>
 
 <script setup lang="ts">
-import { HubsJump } from "@/structures/HubsJump";
+import { HubsJump } from '@/structures/HubsJump';
 
 defineProps({
   jumps: {} as HubsJump,
-  systemName: String,
+  systemName: String
 });
 </script>

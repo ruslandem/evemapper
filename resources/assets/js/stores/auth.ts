@@ -1,10 +1,10 @@
-import { defineStore } from "pinia";
-import { CharacterInfo } from "@/structures/CharacterInfo";
-import { getMetaTagContent } from "@/services/utils";
+import { defineStore } from 'pinia';
+import { CharacterInfo } from '@/structures/CharacterInfo';
+import { getMetaTagContent } from '@/services/utils';
 
-export const useAuthStore = defineStore("auth", {
+export const useAuthStore = defineStore('auth', {
   state: () => ({
-    character: null as CharacterInfo | null,
+    character: null as CharacterInfo | null
   }),
 
   getters: {
@@ -15,7 +15,7 @@ export const useAuthStore = defineStore("auth", {
      */
     isAuthenticated: (state): boolean => {
       return state.character !== null;
-    },
+    }
   },
   actions: {
     /**
@@ -23,11 +23,11 @@ export const useAuthStore = defineStore("auth", {
      * @returns void
      */
     getAuthentication: function (): void {
-      const id: string | null = getMetaTagContent("character-id");
-      const name: string | null = getMetaTagContent("character-name");
+      const id: string | null = getMetaTagContent('character-id');
+      const name: string | null = getMetaTagContent('character-name');
 
       this.character =
         id !== null && name !== null ? { id: parseInt(id), name: name } : null;
-    },
-  },
+    }
+  }
 });

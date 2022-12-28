@@ -17,3 +17,5 @@
 /database/*_test.db
 /storage/debugbar/*.json
 _ide_helper.php
+.eslintrc
+.prettierrc

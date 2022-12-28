@@ -8,13 +8,13 @@ import { createPinia } from "pinia";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import "@/libs/icons";
 createApp(App)
-    .use(createPinia())
-    .use(router)
-    .use(VueGtag, {
+  .use(createPinia())
+  .use(router)
+  .use(VueGtag, {
     property: {
-        id: localStorage.getItem("GlowCookies") === "1" ? "G-GPRF1TNFPB" : null,
+      id: localStorage.getItem("GlowCookies") === "1" ? "G-GPRF1TNFPB" : null,
     },
-})
-    .component("fa-icon", FontAwesomeIcon)
-    .component("v-select", vSelect)
-    .mount("#app");
+  })
+  .component("fa-icon", FontAwesomeIcon)
+  .component("v-select", vSelect)
+  .mount("#app");

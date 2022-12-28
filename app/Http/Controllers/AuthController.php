@@ -99,8 +99,7 @@ class AuthController extends Controller
         if ($user === null) {
             return response()->json([
                 'message' => 'Unauthorized',
-                'error' => 'No user data.',
-                'session-id' => session()->getId()
+                'error' => 'No user data.'
             ], 401);
         }
 

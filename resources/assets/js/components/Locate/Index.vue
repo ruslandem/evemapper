@@ -4,7 +4,7 @@
       @update-system="updateSystem"
       :system-name="system.solarSystemName"
     />
-    <div class="locator columns is-desktop" >
+    <div class="locator columns is-desktop">
       <div
         class="column is-two-thirds-desktop"
         :class="{ 'is-hidden': system.solarSystemName }"
@@ -45,25 +45,25 @@
 /**
  * Imports: funcs
  */
-import axios from "axios";
-import { ref, onMounted } from "vue";
-import { getAxiosPostConfig } from "@/services/utils";
-import { toast } from "bulma-toast";
+import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import { getAxiosPostConfig } from '@/services/utils';
+import { toast } from 'bulma-toast';
 /**
  * Imports: structures
  */
-import { SolarSystem } from "@/structures/SolarSystem";
-import { HubsJump } from "@/structures/HubsJump";
-import { Signature } from "@/structures/Signature";
-import { VisitedLocation } from "@/structures/VisitedLocation";
+import { SolarSystem } from '@/structures/SolarSystem';
+import { HubsJump } from '@/structures/HubsJump';
+import { Signature } from '@/structures/Signature';
+import { VisitedLocation } from '@/structures/VisitedLocation';
 /**
  * Imports: components
  */
-import SearchBar from "./SearchBar.vue";
-import SystemInfo from "./SystemInfo.vue";
-import Signatures from "./Signatures.vue";
-import TradeHubs from "./TradeHubs.vue";
-import History from "./History.vue";
+import SearchBar from './SearchBar.vue';
+import SystemInfo from './SystemInfo.vue';
+import Signatures from './Signatures.vue';
+import TradeHubs from './TradeHubs.vue';
+import History from './History.vue';
 /**
  * References
  */
@@ -112,10 +112,10 @@ const fetchHistory = async () => {
 const deleteSignature = (id: string, systemName: string): void => {
   axios
     .post(
-      "/api/deleteSignature",
+      '/api/deleteSignature',
       {
         id: id,
-        systemName: systemName,
+        systemName: systemName
       },
       getAxiosPostConfig()
     )
@@ -123,7 +123,7 @@ const deleteSignature = (id: string, systemName: string): void => {
       fetchSignatures(systemName);
       toast({
         message: `Signature ${id} deleted`,
-        type: "is-success",
+        type: 'is-success'
       });
     });
 };
