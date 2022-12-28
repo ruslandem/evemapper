@@ -3,23 +3,25 @@
   <div class="waypoints-form is-dark-1 p-4 my-1">
     <p class="title is-3 has-text-white">Route</p>
     <p class="subtitle is-6 has-text-white">
-      Get optimal shortest routing from origin to destination through the set of waypoints:
+      Get optimal shortest routing from origin to destination through the set of
+      waypoints:
     </p>
 
     <div id="searchBar" class="field has-addons">
       <p class="control w-100">
         <span class="select w-100">
           <v-select
-            v-model="selectedSystem"
-            style="min-width: 10rem"
-            @search="fetchSolarSystems"
-            :options="selectOptions"
+            v-model="selectedSolarSystem"
+            @search="searchSolarSystemsList"
+            :options="searchSolarSystemsOptions"
+            :value="{ name: selectedSolarSystem }"
             class="search-dropdown w-100"
-            :value="{ name: selectedSystem }"
-            ><template v-slot:no-options
-              >Start typing to get systems list...</template
-            ></v-select
+            style="min-width: 10rem"
           >
+            <template v-slot:no-options>
+              Start typing to get systems list...
+            </template>
+          </v-select>
         </span>
       </p>
       <div class="control">
@@ -29,8 +31,8 @@
           title="Find solar system"
           @click.prevent="addWaypoint"
         >
-          add</a
-        >
+          add
+        </a>
       </div>
     </div>
   </div>
@@ -38,29 +40,54 @@
 </template>
 
 <script setup lang="ts">
-import { useWaypointsStore } from "@/stores/waypoints";
-import axios from "axios";
-import { ref } from "vue";
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { useWaypointsStore } from '@/stores/waypoints';
+import { fetchSolarSystems } from '@/services/api';
 
-const selectedSystem = ref("");
-const selectOptions = ref([]);
-const wp = useWaypointsStore();
+/**
+ * Emits
+ */
+const emit = defineEmits(['build-route']);
 
-const fetchSolarSystems = (search: String, loading: Function) => {
-  if (search.length > 1) {
-    loading(true);
-    axios.get(`/api/getSolarSystems/${search}`).then((response) => {
-      selectOptions.value = response.data;
-      loading(false);
-    });
+/**
+ * Vars
+ */
+const selectedSolarSystem = ref('');
+const waypointsStore = useWaypointsStore();
+
+/**
+ * Solar systems selectbox.
+ */
+const searchSolarSystemsOptions = ref(['']);
+const searchSolarSystemsList = async (search: string, loading: Function) => {
+  searchSolarSystemsOptions.value = await fetchSolarSystems(search, loading);
+};
+
+/**
+ * Add waypoint
+ */
+const addWaypoint = (): void => {
+  if (selectedSolarSystem.value.length > 1) {
+    waypointsStore.add(selectedSolarSystem.value);
+    selectedSolarSystem.value = '';
+    searchSolarSystemsOptions.value = [];
   }
 };
 
-const addWaypoint = () => {
-  if (selectedSystem.value.length > 1) {
-    wp.add(selectedSystem.value);
-    selectedSystem.value = "";
-    selectOptions.value = [];
-  }
-};
+onMounted(() => {
+  /**
+   * Check if we have preset waypoints in Url query.
+   */
+  const route = useRoute();
+  const presetWaypoints: string[] = route.query.waypoints
+    ? (route.query.waypoints as string).split(',')
+    : [];
+  presetWaypoints.forEach((value) => {
+    if (value.length > 1) {
+      waypointsStore.add(value);
+    }
+  });
+  emit('build-route');
+});
 </script>

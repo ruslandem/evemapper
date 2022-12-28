@@ -36,23 +36,30 @@
 </template>
 
 <script setup lang="ts">
-import { SolarSystem } from "@/structures/solar-system";
-import { getSecurityStatusStyle } from "@/services/utils";
-import axios from "axios";
-import { toast } from "bulma-toast";
+import { toast } from 'bulma-toast';
+import { SolarSystem } from '@/structures/solar-system';
+import { getSecurityStatusStyle } from '@/services/utils';
+import { addAutopilotWaypoint } from '@/services/api';
 
-const props = defineProps({
-  route: Array<Array<SolarSystem>>,
+/**
+ * Props
+ */
+defineProps({
+  route: Array<Array<SolarSystem>>
 });
 
-const setWaypointAutopilot = (name: string) => {
-  axios.post("/api/addAutopilotWaypoint", {
-    system: name
-  }).then(() => {
+/**
+ * Add character autopilot waypoint.
+ * @async
+ * @param name - Solar system name.
+ * @returns Promise<void>
+ */
+const setWaypointAutopilot = async (name: string): Promise<void> => {
+  if (await addAutopilotWaypoint(name)) {
     toast({
-        message: `Waypoint added ${name}`,
-        type: "is-success",
-      });
-  })
+      message: `Waypoint added ${name}`,
+      type: 'is-success'
+    });
+  }
 };
 </script>

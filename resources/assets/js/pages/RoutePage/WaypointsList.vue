@@ -1,6 +1,6 @@
 <template>
   <div
-    v-for="(waypoint, index) in wp.waypoints"
+    v-for="(waypoint, index) in waypointsStore.waypoints"
     :key="index"
     class="card p-0 mb-1"
   >
@@ -10,7 +10,7 @@
         origin
       </span>
       <span
-        v-if="index == Object.keys(wp.waypoints).length - 1"
+        v-if="index == Object.keys(waypointsStore.waypoints).length - 1"
         class="has-text-success is-size-7 mx-2"
       >
         destination
@@ -18,7 +18,7 @@
       <span class="is-pulled-right">
         <a
           href="#"
-          @click.prevent="wp.remove(waypoint)"
+          @click.prevent="waypointsStore.remove(waypoint)"
           title="Delete waypoint"
         >
           <fa-icon
@@ -34,7 +34,7 @@
           href="#"
           title="Set as origin"
           v-if="index != 0"
-          @click.prevent="wp.setOrigin(waypoint)"
+          @click.prevent="waypointsStore.setOrigin(waypoint)"
         >
           <fa-icon
             icon="fas fa-o"
@@ -46,8 +46,8 @@
         <a
           href="#"
           title="Set as destination"
-          v-if="index != Object.keys(wp.waypoints).length - 1"
-          @click.prevent="wp.setDestination(waypoint)"
+          v-if="index != Object.keys(waypointsStore.waypoints).length - 1"
+          @click.prevent="waypointsStore.setDestination(waypoint)"
         >
           <fa-icon
             icon="fas fa-d"
@@ -62,8 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { useWaypointsStore } from "@/stores/waypoints";
+import { useWaypointsStore } from '@/stores/waypoints';
 
-const wp = useWaypointsStore();
-
+const waypointsStore = useWaypointsStore();
 </script>

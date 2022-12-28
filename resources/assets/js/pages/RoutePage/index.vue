@@ -1,7 +1,7 @@
 <template>
   <div class="locator columns is-desktop my-1 px-2">
     <div class="column is-one-third-desktop is-dark-1 p-4 mx-1">
-      <waypoints-form />
+      <waypoints-form @build-route="buildRoute" />
       <waypoints-list />
 
       <div class="my-4 has-text-centered w-100">
