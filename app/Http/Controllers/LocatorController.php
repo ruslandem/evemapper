@@ -90,9 +90,10 @@ class LocatorController extends Controller
             $locationApi = new EveLocationApi($user->token);
             $solarSystemId = $locationApi->getCharacterLocation($user->characterId);
         } catch (EveApiTokenExpiredException $e) {
+
             return redirect()
                 ->route('auth-update')
-                ->with('userData', $user);
+                ->with('user', $user);
         }
 
         $solarSystem = new EveSolarSystem();

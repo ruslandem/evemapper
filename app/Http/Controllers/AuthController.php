@@ -94,12 +94,13 @@ class AuthController extends Controller
      */
     public function update()
     {
-        $user = session()->pull('userData');
+        $user = session()->pull('user');
 
         if ($user === null) {
             return response()->json([
                 'message' => 'Unauthorized',
                 'error' => 'No user data.',
+                'session-id' => session()->getId()
             ], 401);
         }
 
