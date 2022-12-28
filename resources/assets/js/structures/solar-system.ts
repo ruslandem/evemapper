@@ -1,4 +1,4 @@
-import { WormholeStatic } from "./WormholeStatic";
+import { WormholeStatic } from "./wormhole-static";
 
 export interface SolarSystem {
   solarSystemID: number;

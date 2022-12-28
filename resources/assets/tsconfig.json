@@ -15,5 +15,5 @@
     }
   },
   "include": ["js/**/*"],
-  "exclude": ["node_modules", "js/_old"]
+  "exclude": ["node_modules"]
 }

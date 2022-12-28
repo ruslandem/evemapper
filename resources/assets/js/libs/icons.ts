@@ -1,4 +1,4 @@
-import { library } from "@fortawesome/fontawesome-svg-core";
+import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faSearch,
   faRoute,
@@ -9,7 +9,9 @@ import {
   faXmark,
   faO,
   faD,
-} from "@fortawesome/free-solid-svg-icons";
+  faUser,
+  faEnvelope
+} from '@fortawesome/free-solid-svg-icons';
 
 library.add(
   faSearch,
@@ -20,5 +22,7 @@ library.add(
   faCircle,
   faXmark,
   faO,
-  faD
+  faD,
+  faUser,
+  faEnvelope
 );

@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { HubsJump } from '@/structures/HubsJump';
+import { HubsJump } from '@/structures/hubj-jump';
 
 defineProps({
   jumps: {} as HubsJump,

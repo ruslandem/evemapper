@@ -1,6 +1,6 @@
 <template>
   <div class="template has-text-white h-100">
-    <SearchBar
+    <search-bar
       @update-system="updateSystem"
       :system-name="system.solarSystemName"
     />
@@ -21,13 +21,13 @@
         :class="{ 'is-hidden': !system.solarSystemName }"
         style=""
       >
-        <SystemInfo :system="system" />
-        <TradeHubs
+        <system-info :system="system" />
+        <trade-hubs
           v-if="!system?.wormholeClass"
           :jumps="jumps"
           :systemName="system.solarSystemName"
         />
-        <Signatures
+        <cosmic-signatures
           :signatures="signatures"
           :system-name="system.solarSystemName"
           @delete-signature="deleteSignature"
@@ -35,7 +35,7 @@
         />
       </div>
       <div class="column">
-        <History :locations="locations" @updateSystem="updateSystem" />
+        <location-history :locations="locations" @updateSystem="updateSystem" />
       </div>
     </div>
   </div>
@@ -52,18 +52,18 @@ import { toast } from 'bulma-toast';
 /**
  * Imports: structures
  */
-import { SolarSystem } from '@/structures/SolarSystem';
-import { HubsJump } from '@/structures/HubsJump';
-import { Signature } from '@/structures/Signature';
-import { VisitedLocation } from '@/structures/VisitedLocation';
+import { SolarSystem } from '@/structures/solar-system';
+import { HubsJump } from '@/structures/hubj-jump';
+import { Signature } from '@/structures/signature';
+import { VisitedLocation } from '@/structures/visited-location';
 /**
  * Imports: components
  */
 import SearchBar from './SearchBar.vue';
 import SystemInfo from './SystemInfo.vue';
-import Signatures from './Signatures.vue';
+import CosmicSignatures from './CosmicSignatures.vue';
 import TradeHubs from './TradeHubs.vue';
-import History from './History.vue';
+import LocationHistory from './LocationHistory.vue';
 /**
  * References
  */
@@ -83,6 +83,8 @@ const updateSystem = async (name: string | null = null): Promise<void> => {
     name = system.value.solarSystemName;
   }
   if (name !== null && name.length > 2) {
+    // @ts-ignore
+    system.value = {} as SolarSystem;
     await axios.get(`/api/getSolarSystemInfo/${name}`).then((response) => {
       system.value = response.data.system || {};
       jumps.value = (response.data.jumps as HubsJump) || {};
@@ -104,6 +106,7 @@ const fetchSignatures = async (systemName: string) => {
 };
 
 const fetchHistory = async () => {
+  locations.value = [];
   await axios.get(`/api/getLocationsHistory`).then((response) => {
     locations.value = (response.data as Array<VisitedLocation>) || [];
   });

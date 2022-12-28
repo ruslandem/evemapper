@@ -41,7 +41,7 @@
         >
           <fa-icon
             icon="fas fa-location-crosshairs"
-            :class="{ 'fa-spin': isGettingLocation }"
+            :class="{ 'fa-spin': isLoading }"
           />
         </a>
       </div>
@@ -56,34 +56,40 @@
         <label for="autoRefreshSwitch">Auto-refresh</label>
       </div>
     </div>
+
+    <div v-if="isLoading">
+      <progress
+        class="progress is-primary is-radiusless"
+        style="height: 0.5rem"
+      ></progress>
+    </div>
   </div>
+
   <!-- /SearchBar -->
 </template>
 
 <script setup lang="ts">
-import axios from "axios";
-import { ref, watch } from "vue";
+import axios from 'axios';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
-  systemName: String,
+  systemName: String
 });
 
-const selectedSystem = ref("");
-const isGettingLocation = ref(false);
-const emit = defineEmits(["update-system"]);
+const selectedSystem = ref('');
+const isLoading = ref(false);
+const emit = defineEmits(['update-system']);
 
 const updateWithCurrentLocation = () => {
-  if (isGettingLocation.value === true) {
-    return;
+  if (isLoading.value == false) {
+    isLoading.value = true;
+    axios.get(`/api/getLocation`).then((response) => {
+      if (response.data !== props.systemName) {
+        emit('update-system', response.data);
+      }
+      isLoading.value = false;
+    });
   }
-
-  isGettingLocation.value = true;
-  axios.get(`/api/getLocation`).then((response) => {
-    if (response.data !== props.systemName) {
-      emit("update-system", response.data);
-    }
-    isGettingLocation.value = false;
-  });
 };
 
 // Auto-refresh
@@ -109,8 +115,8 @@ const fetchSolarSystems = (search: String, loading: Function) => {
   }
 };
 const searchSystem = () => {
-  emit("update-system", selectedSystem.value);
-  selectedSystem.value = "";
+  emit('update-system', selectedSystem.value);
+  selectedSystem.value = '';
   selectOptions.value = [];
 };
 </script>

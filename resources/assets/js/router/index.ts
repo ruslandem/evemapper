@@ -1,10 +1,10 @@
-import { createRouter, createWebHistory } from "vue-router";
-import routes from "./routes";
-import { trackRouter } from "vue-gtag-next";
+import routes from './routes';
+import { createRouter, createWebHistory } from 'vue-router';
+import { trackRouter } from 'vue-gtag-next';
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes
 });
 
 trackRouter(router);

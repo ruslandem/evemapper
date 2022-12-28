@@ -14,7 +14,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="signature in signatures" class="">
+          <tr v-for="signature in signatures" :key="signature.id">
             <td>{{ signature.signatureId }}</td>
             <td>
               <i
@@ -67,25 +67,25 @@ td:last-child {
 /**
  * Imports
  */
-import { Signature } from "@/structures/Signature";
+import { Signature } from '@/structures/signature';
 import {
   getRelativeTime,
   getCosmicSignatureIcon,
-  getAxiosPostConfig,
-} from "@/services/utils";
-import axios from "axios";
-import { toast } from "bulma-toast";
+  getAxiosPostConfig
+} from '@/services/utils';
+import axios from 'axios';
+import { toast } from 'bulma-toast';
 /**
  * Props
  */
 const props = defineProps({
   signatures: Array<Signature>,
-  systemName: String,
+  systemName: String
 });
 /**
  * Emits
  */
-const emit = defineEmits(["delete-signature", "update-signatures"]);
+const emit = defineEmits(['delete-signature', 'update-signatures']);
 
 /**
  * Emits event to delete a signature.
@@ -94,7 +94,7 @@ const emit = defineEmits(["delete-signature", "update-signatures"]);
  * @emits delete-signature
  */
 const deleteSignature = (id: string, systemName: string): void => {
-  emit("delete-signature", id, systemName);
+  emit('delete-signature', id, systemName);
 };
 
 /**
@@ -107,19 +107,19 @@ const updateSignatures = (replace: Boolean): void => {
   navigator.clipboard.readText().then((value) => {
     axios
       .post(
-        "/api/updateSignatures",
+        '/api/updateSignatures',
         {
           solarSystemName: props.systemName,
           text: value,
-          replace: replace,
+          replace: replace
         },
         getAxiosPostConfig()
       )
       .then(() => {
-        emit("update-signatures");
+        emit('update-signatures');
         toast({
-          message: "Signatures updated",
-          type: "is-success",
+          message: 'Signatures updated',
+          type: 'is-success'
         });
       });
   });

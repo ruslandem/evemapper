@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { SolarSystem } from "@/structures/SolarSystem";
+import { SolarSystem } from "@/structures/solar-system";
 import { getSecurityStatusStyle } from "@/services/utils";
 import axios from "axios";
 import { toast } from "bulma-toast";

@@ -12,5 +12,5 @@
 </template>
 
 <script setup>
-const props = defineProps(["href", "text", "class"]);
+const props = defineProps(['href', 'text', 'class']);
 </script>

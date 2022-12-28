@@ -3,7 +3,14 @@
   <div class="is-dark-1 p-4 my-1 has-text-centered h-100">
     <h5 class="title">Locations History</h5>
 
-    <div class="scrollable mb-5">
+    <div v-if="isLoading">
+      <progress
+        class="progress is-primary is-radiusless"
+        style="height: 0.5rem"
+      ></progress>
+    </div>
+
+    <div v-if="!isLoading" class="scrollable mb-5">
       <table class="table is-fullwidth is-bordered is-size-7">
         <thead>
           <tr class="has-background-dark">
@@ -13,7 +20,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="location in locations">
+          <tr v-for="(location, index) in locations" :key="index">
             <td>
               <a
                 href="#"
@@ -44,7 +51,7 @@
   <!-- /History -->
 </template>
 
-<style>
+<style scoped>
 .main {
   border: 1px solid red;
   height: 100%;
@@ -57,11 +64,23 @@
 </style>
 
 <script setup lang="ts">
-import { VisitedLocation } from "@/structures/VisitedLocation";
-import { getSecurityStatusStyle } from "@/services/utils";
-import { getRelativeTime } from "@/services/utils";
+import { ref, watch } from 'vue';
+import { VisitedLocation } from '@/structures/visited-location';
+import { getSecurityStatusStyle } from '@/services/utils';
+import { getRelativeTime } from '@/services/utils';
 
-defineProps({
-  locations: Array<VisitedLocation>,
+/**
+ * Props
+ */
+const props = defineProps({
+  locations: Array<VisitedLocation>
+});
+
+/**
+ * Progress Bar handle
+ */
+const isLoading = ref(false);
+watch(props, function (value) {
+  isLoading.value = value.locations?.length == 0;
 });
 </script>

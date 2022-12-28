@@ -50,11 +50,14 @@
 
       <!-- Link Buttons -->
       <div class="has-text-centered">
-        <ButtonLink :href="linkDotlan" text="DotLan Map" class="is-warning" />
-        <ButtonLink :href="linkZkillboard" text="zKillboard" class="is-black" />
+        <button-link :href="linkDotlan" text="DotLan Map" class="is-warning" />
+        <button-link
+          :href="linkZkillboard"
+          text="zKillboard"
+          class="is-black"
+        />
       </div>
       <!-- /Link Buttons -->
-
     </div>
   </div>
 </template>
@@ -66,33 +69,32 @@ td:nth-child(1) {
 </style>
 
 <script setup lang="ts">
-import { PropType, computed } from "vue";
+import { PropType, computed } from 'vue';
 import {
   getSecurityStatusStyle,
   getWormholeStaticColor,
-  getWormholeStaticType,
-} from "@/services/utils";
-import { SolarSystem } from "@/structures/SolarSystem";
-import ButtonLink from "@/components/ui/ButtonLink.vue";
+  getWormholeStaticType
+} from '@/services/utils';
+import { SolarSystem } from '@/structures/solar-system';
+import ButtonLink from '@/components/ui/ButtonLink.vue';
 
 const props = defineProps({
-  system: {} as PropType<SolarSystem>,
+  system: {} as PropType<SolarSystem>
 });
 
 const linkDotlan = computed(() => {
   return [
-    "https://evemaps.dotlan.net/map/",
-    props.system?.regionName?.replace(" ", "_"),
-    "/",
+    'https://evemaps.dotlan.net/map/',
+    props.system?.regionName?.replace(' ', '_'),
+    '/',
     props.system?.solarSystemName,
-    "#sec",
-  ].join("");
+    '#sec'
+  ].join('');
 });
 
 const linkZkillboard = computed(() => {
-  return [
-    "https://zkillboard.com/system/", 
-    props.system?.solarSystemName
-  ].join("");
+  return ['https://zkillboard.com/system/', props.system?.solarSystemName].join(
+    ''
+  );
 });
 </script>

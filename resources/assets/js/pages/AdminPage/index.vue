@@ -13,7 +13,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in statistics">
+        <tr v-for="item in statistics" :key="item.characterId">
           <td>{{ item.characterId }}</td>
           <td>{{ item.characterName }}</td>
           <td>{{ item.solarSystemsCount }}</td>
@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import axios from "axios";
 import { ref, onMounted } from "vue";
-import { CharacterStatistics } from "@/structures/CharacterStatistics";
+import { CharacterStatistics } from "@/structures/character-statistics";
 import { getRelativeTime } from "@/services/utils";
 
 const statistics = ref([{}] as CharacterStatistics[]);

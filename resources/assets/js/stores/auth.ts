@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { CharacterInfo } from '@/structures/CharacterInfo';
+import { CharacterInfo } from '@/structures/character-info';
 import { getMetaTagContent } from '@/services/utils';
 
 export const useAuthStore = defineStore('auth', {
