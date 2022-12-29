@@ -2,12 +2,12 @@
   <div class="template has-text-white h-100">
     <search-bar
       @update-system="updateSystem"
-      :system-name="system.solarSystemName"
+      :system-name="system?.solarSystemName"
     />
     <div class="locator columns is-desktop">
       <div
         class="column is-two-thirds-desktop"
-        :class="{ 'is-hidden': system.solarSystemName }"
+        :class="{ 'is-hidden': system?.solarSystemName }"
       >
         <div class="is-dark-1 p-4 my-1">
           <div class="has-text-centered is-size-3 m-5 has-text-info">
@@ -18,18 +18,18 @@
 
       <div
         class="column is-two-thirds-desktop"
-        :class="{ 'is-hidden': !system.solarSystemName }"
+        :class="{ 'is-hidden': !system?.solarSystemName }"
         style=""
       >
         <system-info :system="system" />
         <trade-hubs
           v-if="!system?.wormholeClass"
           :jumps="jumps"
-          :systemName="system.solarSystemName"
+          :systemName="system?.solarSystemName"
         />
         <cosmic-signatures
           :signatures="signatures"
-          :system-name="system.solarSystemName"
+          :system-name="system?.solarSystemName"
           @delete-signature="deleteSignature"
           @update-signatures="updateSystem"
         />
@@ -42,23 +42,14 @@
 </template>
 
 <script setup lang="ts">
-/**
- * Imports: funcs
- */
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { getAxiosPostConfig } from '@/services/utils';
 import { toast } from 'bulma-toast';
-/**
- * Imports: structures
- */
 import { SolarSystem } from '@/structures/solar-system';
 import { HubsJump } from '@/structures/hubj-jump';
 import { Signature } from '@/structures/signature';
 import { VisitedLocation } from '@/structures/visited-location';
-/**
- * Imports: components
- */
 import SearchBar from './SearchBar.vue';
 import SystemInfo from './SystemInfo.vue';
 import CosmicSignatures from './CosmicSignatures.vue';
@@ -69,13 +60,11 @@ import {
   fetchHistory,
   fetchSolarSystemInfo
 } from '@/services/api';
-/**
- * References
- */
-const system = ref({} as SolarSystem);
-const jumps = ref({} as HubsJump);
-const signatures = ref([] as Signature[]);
-const locations = ref([] as VisitedLocation[]);
+
+const system = ref<SolarSystem>();
+const jumps = ref<HubsJump>();
+const signatures = ref<Signature[]>([]);
+const locations = ref<VisitedLocation[]>([]);
 
 /**
  * Update system information including signatures and history list.
@@ -85,9 +74,9 @@ const locations = ref([] as VisitedLocation[]);
  */
 const updateSystem = async (name: string | null = null): Promise<void> => {
   if (name === null) {
-    name = system.value.solarSystemName;
+    name = system.value?.solarSystemName || null;
   }
-  if (name.length > 1) {
+  if (name && name.length > 1) {
     clearAll();
 
     const solarSystemInfo = await fetchSolarSystemInfo(name);
@@ -102,7 +91,7 @@ const updateSystem = async (name: string | null = null): Promise<void> => {
 const clearAll = () => {
   system.value = {} as SolarSystem;
   jumps.value = {} as HubsJump;
-  signatures.value = {} as Signature[];
+  signatures.value = [] as Signature[];
   locations.value = [] as VisitedLocation[];
 };
 
@@ -116,8 +105,8 @@ const deleteSignature = (id: string, systemName: string): void => {
       },
       getAxiosPostConfig()
     )
-    .then(() => {
-      fetchSignatures(systemName);
+    .then(async () => {
+      signatures.value = await fetchSignatures(systemName);
       toast({
         message: `Signature ${id} deleted`,
         type: 'is-success'
@@ -125,7 +114,7 @@ const deleteSignature = (id: string, systemName: string): void => {
     });
 };
 
-onMounted(() => {
-  fetchHistory();
+onMounted(async () => {
+  locations.value = await fetchHistory();
 });
 </script>

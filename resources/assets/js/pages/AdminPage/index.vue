@@ -31,7 +31,7 @@ import { ref, onMounted } from "vue";
 import { CharacterStatistics } from "@/structures/character-statistics";
 import { getRelativeTime } from "@/services/utils";
 
-const statistics = ref([{}] as CharacterStatistics[]);
+const statistics = ref<CharacterStatistics[] | null>(null);
 
 onMounted(() => {
   axios.get("/api/admin/getStatistics").then((response) => {

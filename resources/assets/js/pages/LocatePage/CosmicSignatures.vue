@@ -64,9 +64,6 @@ td:last-child {
 </style>
 
 <script setup lang="ts">
-/**
- * Imports
- */
 import { Signature } from '@/structures/signature';
 import {
   getRelativeTime,
@@ -75,17 +72,19 @@ import {
 } from '@/services/utils';
 import axios from 'axios';
 import { toast } from 'bulma-toast';
-/**
- * Props
- */
-const props = defineProps({
-  signatures: Array<Signature>,
-  systemName: String
-});
-/**
- * Emits
- */
-const emit = defineEmits(['delete-signature', 'update-signatures']);
+
+interface Props {
+  signatures?: Signature[];
+  systemName?: string;
+}
+
+interface Emits {
+  (e: 'update-signatures'): void;
+  (e: 'delete-signature', id: string, systemName: string): void;
+}
+
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 
 /**
  * Emits event to delete a signature.

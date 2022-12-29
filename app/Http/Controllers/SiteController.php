@@ -125,11 +125,11 @@ class SiteController extends Controller
             'name' => 'string|required',
             'email' => 'email|required',
             'message' => 'string|required',
-            'g-recaptcha-response' => 'string|required'
+            'gRecaptchaResponse' => 'string|required'
         ]);
 
         $captcha = GoogleReCaptchaV3::verifyResponse(
-            $validated['g-recaptcha-response'],
+            $validated['gRecaptchaResponse'],
             $request->getClientIp()
         );
 

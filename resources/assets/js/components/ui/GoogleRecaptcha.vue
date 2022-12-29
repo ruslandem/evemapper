@@ -3,12 +3,16 @@
 <script setup lang="ts">
 import { load } from 'recaptcha-v3';
 
-const props = defineProps({
-  siteKey: {
-    type: String
-  }
-});
-const emit = defineEmits(['set-token']);
+interface Props {
+  siteKey: string;
+}
+
+interface Emits {
+  (e: 'set-token', token:string);
+}
+
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 
 if (props.siteKey) {
   load(props.siteKey).then((recaptcha) => {

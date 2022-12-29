@@ -69,18 +69,17 @@ import { VisitedLocation } from '@/structures/visited-location';
 import { getSecurityStatusStyle } from '@/services/utils';
 import { getRelativeTime } from '@/services/utils';
 
-/**
- * Props
- */
-const props = defineProps({
-  locations: Array<VisitedLocation>
-});
+interface Props {
+  locations?: VisitedLocation[];
+}
+
+const props = defineProps<Props>();
 
 /**
  * Progress Bar handle
  */
 const isLoading = ref(false);
-watch(props, function (value) {
+watch(props, (value: Readonly<Props>): void => {
   isLoading.value = value.locations?.length == 0;
 });
 </script>

@@ -45,21 +45,16 @@ import { useRoute } from 'vue-router';
 import { useWaypointsStore } from '@/stores/waypoints';
 import { fetchSolarSystems } from '@/services/api';
 
-/**
- * Emits
- */
-const emit = defineEmits(['build-route']);
+interface Emits {
+  (e: 'build-route'): void;
+}
 
-/**
- * Vars
- */
+const emit = defineEmits<Emits>();
+
 const selectedSolarSystem = ref('');
 const waypointsStore = useWaypointsStore();
+const searchSolarSystemsOptions = ref<string[]>([]);
 
-/**
- * Solar systems selectbox.
- */
-const searchSolarSystemsOptions = ref(['']);
 const searchSolarSystemsList = async (search: string, loading: Function) => {
   searchSolarSystemsOptions.value = await fetchSolarSystems(search, loading);
 };

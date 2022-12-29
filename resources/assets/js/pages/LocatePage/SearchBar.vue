@@ -69,28 +69,21 @@
 </template>
 
 <script setup lang="ts">
-/**
- * Imports
- */
 import { ref, watch } from 'vue';
 import { fetchSolarSystems } from '@/services/api';
 import { fetchCurrentSystem } from '@/services/api';
 
-/**
- * Props
- */
-defineProps({
-  systemName: String
-});
+interface Props {
+  systemName?: string
+}
 
-/**
- * Emits
- */
-const emit = defineEmits(['update-system']);
+interface Emits {
+  (e: 'update-system', solarSystem: string): void;
+}
 
-/**
- * Vars
- */
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
+
 const selectedSystem = ref('');
 const isLoading = ref(false);
 

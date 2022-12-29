@@ -69,7 +69,7 @@ td:nth-child(1) {
 </style>
 
 <script setup lang="ts">
-import { PropType, computed } from 'vue';
+import { computed } from 'vue';
 import {
   getSecurityStatusStyle,
   getWormholeStaticColor,
@@ -78,9 +78,11 @@ import {
 import { SolarSystem } from '@/structures/solar-system';
 import ButtonLink from '@/components/ui/ButtonLink.vue';
 
-const props = defineProps({
-  system: {} as PropType<SolarSystem>
-});
+interface Props {
+  system?: SolarSystem
+}
+
+const props = defineProps<Props>();
 
 const linkDotlan = computed(() => {
   return [

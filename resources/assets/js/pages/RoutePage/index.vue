@@ -5,7 +5,7 @@
       <waypoints-list />
 
       <div class="my-4 has-text-centered w-100">
-        <button class="button mx-2 is-primary" @click="buildRoute" :disabled="wp.waypoints.length < 2">
+        <button class="button mx-2 is-primary" @click="buildRoute" :disabled="waypointsStore.waypoints.length < 2">
           <fa-icon icon="fas fa-route" class="mr-2" />
           get route
         </button>
@@ -28,28 +28,27 @@ import axios from "axios";
 import { ref } from "vue";
 import { SolarSystem } from "@/structures/solar-system";
 
-const wp = useWaypointsStore();
-const route = ref([] as SolarSystem[][]);
+const waypointsStore = useWaypointsStore();
+const route = ref<SolarSystem[][]>([]);
 
 const buildRoute = () => {
   axios
     .post(
       "/api/getRoute",
       {
-        waypoints: wp.waypoints,
+        waypoints: waypointsStore.waypoints,
       },
       getAxiosPostConfig()
     )
     .then((response) => {
       if (response.status == 200) {
-        // @ts-ignore
-        route.value = response.data as SolarSystem[][];
+        route.value = response.data;
       }
     });
 };
 
 const clearWaypoints = () => {
-  wp.waypoints = [];
+  waypointsStore.waypoints = [];
   route.value = [];
 };
 </script>

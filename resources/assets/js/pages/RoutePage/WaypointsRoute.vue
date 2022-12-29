@@ -41,12 +41,11 @@ import { SolarSystem } from '@/structures/solar-system';
 import { getSecurityStatusStyle } from '@/services/utils';
 import { addAutopilotWaypoint } from '@/services/api';
 
-/**
- * Props
- */
-defineProps({
-  route: Array<Array<SolarSystem>>
-});
+interface Props {
+  route: SolarSystem[][];
+}
+
+defineProps<Props>();
 
 /**
  * Add character autopilot waypoint.

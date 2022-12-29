@@ -19,8 +19,11 @@
 <script setup lang="ts">
 import { HubsJump } from '@/structures/hubj-jump';
 
-defineProps({
-  jumps: {} as HubsJump,
-  systemName: String
-});
+interface Props {
+  jumps?: HubsJump,
+  systemName?: string
+}
+
+defineProps<Props>();
+
 </script>

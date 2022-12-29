@@ -19,27 +19,15 @@
 </style>
 
 <script setup>
-/**
- * Imports
- */
 import { onMounted } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { glowCookies } from '@/libs/glow-cookies/glowCookies';
-/**
- * Components
- */
 import Navbar from '@/components/layout/AppNavbar.vue';
 import Footer from '@/components/layout/AppFooter.vue';
 
-/**
- * Authentication init
- */
 useAuthStore().getAuthentication();
 
 onMounted(() => {
-  /**
-   * Cookie consent start
-   */
   glowCookies.start('en', {
     policyLink: '/privacy',
     hideAfterClick: true
