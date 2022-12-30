@@ -65,7 +65,14 @@ export const getWormholeStaticType = (inClass: number): string => {
  * @returns string
  */
 export const getRelativeTime = (time: string): string => {
-  return dayjs().to(dayjs(time));
+  let strTime = time;
+  const regex = new RegExp(
+    /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
+  );
+  if (!regex.test(time)) {
+    strTime += ' UTC';
+  }
+  return dayjs().to(dayjs(strTime));
 };
 
 export const getCosmicSignatureIcon = (groupName: string | null): string => {
