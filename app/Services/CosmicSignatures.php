@@ -20,6 +20,11 @@ class CosmicSignatures
         // parsing text
         $signatures = $this->getArrayFromClipboardText($characterId, $solarSystem, $text);
 
+        if (count($signatures) == 0) {
+            return $report
+                ->set('error', 'no signatures found');
+        }
+
         // deleting absent signatures
         if (count($signatures) > 0 && $replace) {
             $removed = $this->removeAbsentSignatures(

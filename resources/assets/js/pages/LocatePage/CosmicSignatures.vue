@@ -28,7 +28,7 @@
               <button
                 class="delete"
                 @click="
-                  deleteSignature(
+                  deleteSignatureClick(
                     signature.signatureId,
                     signature.solarSystemName
                   )
@@ -40,10 +40,16 @@
       </table>
 
       <div>
-        <a href="#" class="button mx-1" @click.prevent="updateSignatures(false)"
+        <a
+          href="#"
+          class="button mx-1"
+          @click.prevent="updateSignatureClick(false)"
           >update</a
         >
-        <a href="#" class="button mx-1" @click.prevent="updateSignatures(true)"
+        <a
+          href="#"
+          class="button mx-1"
+          @click.prevent="updateSignatureClick(true)"
           >replace</a
         >
       </div>
@@ -64,63 +70,65 @@ td:last-child {
 </style>
 
 <script setup lang="ts">
-import { Signature } from '@/structures/signature';
-import {
-  getRelativeTime,
-  getCosmicSignatureIcon,
-  getAxiosPostConfig
-} from '@/services/utils';
-import axios from 'axios';
+import { ref, watch } from 'vue';
 import { toast } from 'bulma-toast';
+import { Signature } from '@/structures/signature';
+import { getRelativeTime, getCosmicSignatureIcon } from '@/services/utils';
+import {
+  fetchSignatures,
+  updateSignatures,
+  deleteSignature
+} from '@/services/api';
 
 interface Props {
-  signatures?: Signature[];
   systemName?: string;
 }
 
-interface Emits {
-  (e: 'update-signatures'): void;
-  (e: 'delete-signature', id: string, systemName: string): void;
-}
-
 const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
+const signatures = ref<Signature[]>([]);
 
-/**
- * Emits event to delete a signature.
- * @param {string} id - Signature Id.
- * @param {string} systemName  - Solar system name.
- * @emits delete-signature
- */
-const deleteSignature = (id: string, systemName: string): void => {
-  emit('delete-signature', id, systemName);
+watch(props, async () => {
+  if (props.systemName) {
+    signatures.value = await fetchSignatures(props.systemName);
+  }
+});
+
+const updateSignatureClick = async (replace: boolean): Promise<void> => {
+  const clipboardText = await navigator.clipboard.readText();
+
+  if (props.systemName && clipboardText.length > 0) {
+    const updated: string | null = await updateSignatures(
+      props.systemName,
+      clipboardText,
+      replace
+    );
+
+    if (updated === null) {
+      signatures.value = await fetchSignatures(props.systemName);
+      toast({
+        message: 'Signatures updated',
+        type: 'is-success'
+      });
+    } else {
+      toast({
+        message: updated,
+        type: 'is-danger'
+      });
+    }
+  }
 };
 
-/**
- * Handle `update` and  `replace` button click events.
- * Uses clipboard text to update signatures list.
- * @param {Boolean} replace - Replace signatures trigger.
- * @emits update-signatures
- */
-const updateSignatures = (replace: Boolean): void => {
-  navigator.clipboard.readText().then((value) => {
-    axios
-      .post(
-        '/api/updateSignatures',
-        {
-          solarSystemName: props.systemName,
-          text: value,
-          replace: replace
-        },
-        getAxiosPostConfig()
-      )
-      .then(() => {
-        emit('update-signatures');
-        toast({
-          message: 'Signatures updated',
-          type: 'is-success'
-        });
-      });
-  });
+const deleteSignatureClick = async (
+  id: string,
+  solarSystemName: string
+): Promise<void> => {
+  const deleted = await deleteSignature(id, solarSystemName);
+  if (deleted) {
+    signatures.value = await fetchSignatures(solarSystemName);
+    toast({
+      message: `${id} signatures deleted`,
+      type: 'is-success'
+    });
+  }
 };
 </script>

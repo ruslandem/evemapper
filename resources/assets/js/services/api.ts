@@ -3,6 +3,7 @@ import { Signature } from '@/structures/signature';
 import { SolarSystem } from '@/structures/solar-system';
 import { VisitedLocation } from '@/structures/visited-location';
 import axios from 'axios';
+import { getAxiosPostConfig } from './utils';
 /**
  * Get solar system names by the search string.
  * @async
@@ -73,13 +74,54 @@ export const fetchHistory = async (): Promise<VisitedLocation[]> => {
   return status == 200 ? data : [];
 };
 
+interface solarSystemInfo {
+  system?: SolarSystem;
+  jumps?: HubsJump;
+}
+
 export const fetchSolarSystemInfo = async (
   solarSystemName: string
-): Promise<{ system: SolarSystem; jumps: HubsJump }> => {
-  const { data, status } = await axios.get<{
-    system: SolarSystem;
-    jumps: HubsJump;
-  }>(`/api/getSolarSystemInfo/${solarSystemName}`);
+): Promise<solarSystemInfo> => {
+  const { data, status } = await axios.get<solarSystemInfo>(
+    `/api/getSolarSystemInfo/${solarSystemName}`
+  );
 
-  return status == 200 ? data : {system: {} as SolarSystem, jumps: {} as HubsJump};
+  return status == 200 ? data : {};
+};
+
+export const updateSignatures = async (
+  solarSystemName: string,
+  text: string,
+  replace: boolean
+): Promise<string | null> => {
+  const { data, status } = await axios.post(
+    '/api/updateSignatures',
+    {
+      solarSystemName,
+      text,
+      replace
+    },
+    getAxiosPostConfig()
+  );
+
+  if (status === 200) {
+    return data.error;
+  }
+
+  return 'update error';
+};
+
+export const deleteSignature = async (
+  id: string,
+  systemName: string
+): Promise<boolean> => {
+  const { status } = await axios.post(
+    '/api/deleteSignature',
+    {
+      id: id,
+      systemName: systemName
+    },
+    getAxiosPostConfig()
+  );
+  return status === 200;
 };

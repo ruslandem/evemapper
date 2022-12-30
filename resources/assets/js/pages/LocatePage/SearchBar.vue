@@ -74,7 +74,7 @@ import { fetchSolarSystems } from '@/services/api';
 import { fetchCurrentSystem } from '@/services/api';
 
 interface Props {
-  systemName?: string
+  systemName?: string;
 }
 
 interface Emits {
@@ -84,28 +84,12 @@ interface Emits {
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const selectedSystem = ref('');
+const selectedSystem = ref<string>();
 const isLoading = ref(false);
-
-/**
- * Get current character location and updates current solar system accordingly.
- * @async
- * @returns Promise<void>
- */
-const updateWithCurrentLocation = async (): Promise<void> => {
-  if (isLoading.value == false) {
-    isLoading.value = true;
-    selectedSystem.value = await fetchCurrentSystem();
-    searchSystem();
-    isLoading.value = false;
-  }
-};
-
-/**
- * Auto-refresh
- */
+const searchSolarSystemsOptions = ref<string[]>([]);
 const autoRefresh = ref(false);
 let refreshTimer: NodeJS.Timer | null = null;
+
 watch(autoRefresh, (value) => {
   value
     ? (refreshTimer = setInterval(updateWithCurrentLocation, 15000))
@@ -114,10 +98,20 @@ watch(autoRefresh, (value) => {
     : (refreshTimer = null);
 });
 
-/**
- * Solar systems search selectbox
- */
-const searchSolarSystemsOptions = ref(['']);
+const updateWithCurrentLocation = async (): Promise<void> => {
+  if (isLoading.value === false) {
+    isLoading.value = true;
+
+    const currentLocation: string = await fetchCurrentSystem();
+    if (props.systemName !== currentLocation) {
+      selectedSystem.value = await fetchCurrentSystem();
+      searchSystem();
+    }
+
+    isLoading.value = false;
+  }
+};
+
 const searchSolarSystemsList = async (
   search: string,
   loading: Function
@@ -125,13 +119,11 @@ const searchSolarSystemsList = async (
   searchSolarSystemsOptions.value = await fetchSolarSystems(search, loading);
 };
 
-/**
- * Search for selected solar system by emiting `update-system` event.
- * @returns void
- */
 const searchSystem = (): void => {
-  emit('update-system', selectedSystem.value);
-  selectedSystem.value = '';
-  searchSolarSystemsOptions.value = [];
+  if (selectedSystem.value) {
+    emit('update-system', selectedSystem.value);
+    selectedSystem.value = '';
+    searchSolarSystemsOptions.value = [];
+  }
 };
 </script>

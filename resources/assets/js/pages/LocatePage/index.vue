@@ -25,96 +25,43 @@
         <trade-hubs
           v-if="!system?.wormholeClass"
           :jumps="jumps"
-          :systemName="system?.solarSystemName"
-        />
-        <cosmic-signatures
-          :signatures="signatures"
           :system-name="system?.solarSystemName"
-          @delete-signature="deleteSignature"
-          @update-signatures="updateSystem"
         />
+        <cosmic-signatures :system-name="system?.solarSystemName" />
       </div>
       <div class="column">
-        <location-history :locations="locations" @updateSystem="updateSystem" />
+        <location-history
+          :system-name="system?.solarSystemName"
+          @update-system="updateSystem"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { getAxiosPostConfig } from '@/services/utils';
-import { toast } from 'bulma-toast';
+import { ref } from 'vue';
 import { SolarSystem } from '@/structures/solar-system';
 import { HubsJump } from '@/structures/hubj-jump';
-import { Signature } from '@/structures/signature';
-import { VisitedLocation } from '@/structures/visited-location';
+import { fetchSolarSystemInfo } from '@/services/api';
 import SearchBar from './SearchBar.vue';
 import SystemInfo from './SystemInfo.vue';
 import CosmicSignatures from './CosmicSignatures.vue';
 import TradeHubs from './TradeHubs.vue';
 import LocationHistory from './LocationHistory.vue';
-import {
-  fetchSignatures,
-  fetchHistory,
-  fetchSolarSystemInfo
-} from '@/services/api';
 
 const system = ref<SolarSystem>();
 const jumps = ref<HubsJump>();
-const signatures = ref<Signature[]>([]);
-const locations = ref<VisitedLocation[]>([]);
 
-/**
- * Update system information including signatures and history list.
- * @async
- * @param {string|null} name
- * @returns {Promise<void>}
- */
-const updateSystem = async (name: string | null = null): Promise<void> => {
-  if (name === null) {
-    name = system.value?.solarSystemName || null;
-  }
-  if (name && name.length > 1) {
-    clearAll();
+const updateSystem = async (name: string): Promise<void> => {
+  const solarSystemInfo = await fetchSolarSystemInfo(name);
 
-    const solarSystemInfo = await fetchSolarSystemInfo(name);
+  if (solarSystemInfo.system) {
     system.value = solarSystemInfo.system;
-    jumps.value = solarSystemInfo.jumps;
+  }
 
-    signatures.value = await fetchSignatures(name);
-    locations.value = await fetchHistory();
+  if (solarSystemInfo.jumps) {
+    jumps.value = solarSystemInfo.jumps;
   }
 };
-
-const clearAll = () => {
-  system.value = {} as SolarSystem;
-  jumps.value = {} as HubsJump;
-  signatures.value = [] as Signature[];
-  locations.value = [] as VisitedLocation[];
-};
-
-const deleteSignature = (id: string, systemName: string): void => {
-  axios
-    .post(
-      '/api/deleteSignature',
-      {
-        id: id,
-        systemName: systemName
-      },
-      getAxiosPostConfig()
-    )
-    .then(async () => {
-      signatures.value = await fetchSignatures(systemName);
-      toast({
-        message: `Signature ${id} deleted`,
-        type: 'is-success'
-      });
-    });
-};
-
-onMounted(async () => {
-  locations.value = await fetchHistory();
-});
 </script>

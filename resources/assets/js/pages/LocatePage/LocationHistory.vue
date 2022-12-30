@@ -68,18 +68,18 @@ import { ref, watch } from 'vue';
 import { VisitedLocation } from '@/structures/visited-location';
 import { getSecurityStatusStyle } from '@/services/utils';
 import { getRelativeTime } from '@/services/utils';
+import { fetchHistory } from '@/services/api';
 
 interface Props {
-  locations?: VisitedLocation[];
+  systemName?: string;
 }
 
 const props = defineProps<Props>();
 
-/**
- * Progress Bar handle
- */
+const locations = ref<VisitedLocation[]>([]);
+
 const isLoading = ref(false);
-watch(props, (value: Readonly<Props>): void => {
-  isLoading.value = value.locations?.length == 0;
+watch(props, async () => {
+  locations.value = await fetchHistory();
 });
 </script>
