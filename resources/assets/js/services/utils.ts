@@ -64,8 +64,8 @@ export const getWormholeStaticType = (inClass: number): string => {
  * @param  {string} time
  * @returns string
  */
-export const getRelativeTime = (time: string): string => {
-  return dayjs().to(dayjs(time));
+export const getRelativeTime = (time: string): string => { 
+  return dayjs().to(dayjs(time + ' UTC'));
 };
 
 export const getCosmicSignatureIcon = (groupName: string | null): string => {
