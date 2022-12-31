@@ -13,6 +13,7 @@
 /.tmp-dev
 /.dev
 .env
+.env.testing
 /database/*.db
 /storage/debugbar/*.json
 _ide_helper.php
