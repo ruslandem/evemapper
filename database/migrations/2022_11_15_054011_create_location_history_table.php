@@ -17,6 +17,8 @@ class CreateLocationHistoryTable extends Migration
             $table->id();
             $table->integer('userId');
             $table->string('solarSystemName');
+            $table->float('solarSystemSecurity')->nullable();
+            $table->string('wormholeClass')->nullable();
             $table->dateTime('createdAt');
         });
     }
