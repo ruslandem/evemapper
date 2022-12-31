@@ -8,18 +8,16 @@ use stdClass;
 
 class EveSolarSystem
 {
-    private ConnectionInterface $dbApp;
-    private ConnectionInterface $dbEve;
+    private ConnectionInterface $db;
 
-    public function __construct(string $dbAppConfig = 'app', string $dbEveConfig = 'eve')
+    public function __construct(string $db = 'app')
     {
-        $this->dbApp = DB::connection($dbAppConfig);
-        $this->dbEve = DB::connection($dbEveConfig);
+        $this->db = DB::connection($db);
     }
 
     public function getById(int $solarSystemId): ?stdClass
     {
-        $data = $this->dbEve->table('mapSolarSystems')
+        $data = $this->db->table('mapSolarSystems')
             ->join('mapConstellations', 'mapSolarSystems.constellationID', '=', 'mapConstellations.constellationID')
             ->join('mapRegions', 'mapSolarSystems.regionID', '=', 'mapRegions.regionID')
             ->where('mapSolarSystems.solarSystemID', '=', $solarSystemId)
@@ -37,7 +35,7 @@ class EveSolarSystem
 
     public function getByName(string $solarSystemName): ?stdClass
     {
-        $data = $this->dbEve->table('mapSolarSystems')
+        $data = $this->db->table('mapSolarSystems')
             ->join('mapConstellations', 'mapSolarSystems.constellationID', '=', 'mapConstellations.constellationID')
             ->join('mapRegions', 'mapSolarSystems.regionID', '=', 'mapRegions.regionID')
             ->where('mapSolarSystems.solarSystemName', '=', $solarSystemName)
@@ -60,7 +58,7 @@ class EveSolarSystem
 
     public function search(string $searchText): array
     {
-        $data = $this->dbEve->table('mapSolarSystems')
+        $data = $this->db->table('mapSolarSystems')
             ->where('solarSystemName', 'like', $searchText . '%')
             ->get('solarSystemName');
 
@@ -75,7 +73,7 @@ class EveSolarSystem
 
     public function getStatistics(): array
     {
-        $data = $this->dbApp->table('signatures')
+        $data = $this->db->table('signatures')
             ->select(
                 'signatures.characterId',
                 'users.characterName',
@@ -92,7 +90,7 @@ class EveSolarSystem
 
     protected function addWormholeSystemData(stdClass &$data): void
     {
-        $wormholeData = $this->dbApp->table('wormholeSystems')
+        $wormholeData = $this->db->table('wormholeSystems')
             ->where('id', '=', $data->solarSystemID)
             ->get()
             ->first();
@@ -109,7 +107,7 @@ class EveSolarSystem
 
         $wormholeData->static = [];
         foreach ($statics as $key => $value) {
-            $details = $this->dbApp->table('wormholeClasses')
+            $details = $this->db->table('wormholeClasses')
                 ->where('hole', '=', $key)
                 ->get()
                 ->first();
@@ -137,7 +135,7 @@ class EveSolarSystem
                 return;
             }
 
-            $rats = $this->dbApp->table('regionRats')
+            $rats = $this->db->table('regionRats')
                 ->where('regionName', '=', $data->regionName)
                 ->get()
                 ->first();

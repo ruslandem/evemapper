@@ -20,7 +20,7 @@ class EveRoute
     protected array $systemNames = [];
 
 
-    public function __construct(string $connection = 'eve', bool $useCache = true)
+    public function __construct(string $connection = 'app', bool $useCache = true)
     {
         $this->db = DB::connection($connection);
         $this->useCache = $useCache;
@@ -141,19 +141,4 @@ class EveRoute
             }
         }
     }
-
-    // Query get XYZ-positions between gates
-
-    // SELECT invItems.itemID as originID, invItems.locationID AS originLocationID, invNames.itemName, mapJumps.destinationID, destinationItems.locationID AS destinationLocationID,
-    // originPositions.x as originX, originPositions.y as originY, originPositions.z as originZ,
-    // destinationPositions.x as destinationX, destinationPositions.y as destinationY, destinationPositions.z as destinationZ
-    // FROM invItems 
-    // LEFT JOIN invNames ON invNames.itemID = invItems.itemID
-    // LEFT JOIN invTypes ON invTypes.typeID = invItems.typeID
-    // LEFT JOIN mapJumps ON mapJumps.stargateID = invItems.itemID
-    // LEFT JOIN invItems AS destinationItems ON destinationItems.itemID = mapJumps.destinationID
-    // LEFT JOIN invPositions AS originPositions ON originPositions.itemID = invNames.itemID
-    // LEFT JOIN invPositions AS destinationPositions ON destinationPositions.itemID = mapJumps.destinationID
-    // WHERE invItems.locationID = 30000140 AND invTypes.groupID = 10
-
 }
