@@ -13,8 +13,7 @@
 /.tmp-dev
 /.dev
 .env
-/database/whident.db
-/database/*_test.db
+/database/*.db
 /storage/debugbar/*.json
 _ide_helper.php
 .eslintrc
