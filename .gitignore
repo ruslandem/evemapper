@@ -19,3 +19,4 @@
 _ide_helper.php
 .eslintrc
 .prettierrc
+resources/assets/js/config.ts
