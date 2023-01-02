@@ -17,7 +17,7 @@ class EveSolarSystem
 
     public function getById(int $solarSystemId): ?stdClass
     {
-        $data = $this->db->table('mapSolarSystems')
+        $data = (object) $this->db->table('mapSolarSystems')
             ->join('mapConstellations', 'mapSolarSystems.constellationID', '=', 'mapConstellations.constellationID')
             ->join('mapRegions', 'mapSolarSystems.regionID', '=', 'mapRegions.regionID')
             ->where('mapSolarSystems.solarSystemID', '=', $solarSystemId)
@@ -29,13 +29,14 @@ class EveSolarSystem
         }
 
         $this->addRatsInfo($data);
+        $this->addAdjacentSystems($data);
 
         return $data;
     }
 
     public function getByName(string $solarSystemName): ?stdClass
     {
-        $data = $this->db->table('mapSolarSystems')
+        $data = (object) $this->db->table('mapSolarSystems')
             ->join('mapConstellations', 'mapSolarSystems.constellationID', '=', 'mapConstellations.constellationID')
             ->join('mapRegions', 'mapSolarSystems.regionID', '=', 'mapRegions.regionID')
             ->where('mapSolarSystems.solarSystemName', '=', $solarSystemName)
@@ -47,6 +48,7 @@ class EveSolarSystem
         }
 
         $this->addRatsInfo($data);
+        $this->addAdjacentSystems($data);
 
         return $data;
     }
@@ -141,6 +143,29 @@ class EveSolarSystem
                 ->first();
 
             $data->rats = $rats ? $rats->rats : null;
+        }
+    }
+
+    protected function addAdjacentSystems(?stdClass &$data): void
+    {
+        if ($data instanceof stdClass) {
+            $adjacentSystems = $this->db->table('mapSolarSystemJumps')
+                ->where('fromSolarSystemID', '=', $data->solarSystemID)
+                ->leftJoin('mapSolarSystems', 'mapSolarSystems.solarSystemID', '=', 'mapSolarSystemJumps.toSolarSystemID')
+                ->leftJoin('mapConstellations', 'mapConstellations.constellationID', '=', 'mapSolarSystems.constellationID')
+                ->leftJoin('mapRegions', 'mapRegions.regionID', '=', 'mapSolarSystems.regionID')
+                ->leftJoin('regionRats', 'regionRats.regionName', '=', 'mapRegions.regionName')
+                ->get([
+                    'mapSolarSystems.solarSystemID',
+                    'mapSolarSystems.solarSystemName',
+                    'mapRegions.regionName',
+                    'mapConstellations.constellationName',
+                    'mapSolarSystems.security',
+                    'regionRats.rats'
+                ])
+                ->toArray();
+
+            $data->adjacentSystems = $adjacentSystems ? $adjacentSystems : [];
         }
     }
 }

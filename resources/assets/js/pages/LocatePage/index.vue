@@ -21,7 +21,7 @@
         :class="{ 'is-hidden': !system?.solarSystemName }"
         style=""
       >
-        <system-info :system="system" />
+        <system-info @update-system="updateSystem" :system="system" />
         <trade-hubs
           v-if="!system?.wormholeClass"
           :jumps="jumps"

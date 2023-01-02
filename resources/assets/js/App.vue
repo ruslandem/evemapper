@@ -15,6 +15,7 @@
 @import '@modules/bulma-extensions/dist/css/bulma-extensions.min.css';
 @import '@modules/vue-select/dist/vue-select.css';
 @import '@modules/vue-cookie-comply/dist/style.css';
+@import '@creativebulma/bulma-tooltip/dist/bulma-tooltip.min.css';
 @import '@/../css/app.css';
 </style>
 

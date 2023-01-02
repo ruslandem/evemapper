@@ -9,4 +9,5 @@ export interface SolarSystem {
   rats: string;
   wormholeClass?: string;
   wormholeStatics?: WormholeStatic[];
+  adjacentSystems?: SolarSystem[];
 }

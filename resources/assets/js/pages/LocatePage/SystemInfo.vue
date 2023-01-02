@@ -58,6 +58,22 @@
         />
       </div>
       <!-- /Link Buttons -->
+
+      <!-- Adjacent Systems -->
+      <div class="mt-5 has-text-centered">
+        <span v-for="adjacentSystem in system?.adjacentSystems" class="mx-3">
+          <a
+            href="#"
+            @click.prevent="$emit('updateSystem', adjacentSystem.solarSystemName)"
+            :style="[getSecurityStatusStyle(adjacentSystem.security)]"
+            :data-tooltip="adjacentSystem.rats"
+          >
+            {{ adjacentSystem.solarSystemName }}
+            {{ adjacentSystem.security.toFixed(1) }}
+          </a>
+        </span>
+      </div>
+      <!-- /Adjacent Systems -->
     </div>
   </div>
 </template>
@@ -79,7 +95,7 @@ import { SolarSystem } from '@/structures/solar-system';
 import ButtonLink from '@/components/ui/ButtonLink.vue';
 
 interface Props {
-  system?: SolarSystem
+  system?: SolarSystem;
 }
 
 const props = defineProps<Props>();
