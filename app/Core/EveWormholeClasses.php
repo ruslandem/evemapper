@@ -2,20 +2,11 @@
 
 namespace App\Core;
 
-use Illuminate\Database\ConnectionInterface;
-use Illuminate\Support\Facades\DB;
-
-class EveWormholeClasses
+class EveWormholeClasses extends DatabaseConnection
 {
-    private ConnectionInterface $db;
-
-    public function __construct(string $connection = 'app') {
-        $this->db = DB::connection($connection);
-    }
-
-    public function getList(int $wormholeClass): array
+    public static function getList(int $wormholeClass): array
     {
-        $classes = $this->db->table('wormholeClasses')
+        $classes = self::db()->table('wormholeClasses')
             ->where('inClass', '=', $wormholeClass)
             ->orderBy('hole')
             ->get();

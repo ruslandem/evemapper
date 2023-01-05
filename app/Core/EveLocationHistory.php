@@ -3,18 +3,9 @@
 namespace App\Core;
 
 use DateTime;
-use Illuminate\Database\ConnectionInterface;
-use Illuminate\Support\Facades\DB;
 
-class EveLocationHistory
+class EveLocationHistory extends DatabaseConnection
 {
-    private ConnectionInterface $db;
-
-    public function __construct(string $connection = 'app')
-    {
-        $this->db = DB::connection($connection);
-    }
-
     /**
      * Records location (if changed) of the specified user into database.
      * 
@@ -22,10 +13,10 @@ class EveLocationHistory
      * @param string $solarSystemName
      * @return bool
      */
-    public function write(int $userId, string $solarSystemName): bool
+    public static function write(int $userId, string $solarSystemName): bool
     {
         // check previous location does not equals to present location
-        $record = $this->db->table('locationHistory')
+        $record = self::db()->table('locationHistory')
             ->where(['userId' => $userId])
             ->orderByDesc('createdAt')
             ->limit(1)
@@ -35,9 +26,9 @@ class EveLocationHistory
             return false;
         }
 
-        $solarSystemInfo = (new EveSolarSystem())->getByName($solarSystemName);
+        $solarSystemInfo = EveSolarSystem::getByName($solarSystemName);
 
-        return $this->db->table('locationHistory')->insert([
+        return self::db()->table('locationHistory')->insert([
             'userId' => $userId,
             'solarSystemName' => $solarSystemName,
             'solarSystemSecurity' => $solarSystemInfo->security,
@@ -46,9 +37,9 @@ class EveLocationHistory
         ]);
     }
 
-    public function get(int $userId, int $limit = 100)
+    public static function get(int $userId, int $limit = 100)
     {
-        return $this->db->table('locationHistory')
+        return self::db()->table('locationHistory')
             ->where(['userId' => $userId])
             ->orderByDesc('createdAt')
             ->limit($limit)
