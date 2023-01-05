@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\EveLocationApi;
+use App\Core\EveApi\AutopilotWaypointApiRequest;
 use App\Core\EveRoute;
 use App\Core\EveSolarSystem;
 use App\Core\Exceptions\EveApiTokenExpiredException;
@@ -12,10 +12,11 @@ use Illuminate\Support\Facades\Auth;
 
 class RoutesController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('eve.auth');
     }
-    
+
     public function route(Request $request)
     {
         $waypoints = [];
@@ -39,11 +40,9 @@ class RoutesController extends Controller
             ], 401);
         }
 
-        $api = new EveSolarSystem();
-
         foreach ($route as &$waypointRoute) {
             foreach ($waypointRoute as &$waypoint) {
-                $info = $api->getByName($waypoint);
+                $info = EveSolarSystem::getByName($waypoint);
                 $waypoint = [
                     'solarSystemID' => $info->solarSystemID,
                     'solarSystemName' => $info->solarSystemName,
@@ -66,11 +65,16 @@ class RoutesController extends Controller
 
         $user = Auth::user();
 
+        if ($user === null) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
         try {
-            $api = new EveLocationApi($user->token);
-            $api->addAutopilotWaypoint(
-                $validated['system']
-            );
+            AutopilotWaypointApiRequest::get($user, [
+                'solarSystemName' => $validated['system']
+            ]);
         } catch (EveApiTokenExpiredException $e) {
             return $this->update($user);
         }

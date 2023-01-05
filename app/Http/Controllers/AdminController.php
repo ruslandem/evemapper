@@ -13,6 +13,6 @@ class AdminController extends Controller
 
     public function getStatistics()
     {
-        return (new EveSolarSystem())->getStatistics();
+        return EveSolarSystem::getStatistics();
     }
 }
