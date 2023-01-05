@@ -7,7 +7,7 @@ namespace App\Core\EveApi;
 class AuthData
 {
     protected ?string $accessToken;
-    protected ?string $expiresIn;
+    protected ?int $expiresIn;
     protected ?string $tokenType;
     protected ?string $refreshToken;
 
@@ -15,14 +15,16 @@ class AuthData
      * @throws JsonException
      * @param string|null $oAuthResponse
      */
-    function __construct(string $oAuthResponse)
+    function __construct(?string $oAuthResponse = null)
     {
-        $json = json_decode($oAuthResponse, true, 512, JSON_THROW_ON_ERROR);
+        if ($oAuthResponse) {
+            $json = json_decode($oAuthResponse, true, 512, JSON_THROW_ON_ERROR);
 
-        $this->setProperty('accessToken', $json['access_token']);
-        $this->setProperty('expiresIn', $json['expires_in']);
-        $this->setProperty('tokenType', $json['token_type']);
-        $this->setProperty('refreshToken', $json['refresh_token']);
+            $this->setProperty('accessToken', $json['access_token']);
+            $this->setProperty('expiresIn', $json['expires_in']);
+            $this->setProperty('tokenType', $json['token_type']);
+            $this->setProperty('refreshToken', $json['refresh_token']);
+        }
     }
 
     /**
@@ -61,12 +63,12 @@ class AuthData
      * Set authentication response property.
      * 
      * @param string $name property name
-     * @param string|null $value value acquired from response
+     * @param mixed|null $value value acquired from response
      * @throws \InvalidArgumentException if property does not exist
      * @throws \UnexpectedValueException if value in response is null
-     * @return void
+     * @return $this
      */
-    protected function setProperty(string $name, ?string $value): void
+    public function setProperty(string $name, $value): self
     {
         if (!property_exists($this, $name)) {
             throw new \InvalidArgumentException("property {$name} not found");
@@ -77,5 +79,7 @@ class AuthData
         }
 
         $this->$name = $value;
+
+        return $this;
     }
 }
