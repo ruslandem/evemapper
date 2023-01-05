@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\EveAuth;
+use App\Core\EveApi\AuthDataFactory;
 use App\Models\User;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
@@ -45,22 +45,22 @@ class AuthController extends Controller
      */
     public function callback(Request $request)
     {
-        $eveUser = Socialite::driver('eveonline')->user();
+        $character = Socialite::driver('eveonline')->user();
 
-        $user = User::where('characterId', $eveUser->character_id)->first();
+        $user = User::where('characterId', $character->character_id)->first();
 
         if ($user) {
             $user->update([
-                'token' => $eveUser->token,
-                'refreshToken' => $eveUser->refreshToken,
+                'token' => $character->token,
+                'refreshToken' => $character->refreshToken,
             ]);
         } else {
             $user = User::create([
-                'characterId' => $eveUser->character_id,
-                'characterName' => $eveUser->character_name,
-                'ownerHash' => $eveUser->character_owner_hash,
-                'token' => $eveUser->token,
-                'refreshToken' => $eveUser->refreshToken,
+                'characterId' => $character->character_id,
+                'characterName' => $character->character_name,
+                'ownerHash' => $character->character_owner_hash,
+                'token' => $character->token,
+                'refreshToken' => $character->refreshToken,
                 'scopes' => self::$scopes,
             ]);
         }
@@ -104,18 +104,15 @@ class AuthController extends Controller
         }
 
         try {
-            $data = EveAuth::refreshAuthToken($user->refreshToken);
-            if (empty($data)) {
-                throw new \UnexpectedValueException('empty token data received');
-            }
+            $data = AuthDataFactory::update($user->refreshToken);
         } catch (\Throwable $e) {
             return response()->json([
                 'error' => $e->getMessage()
             ]);
         }
 
-        $user->token = $data['access_token'];
-        $user->refreshToken = $data['refresh_token'];
+        $user->token = $data->getAccessToken();
+        $user->refreshToken = $data->getRefreshToken();
 
         $user->save();
 

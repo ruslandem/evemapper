@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Core\EveWormholeClasses;
 use App\Mail\ContactMessage;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use TimeHunter\LaravelGoogleReCaptchaV3\Facades\GoogleReCaptchaV3;
@@ -14,8 +13,6 @@ class SiteController extends Controller
 {
     public function getWormholeClasses()
     {
-        $eveWormholeClasses = new EveWormholeClasses();
-
         $types = [
             'High' => 7,
             'Low' => 8,
@@ -44,10 +41,10 @@ class SiteController extends Controller
             'Thera' => '#df9fdf'
         ];
 
-        return array_map(function ($key, $value) use ($eveWormholeClasses, $colors) {
+        return array_map(function ($key, $value) use ($colors) {
             return array(
                 'name' => $key,
-                'classes'  => $eveWormholeClasses->getList($value),
+                'classes'  => EveWormholeClasses::getList($value),
                 'highlightColor' => $colors[$key]
             );
         }, array_keys($types), $types);
