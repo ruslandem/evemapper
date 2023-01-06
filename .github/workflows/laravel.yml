@@ -30,7 +30,7 @@ jobs:
         touch database/app.db
     - name: Migrate database
       run: php artisan migrate:install && php artisan migrate --force
-    - name: Execute tests (Unit and Feature tests) via PHPUnit
+    - name: Execute tests (Unit and Feature tests) via PHPUnit!
       env:
         DB_CONNECTION: app
         DB_DATABASE: database/app.db
