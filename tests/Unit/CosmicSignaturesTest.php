@@ -303,7 +303,7 @@ class CosmicSignaturesTest extends TestCase
 
         $this->assertEqualsCanonicalizing(
             [
-                'error' => null,
+                'error' => 'no signatures found',
             ],
             $report->output()
         );
