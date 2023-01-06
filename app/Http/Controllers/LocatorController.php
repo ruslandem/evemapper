@@ -56,10 +56,9 @@ class LocatorController extends Controller
         $result['system'] = EveSolarSystem::getByName($system);
 
         if ($result['system']) {
-            $eveRoute = new EveRoute();
             foreach ($this->tradeHubs as $tradeHub) {
                 $result['jumps'][$tradeHub] = count(
-                    $eveRoute->getRoute($result['system']->solarSystemName, $tradeHub)
+                    EveRoute::getRoute($result['system']->solarSystemName, $tradeHub)
                 );
             }
             @asort($result['jumps']);

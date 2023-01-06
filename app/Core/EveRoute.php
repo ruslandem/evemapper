@@ -4,29 +4,23 @@ namespace App\Core;
 
 use App\Core\Exceptions\EveRouteNotFoundException;
 use Fisharebest\Algorithm\Dijkstra;
-use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
-class EveRoute
+class EveRoute extends DatabaseConnection
 {
-    private const CACHE_PREFIX = 'EveRoute_';
+    public static bool $useCache = true;
 
-    private ConnectionInterface $db;
+    protected static array $mapSystems = [];
+    protected static array $mapJumps = [];
 
-    private bool $useCache;
-
-    protected array $systemJumps = [];
-    protected array $systemNames = [];
-
-
-    public function __construct(string $connection = 'app', bool $useCache = true)
-    {
-        $this->db = DB::connection($connection);
-        $this->useCache = $useCache;
-    }
-
-    public function getWaypointsRoute(array $waypoints)
+    /**
+     * Get shortest route through several waypoints with the first waypoint 
+     * as origin and the last waypoint as destination.
+     * 
+     * @param array $waypoints
+     * @return array
+     */
+    public static function getWaypointsRoute(array $waypoints): array
     {
         $destinations = $waypoints;
         $route = [
@@ -38,7 +32,7 @@ class EveRoute
 
             $paths = [];
             foreach ($destinations as $waypoint) {
-                $waypointRoute = $this->getRoute($position, $waypoint);
+                $waypointRoute = self::getRoute($position, $waypoint);
                 $paths[$waypoint] = count($waypointRoute);
             }
 
@@ -55,90 +49,120 @@ class EveRoute
         $result = [];
         if (count($route) > 1) {
             for ($i = 1; $i < count($route); $i++) {
-                $result[] = $this->getRoute($route[$i - 1], $route[$i]);
+                $result[] = self::getRoute($route[$i - 1], $route[$i]);
             }
-            $result[] = $this->getRoute($route[count($route) - 1], $route[0]);
+            $result[] = self::getRoute($route[count($route) - 1], $route[0]);
         }
 
         return $result;
     }
 
-    public function getRoute(string $fromSystemName, string $toSystemName)
+    /**
+     * Get shortest route between two solar systems.
+     * 
+     * @param string $originName
+     * @param string $destName
+     * @return array
+     */
+    public static function getRoute(string $originName, string $destName): array
     {
-        if ($this->useCache) {
-            $route = $this->getCachedRoute($fromSystemName, $toSystemName);
-            if ($route) {
-                return $route;
-            }
+        $route = self::getCachedRoute($originName, $destName);
+
+        if ($route !== null) {
+            return $route;
         }
 
-        $this->fillSystemArrays();
+        if (sizeof(self::$mapSystems) === 0) {
+            self::$mapSystems = self::getSolarSystemsMap();
+        }
 
-        $fromSolarSystemId = array_search($fromSystemName, $this->systemNames, true);
-        $toSolarSystemId = array_search($toSystemName, $this->systemNames, true);
+        if (sizeof(self::$mapJumps) === 0) {
+            self::$mapJumps = self::getSolarSystemJumpsMap();
+        }
 
-        if (!$fromSolarSystemId || !$toSolarSystemId) {
+        $originId = array_search($originName, self::$mapSystems, true);
+        $destId = array_search($destName, self::$mapSystems, true);
+
+        if (!$originId || !$destId) {
             throw new EveRouteNotFoundException();
         }
 
+        $algorithm = new Dijkstra(self::$mapJumps);
+        $route = $algorithm->shortestPaths($originId, $destId);
+
         $result = [];
-        $algorithm = new Dijkstra($this->systemJumps);
-        $route = $algorithm->shortestPaths($fromSolarSystemId, $toSolarSystemId);
 
         if (isset($route[0])) {
-            $result = Utils::mapArray($route[0], $this->systemNames);
-            if ($this->useCache) {
-                $this->saveCachedRoute($fromSystemName, $toSystemName, $result);
+            $result = Utils::mapArray($route[0], self::$mapSystems);
+            if (self::$useCache) {
+                self::saveCachedRoute($originName, $destName, $result);
             }
         }
 
         return $result;
     }
 
-    protected function getCachedRoute(string $fromSystemName, string $toSystemName)
+    protected static function getCachedRoute(string $originName, string $destName): ?array
     {
-        return Cache::get(
-            self::getCacheKey($fromSystemName, $toSystemName)
-        );
+        if (static::$useCache) {
+            return (array) Cache::get(
+                self::getCacheKey($originName, $destName)
+            );
+        }
+
+        return null;
     }
 
-    protected function saveCachedRoute(string $fromSystemName, string $toSystemName, array $route): bool
+    protected static function saveCachedRoute(string $originName, string $destName, array $route): bool
     {
         return Cache::put(
-            self::getCacheKey($fromSystemName, $toSystemName),
+            self::getCacheKey($originName, $destName),
             $route
         );
     }
 
-    protected static function getCacheKey(string $fromSystemName, string $toSystemName): string
+    protected static function getCacheKey(string $originName, string $destName): string
     {
-        return implode('_', [
-            self::CACHE_PREFIX,
-            $fromSystemName,
-            $toSystemName
-        ]);
+        $className = (new \ReflectionClass(EveRoute::class))->getShortName();
+        return implode('_', [$className, $originName, $destName]);
+    }
+
+
+    /**
+     * Get map of solar system names by id.
+     * 
+     * @return array
+     */
+    protected static function getSolarSystemsMap(): array
+    {
+        $data = self::db()->table('mapSolarSystems')->get();
+
+        $result = [];
+        foreach ($data as $item) {
+            $id = intval($item->solarSystemID);
+            $result[$id] = $item->solarSystemName;
+        }
+
+        return $result;
     }
 
     /**
-     * Fill syatems data into arrays from database only in case
-     * the arrays are empty.
+     * Get map of solar system jumps to use in Dijkstra algorithm.
      * 
-     * @return void
+     * @see https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
+     * @return array
      */
-    protected function fillSystemArrays(): void
+    protected static function getSolarSystemJumpsMap(): array
     {
-        if (empty($this->systemJumps)) {
-            $data = $this->db->table('mapSolarSystemJumps')->get();
-            foreach ($data as $item) {
-                $this->systemJumps[intval($item->fromSolarSystemID)][intval($item->toSolarSystemID)] = 1;
-            }
+        $data = self::db()->table('mapSolarSystemJumps')->get();
+
+        $result = [];
+        foreach ($data as $item) {
+            $from = intval($item->fromSolarSystemID);
+            $to = intval($item->toSolarSystemID);
+            $result[$from][$to] = 1;
         }
 
-        if (empty($this->systemNames)) {
-            $data = $this->db->table('mapSolarSystems')->get();
-            foreach ($data as $item) {
-                $this->systemNames[intval($item->solarSystemID)] = $item->solarSystemName;
-            }
-        }
+        return $result;
     }
 }

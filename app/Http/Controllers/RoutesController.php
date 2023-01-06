@@ -33,7 +33,7 @@ class RoutesController extends Controller
         $waypoints = $request->input('waypoints', []);
 
         try {
-            $route = (new EveRoute())->getWaypointsRoute($waypoints);
+            $route = EveRoute::getWaypointsRoute($waypoints);
         } catch (EveRouteNotFoundException $e) {
             return response()->json([
                 'message' => 'Failed to build route'
