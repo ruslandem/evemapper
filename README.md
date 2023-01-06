@@ -39,6 +39,30 @@ php artisan migrate --quiet --force
    * Back-end configuration file: `.env` (see `.env.example`).
    * Front-end configuration file: `resourses/assets/js/config.ts` (see comments in the file). 
 
+## Testing
+
+Test environment should use another database (i.e. app_test.db) in the same directory. 
+
+Prior testing, please create separate environment file: 
+```bash
+cp .env .env.testing
+```
+and change the next parameters:
+```ini
+...
+APP_ENV=testing
+DB_APP=app_test.db
+...
+```
+After you have created the testin environment file as specified above, you can install and run testing database migration:
+```bash
+php artisan migrate:install --env=testing
+php artisan migrate --env=testing
+```
+Finally, you can rpoceed to the testing:
+```bash
+php artisan test
+```
 
 ## Contributing
 
