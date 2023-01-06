@@ -28,11 +28,6 @@ return [
             'database' => database_path(env('DB_EVE', '')),
         ],
 
-        'test' => [
-            'driver' => 'sqlite',
-            'database' => database_path((env('DB_APP_TEST', ''))),
-        ],
-
     ],
 
     /*
