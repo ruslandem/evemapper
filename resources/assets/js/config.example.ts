@@ -7,5 +7,10 @@ export const appConfig = {
    * Global site tag ID (gtag.js) - Google Analytics.
    * (set to null to disable)
    */
-  gTagId: null
+  gTagId: null,
+  /**
+   * Characters' names (i.e. ['Char 1', 'Char 2']) that have access
+   * to admin page.
+   */
+  admins: [],
 };
