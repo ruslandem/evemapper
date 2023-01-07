@@ -4,8 +4,9 @@ import {
   RouteLocationNormalized,
   RouteRecordRaw
 } from 'vue-router';
+import { appConfig } from '@/config';
 
-const admins: string[] = ['Khazad Tyori'];
+const admins: string[] = appConfig.admins;
 
 const checkAuth = (
   to: RouteLocationNormalized,
@@ -61,19 +62,9 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/pages/LoginPage.vue')
   },
   {
-    name: 'privacy',
-    path: '/privacy',
-    component: () => import('@/pages/PrivacyPage.vue')
-  },
-  {
-    name: 'legal',
-    path: '/legal',
-    component: () => import('@/pages/LegalPage.vue')
-  },
-  {
-    name: 'contacts',
-    path: '/contacts',
-    component: () => import('@/pages/ContactsPage.vue')
+    name: 'license',
+    path: '/license',
+    component: () => import('@/pages/LicensePage.vue')
   },
   {
     name: 'admin',
