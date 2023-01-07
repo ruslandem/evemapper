@@ -2,6 +2,13 @@
 
 EveMapper is a signature logging, route planner and solar system mapping tool in the Eve Online game.
 
+## Requirements
+
+* PHP 8.2+
+* Nginx 1.2+
+
+See `/install` for docker-compose and nginx configuration files.
+
 ## Installation
 
 1. Clone repository.
