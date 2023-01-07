@@ -1,3 +1,5 @@
+[![SWUbanner](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://supportukrainenow.org/)
+
 # EveMapper
 
 EveMapper is a signature logging, route planner and solar system mapping tool in the Eve Online game.
