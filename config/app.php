@@ -236,6 +236,7 @@ return [
         'client_id' => env('EVE_API_CLIENT_ID', null),
         'secret_key' => env('EVE_API_SECRET_KEY', null),
         'callback_url' => env('EVE_API_CALLBACK_URL', null),
+        'admin_characters' => explode(',', env('EVE_ADMIN_CHARACTERS', '')),
     ],
 
 ];

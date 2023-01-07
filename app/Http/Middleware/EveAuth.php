@@ -5,14 +5,10 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
 
 class EveAuth
 {
-    public static $adminCharacters = [
-        'Khazad Tyori'
-    ];
-
     /**
      * Handle an incoming request.
      *
@@ -32,7 +28,7 @@ class EveAuth
             if (
                 !in_array(
                     Auth::user()->characterName,
-                    self::$adminCharacters
+                    Config::get('app.eve.admin_characters', [])
                 )
             ) {
                 return response()->json([
