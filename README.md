@@ -4,7 +4,7 @@ EveMapper is a signature logging, route planner and solar system mapping tool in
 
 ## Requirements
 
-* PHP 8.2+
+* PHP 8+
 * Nginx 1.2+
 
 See `/install` for docker-compose and nginx configuration files.
