@@ -1,6 +1,6 @@
 # EveMapper
 
-EveMapper is an online tool to help you with some aspects of playing the Eve Online game.
+EveMapper is a signature logging, route planner and solar system mapping tool in the Eve Online game.
 
 ## Installation
 
@@ -73,4 +73,4 @@ Please make sure to update tests as appropriate.
 
 ## License
 
-All rights reserved.
+[MIT](LICENSE) © Ruslan Demchenko
