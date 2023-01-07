@@ -7,10 +7,11 @@
       <span class="is-size-5 m-0 p-0">
         {{ waypointsRoute[0].solarSystemName }}
         <a
-          href="#"
           @click.prevent="
             setWaypointAutopilot(waypointsRoute[0].solarSystemName)
           "
+          href="#"
+          title="Add waypoint to autopilot"
         >
           <fa-icon
             icon="fas fa-location"
