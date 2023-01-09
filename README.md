@@ -1,5 +1,7 @@
 [![SWUbanner](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://supportukrainenow.org/)
 
+<img alt="GitHub" src="https://img.shields.io/github/license/ruslandem/evemapper"> <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/ruslandem/evemapper"> <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/ruslandem/evemapper"> <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/ruslandem/evemapper">
+
 # EveMapper
 
 EveMapper is a signature logging, route planner and solar system mapping tool in the Eve Online game.
