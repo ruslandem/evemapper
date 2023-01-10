@@ -14,10 +14,6 @@ class CreateWormholeSystemsTable extends Migration
 
     public function up()
     {
-        if (app()->environment('testing')) {
-            return;
-        }
-        
         Schema::dropIfExists($this->tableName);
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->id();
