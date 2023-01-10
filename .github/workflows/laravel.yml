@@ -16,10 +16,14 @@ jobs:
       with:
         php-version: '8.2'
     - uses: actions/checkout@v3
-    - name: Copy .env
-      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+    - name: Copy .env and config.ts
+      run: |
+        php -r "file_exists('.env') || copy('.env.example', '.env');"
+        php -r "file_exists('./resources/assets/js/config.ts') || copy('./resources/assets/js/config.example.ts', './resources/assets/js/config.ts');"
     - name: Install Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      run: |
+        composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        npm run build
     - name: Generate key
       run: php artisan key:generate
     - name: Directory Permissions
