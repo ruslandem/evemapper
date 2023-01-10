@@ -10,7 +10,7 @@ use App\Services\CosmicSignatures;
 
 class CosmicSignaturesTest extends TestCase
 {
-    use RefreshDatabase;
+    // use RefreshDatabase;
 
     public const SOLAR_SYSTEM = 'Amarr';
     /**
