@@ -19,7 +19,7 @@ class EveSolarSystem extends DatabaseConnection
             ->get()
             ->first();
 
-        if (!$data) {
+        if (!property_exists($data, 'solarSystemName')) {
             throw new EveApiException("solar system ID {$solarSystemId} not found");
         }
 
@@ -40,14 +40,14 @@ class EveSolarSystem extends DatabaseConnection
      */
     public static function getByName(string $solarSystemName): stdClass
     {
-        $data = self::db()->table('mapSolarSystems')
+        $data = (object) self::db()->table('mapSolarSystems')
             ->join('mapConstellations', 'mapSolarSystems.constellationID', '=', 'mapConstellations.constellationID')
             ->join('mapRegions', 'mapSolarSystems.regionID', '=', 'mapRegions.regionID')
             ->where('mapSolarSystems.solarSystemName', '=', $solarSystemName)
             ->get()
             ->first();
 
-        if (!$data) {
+        if (!property_exists($data, 'solarSystemName')) {
             throw new EveApiException("solar system name {$solarSystemName} not found");
         }
 
@@ -58,7 +58,7 @@ class EveSolarSystem extends DatabaseConnection
         self::addRatsInfo($data);
         self::addAdjacentSystems($data);
 
-        return (object) $data;
+        return $data;
     }
 
     public static function getByNames(array $names): array
