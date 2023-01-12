@@ -25,12 +25,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // DB::listen(function($query) {
-        //     Log::info(
-        //         $query->sql,
-        //         $query->bindings,
-        //         $query->time
-        //     );
-        // });
+        if ((bool) env('APP_DEBUG', false)) {
+            $dbLogger = Log::build([
+                'driver' => 'single',
+                'path' => storage_path('logs/database.log'),
+            ]);;
+
+            DB::connection('app')
+                ->listen(function ($query) use ($dbLogger) {
+                    $dbLogger->info(
+                        $query->sql,
+                        $query->bindings,
+                        $query->time
+                    );
+                });
+        }
     }
 }
