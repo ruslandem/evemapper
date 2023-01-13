@@ -2,7 +2,7 @@
 
 namespace App\Core\EveMarketApi;
 
-class AppraisalItem
+class AppraisalItem implements \JsonSerializable
 {
     protected int $typeId;
     protected int $sellVolume;
@@ -19,6 +19,11 @@ class AppraisalItem
             $this->buyVolume = $array['buyVolume'];
             $this->buyPrice = $array['buyPrice'];
         }
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 
     public function toArray(): array

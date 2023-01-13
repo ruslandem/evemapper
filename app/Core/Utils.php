@@ -23,4 +23,10 @@ class Utils
         
         return $result;
     }
+
+    public static function searchAssocArray(array $array, string $keyName, $keyValue)
+    {
+        $key = array_search($keyValue, array_column($array, $keyName));
+        return $key !== false ? $array[$key] : null;
+    }
 }

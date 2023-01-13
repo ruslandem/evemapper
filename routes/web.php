@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', static fn () => view('index'));
 Route::get('/route', static fn () => view('index'));
 Route::get('/locate', static fn () => view('index'));
+Route::get('/appraisal', static fn () => view('index'));
 Route::get('/login', static fn () => view('index'));
 Route::get('/license', static fn () => view('index'));
 Route::get('/admin', static fn () => view('index'));

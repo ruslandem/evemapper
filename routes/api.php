@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AppraisalController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LocatorController;
 use App\Http\Controllers\RoutesController;
@@ -30,6 +31,8 @@ Route::post('/updateSignatures', [SignaturesController::class, 'update']);
 // Solar systems route
 Route::post('/getRoute', [RoutesController::class, 'buildRoute']);
 Route::post('/addAutopilotWaypoint', [RoutesController::class, 'waypoint']);
+// Appraisal
+Route::get('/getBlueprintAppraisal', [AppraisalController::class, 'blueprintAppraisal']);
 
 // Admin routes
 Route::prefix('admin')->group(function () {

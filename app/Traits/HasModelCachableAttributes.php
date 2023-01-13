@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 trait HasModelCachableAttributes
 {
@@ -52,10 +53,11 @@ trait HasModelCachableAttributes
     private function getCachedAttributeCacheKey(string $name): string
     {
         if ($this instanceof Model) {
+            $pkey = $this->primaryKey;
             return implode('_', [
                 'attribute',
                 $this->table ?? '',
-                $this->primaryKey ?? '',
+                $this->$pkey ?? '',
                 $name
             ]);
         }

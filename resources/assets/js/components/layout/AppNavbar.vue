@@ -37,6 +37,12 @@
             :to="{ name: 'route' }"
             >Route</router-link
           >
+          <router-link
+            @click.prevent=""
+            class="navbar-item"
+            :to="{ name: 'appraisal' }"
+            >Appraisal</router-link
+          >
         </div>
         <div class="navbar-end">
           <span v-if="authStore.isAuthenticated">

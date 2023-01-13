@@ -1,3 +1,4 @@
+import { Blueprint } from '@/structures/blueprint';
 import { HubsJump } from '@/structures/hubj-jump';
 import { Signature } from '@/structures/signature';
 import { SolarSystem } from '@/structures/solar-system';
@@ -124,4 +125,14 @@ export const deleteSignature = async (
     getAxiosPostConfig()
   );
   return status === 200;
+};
+
+export const getBlueprintAppraisal = async (
+  blueprintName: string
+): Promise<Blueprint | null> => {
+  const { data, status } = await axios.get<Blueprint>(
+    `/api/getBlueprintAppraisal`,
+    { params: { blueprintName } }
+  );
+  return status == 200 ? data : null;
 };

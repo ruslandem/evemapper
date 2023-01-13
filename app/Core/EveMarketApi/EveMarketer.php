@@ -10,7 +10,8 @@ class EveMarketer implements MarketApiInterface
 {
     public static string $url = 'https://api.evemarketer.com/ec/marketstat/json';
 
-    public static int $useSystem = 30000142;
+    public static int $useRegion = 10000002; // The Forge
+    public static int $useSystem = 30000142; // Jita
 
     public function getMarketPrices(array $types): array
     {
@@ -23,6 +24,7 @@ class EveMarketer implements MarketApiInterface
         }
 
         $queryData = [
+            'regionlimit' => self::$useRegion,
             'usesystem' => self::$useSystem,
             'typeid' => implode(',', $types)
         ];
@@ -39,13 +41,13 @@ class EveMarketer implements MarketApiInterface
 
         $appraisalItems = [];
         foreach ($decodedJson as $item) {
-            $appraisalItems[] = new AppraisalItem([
+            $appraisalItems[] = (new AppraisalItem([
                 'typeId' => $item['buy']['forQuery']['types'][0],
                 'sellVolume' => $item['sell']['volume'] ?? 0,
-                'sellPrice' => $item['sell']['median'] ?? 0,
+                'sellPrice' => $item['sell']['min'] ?? 0,
                 'buyVolume' => $item['buy']['volume'] ?? 0,
                 'buyPrice' => $item['buy']['median'] ?? 0,
-            ]);
+            ]))->toArray();
         }
 
         return $appraisalItems;

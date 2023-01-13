@@ -30,12 +30,41 @@ class InvType extends Model
             get: function () {
                 return $this->useAttributeCache('materials', function () {
                     return $this->getConnection()
-                        ->table('industryActivityMaterials')
+                        ->table('industryActivityMaterials AS m')
+                        ->leftJoin('invTypes AS i', 'i.typeID', '=', 'm.materialTypeID')
                         ->where([
-                            'typeID' => $this->typeID,
-                            'activityID' => self::MANUFACTURE_ACTIVITY
+                            'm.typeID' => $this->typeID,
+                            'm.activityID' => self::MANUFACTURE_ACTIVITY
                         ])
-                        ->get(['materialTypeID', 'quantity']);
+                        ->get([
+                            'm.materialTypeID AS typeId',
+                            'i.typeName AS name',
+                            'm.quantity'
+                        ])
+                        ->toArray();
+                });
+            }
+        );
+    }
+
+    protected function products(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->useAttributeCache('products', function () {
+                    return $this->getConnection()
+                        ->table('industryActivityProducts AS p')
+                        ->leftJoin('invTypes AS i', 'i.typeID', '=', 'p.productTypeID')
+                        ->where([
+                            'p.typeID' => $this->typeID,
+                            'p.activityID' => self::MANUFACTURE_ACTIVITY
+                        ])
+                        ->get([
+                            'p.productTypeID AS typeId',
+                            'i.typeName AS name',
+                            'p.quantity'
+                        ])
+                        ->toArray();
                 });
             }
         );

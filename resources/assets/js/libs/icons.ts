@@ -10,7 +10,8 @@ import {
   faO,
   faD,
   faUser,
-  faEnvelope
+  faEnvelope,
+  faHandHoldingDollar
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -24,5 +25,6 @@ library.add(
   faO,
   faD,
   faUser,
-  faEnvelope
+  faEnvelope,
+  faHandHoldingDollar
 );
