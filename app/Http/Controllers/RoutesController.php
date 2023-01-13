@@ -76,7 +76,10 @@ class RoutesController extends Controller
                 'solarSystemName' => $validated['system']
             ]);
         } catch (EveApiTokenExpiredException $e) {
-            return $this->update($user);
+            return redirect()
+                ->action([AuthController::class, 'update'])
+                ->with('user', $user)
+                ->with('callbackUrl', '/api/addAutopilotWaypoint');
         }
     }
 }
