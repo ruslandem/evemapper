@@ -9,7 +9,6 @@
 <script setup lang="ts">
 import WaypointsRouteTable from './WaypointsRouteTable.vue';
 import { SolarSystem } from '@/structures/solar-system';
-import { getSecurityStatusStyle } from '@/services/utils';
 
 interface Props {
   route: SolarSystem[][];
