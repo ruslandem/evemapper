@@ -104,10 +104,14 @@ class EveRoute extends DatabaseConnection
 
     protected static function getCachedRoute(string $originName, string $destName): ?array
     {
-        if (static::$useCache) {
-            return (array) Cache::get(
+        if (self::$useCache) {
+            $cached = Cache::get(
                 self::getCacheKey($originName, $destName)
             );
+
+            if ($cached) {
+                return (array) $cached;
+            }
         }
 
         return null;

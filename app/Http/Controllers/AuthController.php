@@ -95,6 +95,7 @@ class AuthController extends Controller
     public function update()
     {
         $user = session()->pull('user');
+        $callbackUrl = session()->pull('callbackUrl');
 
         if ($user === null) {
             return response()->json([
@@ -116,6 +117,8 @@ class AuthController extends Controller
 
         $user->save();
 
-        return redirect()->action([LocatorController::class, 'locate']);
+        return $callbackUrl
+            ? redirect($callbackUrl)
+            : redirect()->action([LocatorController::class, 'locate']);
     }
 }

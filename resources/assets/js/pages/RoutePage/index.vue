@@ -41,6 +41,7 @@ const buildRoute = () => {
       getAxiosPostConfig()
     )
     .then((response) => {
+      console.log(response);
       if (response.status == 200) {
         route.value = response.data;
       }
