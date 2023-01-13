@@ -5,6 +5,8 @@ namespace App\Core\EveMarketApi;
 use App\Core\Exceptions\EveApiException;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client as HttpClient;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 
 class EveMarketer implements MarketApiInterface
 {
@@ -31,6 +33,10 @@ class EveMarketer implements MarketApiInterface
 
         $requestUrl = self::$url . '?' . http_build_query($queryData);
 
+        if (Config::get('app.api.log', true)) {
+            Log::channel('api')->info($requestUrl);
+        }
+        
         $response = (new HttpClient())->request('GET', $requestUrl);
 
         if ($response->getStatusCode() !== 200) {

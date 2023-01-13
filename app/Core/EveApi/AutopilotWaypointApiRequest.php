@@ -8,6 +8,8 @@ use App\Core\EveSolarSystem;
 use App\Core\Exceptions\EveApiException;
 use App\Core\Exceptions\EveApiTokenExpiredException;
 use App\Models\User;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Swagger\Client\Eve\ApiException;
 
 /**
@@ -29,6 +31,12 @@ class AutopilotWaypointApiRequest extends AbstractApiRequest
         }
 
         $api = self::getApiInstance('userInterfaceApi', $user);
+
+        if (Config::get('app.api.log', true)) {
+            Log::channel('api')->info(
+                "User:{$user->characterId} postUiAutopilotWaypoint {$data['solarSystemName']}"
+            );
+        }
 
         try {
             $api->postUiAutopilotWaypoint(

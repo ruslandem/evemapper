@@ -8,6 +8,7 @@ use App\Models\User;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\RequestOptions as HttpRequestOptions;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 
 class AuthDataFactory
 {
@@ -20,6 +21,10 @@ class AuthDataFactory
 
         $secretKey = Config::get('app.eve.secret_key')
             ?? throw new \Exception('secret_key not found in config');
+
+        if (Config::get('app.api.log', true)) {
+            Log::channel('api')->info(static::$authUrl . ' (update)');
+        }
 
         $response = (new HttpClient())->request(
             'POST',

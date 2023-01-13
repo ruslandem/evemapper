@@ -239,4 +239,8 @@ return [
         'admin_characters' => explode(',', env('EVE_ADMIN_CHARACTERS', '')),
     ],
 
+    'api' => [
+        'log' => env('API_LOG', true),
+    ],
+
 ];
