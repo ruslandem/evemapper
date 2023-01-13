@@ -30,19 +30,21 @@ class AutopilotWaypointApiRequest extends AbstractApiRequest
             throw new EveApiException('solarSystemName is not set');
         }
 
-        $api = self::getApiInstance('userInterfaceApi', $user);
-
+        $api = self::getApiInstance('UserInterfaceApi', $user);
+        
         if (Config::get('app.api.log', true)) {
             Log::channel('api')->info(
                 "User:{$user->characterId} postUiAutopilotWaypoint {$data['solarSystemName']}"
             );
         }
 
+        $solarSystem = EveSolarSystem::getByName($data['solarSystemName']);
+
         try {
             $api->postUiAutopilotWaypoint(
                 false,
                 false,
-                EveSolarSystem::getByName($data['solarSystemName']),
+                $solarSystem->solarSystemID,
                 static::$dataSource,
                 $user->token
             );
