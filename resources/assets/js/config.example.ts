@@ -13,4 +13,10 @@ export const appConfig = {
    * to admin page.
    */
   admins: [],
+  /**
+   * Link to privacy policy
+   */
+  url: {
+    privacy: '/privacy'
+  }
 };

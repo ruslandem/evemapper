@@ -23,6 +23,7 @@
 import { onMounted } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { glowCookies } from '@/libs/glow-cookies/glowCookies';
+import { appConfig } from './config';
 import Navbar from '@/components/layout/AppNavbar.vue';
 import Footer from '@/components/layout/AppFooter.vue';
 
@@ -30,7 +31,7 @@ useAuthStore().getAuthentication();
 
 onMounted(() => {
   glowCookies.start('en', {
-    policyLink: '/privacy',
+    policyLink: appConfig.url.privacy,
     hideAfterClick: true
   });
 });
