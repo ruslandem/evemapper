@@ -25,7 +25,7 @@ class InvTypeModelTest extends TestCase
             $this->assertSame($value, $item->$key);
         }
 
-        $this->assertTrue($item->materials->count() > 0);
+        $this->assertTrue(count($item->materials) > 0);
     }
 
     public function test_find_unexistent_inventory_item()
