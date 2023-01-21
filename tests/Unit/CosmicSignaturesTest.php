@@ -3,15 +3,12 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Signature;
 use App\Models\User;
 use App\Services\CosmicSignatures;
 
 class CosmicSignaturesTest extends TestCase
 {
-    // use RefreshDatabase;
-
     public const SOLAR_SYSTEM = 'Amarr';
     /**
      * @var \Illuminate\Contracts\Auth\Authenticatable
