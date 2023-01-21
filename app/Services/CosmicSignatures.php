@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Core\ResponseReport;
 use App\Models\Signature;
-use Illuminate\Support\Facades\Auth;
+use App\Services\CosmicSignatureUpsertStatus;
 use Illuminate\Support\Facades\Validator;
 
 class CosmicSignatures
@@ -40,17 +42,10 @@ class CosmicSignatures
         foreach ($signatures as $signature) {
             $upserted = $this->upsertSignature($signature);
 
-            switch ($upserted) {
-                case self::SIG_CREATED:
-                    $report->increment('created');
-                    break;
-                case self::SIG_UPDATED:
-                    $report->increment('updated');
-                    break;
-                case self::SIG_UNCHAGED:
-                    // skip invalid signature record
-                    break;
-            }
+            match ($upserted) {
+                CosmicSignatureUpsertStatus::Created => $report->increment('created'),
+                CosmicSignatureUpsertStatus::Updated => $report->increment('updated')
+            };
         }
 
         return $report;
@@ -60,9 +55,9 @@ class CosmicSignatures
      * Insert or update signature with the specified signatureId.
      * 
      * @param array $signature
-     * @return int return either SIG_UPDATED, SIG_CREATED, or SIG_UNCHAGED
+     * @return CosmicSignatureUpsertStatus
      */
-    public function upsertSignature(array $signature): int
+    public function upsertSignature(array $signature): CosmicSignatureUpsertStatus
     {
         $validator = Validator::make($signature, [
             'characterId' => 'required|integer',
@@ -71,10 +66,8 @@ class CosmicSignatures
         ]);
 
         if ($validator->fails()) {
-            return self::SIG_UNCHAGED;
+            return CosmicSignatureUpsertStatus::Unchanged;
         }
-
-
 
         $found = Signature::where([
             'characterId' => $signature['characterId'],
@@ -84,11 +77,11 @@ class CosmicSignatures
 
         if ($found) {
             $found->updateData($signature)->save();
-            return self::SIG_UPDATED;
+            return CosmicSignatureUpsertStatus::Updated;
         }
 
         Signature::create($signature);
-        return self::SIG_CREATED;
+        return CosmicSignatureUpsertStatus::Created;
     }
 
     public function removeAbsentSignatures(int $characterId, string $solarSystem, array $signatures)
