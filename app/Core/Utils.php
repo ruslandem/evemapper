@@ -2,7 +2,9 @@
 
 namespace App\Core;
 
-class Utils
+use App\Core\Singleton;
+
+final class Utils extends Singleton
 {
     /**
      * Substitute $array values with mapped values in $token.
@@ -20,7 +22,7 @@ class Utils
                 $result[$key] = $tokens[$value] ?? null;
             }
         }
-        
+
         return $result;
     }
 
