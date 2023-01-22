@@ -31,12 +31,11 @@ class AutopilotWaypointApiRequest extends AbstractApiRequest
         }
 
         $api = self::getApiInstance('UserInterfaceApi', $user);
-        
-        if (Config::get('app.api.log', true)) {
-            Log::channel('api')->info(
-                "User:{$user->characterId} postUiAutopilotWaypoint {$data['solarSystemName']}"
-            );
-        }
+
+        self::log(
+            'info',
+            "User:{$user->characterId} postUiAutopilotWaypoint {$data['solarSystemName']}"
+        );
 
         $solarSystem = EveSolarSystem::getByName($data['solarSystemName']);
 
@@ -49,12 +48,7 @@ class AutopilotWaypointApiRequest extends AbstractApiRequest
                 $user->token
             );
         } catch (ApiException $e) {
-            $errorResponse = json_decode(
-                $e->getResponseBody(),
-                true,
-                512,
-                JSON_THROW_ON_ERROR
-            );
+            $errorResponse = self::getErrorResponse($e);
 
             if ($errorResponse['error'] == 'token is expired') {
                 throw new EveApiTokenExpiredException('token is expired');
