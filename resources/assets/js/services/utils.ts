@@ -13,13 +13,15 @@ export const getSecurityStatusStyle = (value: number | undefined): any => {
     return { color: '#FF0000' };
   }
 
-  return value >= 0.8
+  const rounded: number = Math.round(value * 10) / 10;
+
+  return rounded >= 0.8
     ? { color: '#00BFFF' }
-    : value >= 0.6
+    : rounded >= 0.6
     ? { color: '#57EDAA' }
-    : value >= 0.5
+    : rounded >= 0.5
     ? { color: '#FFD700' }
-    : value >= 0
+    : rounded >= 0
     ? { color: '#FF8000' }
     : { color: '#FF0000' };
 };

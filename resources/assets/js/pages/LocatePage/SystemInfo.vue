@@ -15,33 +15,35 @@
           </tr>
           <tr>
             <td>Region</td>
-            <td>{{ system?.regionName }}</td>
+            <td>{{ system?.region?.regionName }}</td>
           </tr>
           <tr>
             <td>Constellation</td>
-            <td>{{ system?.constellationName }}</td>
+            <td>{{ system?.constellation?.constellationName }}</td>
           </tr>
           <tr>
             <td>Rats</td>
-            <td>{{ system?.rats }}</td>
+            <td>
+              {{ system?.wormhole ? 'Sleepers' : system?.region?.rats?.rats }}
+            </td>
           </tr>
 
-          <tr v-if="system?.wormholeClass">
+          <tr v-if="system?.wormhole">
             <td>Wormhole Class</td>
-            <td>{{ system?.wormholeClass }}</td>
+            <td>{{ system?.wormhole.class }}</td>
           </tr>
-          <tr v-if="system?.wormholeClass">
+          <tr v-if="system?.wormhole?.statics">
             <td>Wormhole Statics</td>
-            <td v-if="system?.wormholeStatics">
+            <td>
               <span
-                v-for="(value, index) in system?.wormholeStatics"
+                v-for="(value, index) in system?.wormhole?.statics"
                 :key="index"
                 class="mr-2"
               >
-                {{ index }}
-                <span :style="getWormholeStaticColor(+value.inClass)">
-                  ({{ getWormholeStaticType(+value.inClass) }})
-                </span>
+                {{ value.hole }}
+                <sup :style="getWormholeStaticColor(+value.inClass)">
+                  {{ getWormholeStaticType(+value.inClass) }}
+                </sup>
               </span>
             </td>
           </tr>
@@ -61,15 +63,17 @@
 
       <!-- Adjacent Systems -->
       <div class="mt-5 has-text-centered">
-        <span v-for="adjacentSystem in system?.adjacentSystems" class="mx-3">
+        <span v-for="adjacent in system?.jumps" class="mx-3">
           <a
             href="#"
-            @click.prevent="$emit('updateSystem', adjacentSystem.solarSystemName)"
-            :style="[getSecurityStatusStyle(adjacentSystem.security)]"
-            :data-tooltip="adjacentSystem.rats"
+            @click.prevent="
+              $emit('updateSystem', adjacent.to_solar_system.solarSystemName)
+            "
+            :style="[getSecurityStatusStyle(adjacent.to_solar_system.security)]"
+            :data-tooltip="adjacent.to_solar_system.rats"
           >
-            {{ adjacentSystem.solarSystemName }}
-            {{ adjacentSystem.security.toFixed(1) }}
+            {{ adjacent.to_solar_system.solarSystemName }}
+            <sup>{{ adjacent.to_solar_system.security.toFixed(1) }}</sup>
           </a>
         </span>
       </div>
@@ -103,7 +107,7 @@ const props = defineProps<Props>();
 const linkDotlan = computed(() => {
   return [
     'https://evemaps.dotlan.net/map/',
-    props.system?.regionName?.replace(' ', '_'),
+    props.system?.region?.regionName?.replace(' ', '_'),
     '/',
     props.system?.solarSystemName,
     '#sec'
@@ -115,4 +119,8 @@ const linkZkillboard = computed(() => {
     ''
   );
 });
+
+const wormhole = () => {
+  return props.system?.wormhole?.static?.split(',');
+};
 </script>
