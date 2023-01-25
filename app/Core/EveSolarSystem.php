@@ -8,11 +8,11 @@ use App\Core\Exceptions\EveApiException;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
-class EveSolarSystem extends DatabaseConnection
+class EveSolarSystem
 {
     public static function getById(int $solarSystemId): ?stdClass
     {
-        $data = (object) self::db()->table('mapSolarSystems')
+        $data = (object) DB::table('mapSolarSystems')
             ->join('mapConstellations', 'mapSolarSystems.constellationID', '=', 'mapConstellations.constellationID')
             ->join('mapRegions', 'mapSolarSystems.regionID', '=', 'mapRegions.regionID')
             ->where('mapSolarSystems.solarSystemID', '=', $solarSystemId)
@@ -40,7 +40,7 @@ class EveSolarSystem extends DatabaseConnection
      */
     public static function getByName(string $solarSystemName): stdClass
     {
-        $data = (object) self::db()->table('mapSolarSystems')
+        $data = (object) DB::table('mapSolarSystems')
             ->join('mapConstellations', 'mapSolarSystems.constellationID', '=', 'mapConstellations.constellationID')
             ->join('mapRegions', 'mapSolarSystems.regionID', '=', 'mapRegions.regionID')
             ->where('mapSolarSystems.solarSystemName', '=', $solarSystemName)
@@ -68,7 +68,7 @@ class EveSolarSystem extends DatabaseConnection
 
     public static function search(string $searchText): array
     {
-        $data = self::db()->table('mapSolarSystems')
+        $data = DB::table('mapSolarSystems')
             ->where('solarSystemName', 'like', $searchText . '%')
             ->get('solarSystemName');
 
@@ -83,7 +83,7 @@ class EveSolarSystem extends DatabaseConnection
 
     public static function getStatistics(): array
     {
-        $data = self::db()->table('signatures')
+        $data = DB::table('signatures')
             ->select(
                 'signatures.characterId',
                 'users.characterName',
@@ -100,7 +100,7 @@ class EveSolarSystem extends DatabaseConnection
 
     protected static function addWormholeSystemData(stdClass &$data): void
     {
-        $wormholeData = self::db()->table('wormholeSystems')
+        $wormholeData = DB::table('wormholeSystems')
             ->where('id', '=', $data->solarSystemID)
             ->get()
             ->first();
@@ -117,7 +117,7 @@ class EveSolarSystem extends DatabaseConnection
 
         $wormholeData->static = [];
         foreach ($statics as $key => $value) {
-            $details = self::db()->table('wormholeClasses')
+            $details = DB::table('wormholeClasses')
                 ->where('hole', '=', $key)
                 ->get()
                 ->first();
@@ -144,7 +144,7 @@ class EveSolarSystem extends DatabaseConnection
                 return;
             }
 
-            $rats = self::db()->table('regionRats')
+            $rats = DB::table('regionRats')
                 ->where('regionName', '=', $data->regionName)
                 ->get()
                 ->first();
@@ -156,7 +156,7 @@ class EveSolarSystem extends DatabaseConnection
     protected static function addAdjacentSystems(?stdClass &$data): void
     {
         if ($data instanceof stdClass) {
-            $adjacentSystems = self::db()->table('mapSolarSystemJumps')
+            $adjacentSystems = DB::table('mapSolarSystemJumps')
                 ->where('fromSolarSystemID', '=', $data->solarSystemID)
                 ->leftJoin('mapSolarSystems', 'mapSolarSystems.solarSystemID', '=', 'mapSolarSystemJumps.toSolarSystemID')
                 ->leftJoin('mapConstellations', 'mapConstellations.constellationID', '=', 'mapSolarSystems.constellationID')

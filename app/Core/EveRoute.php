@@ -5,8 +5,9 @@ namespace App\Core;
 use App\Core\Exceptions\EveRouteNotFoundException;
 use Fisharebest\Algorithm\Dijkstra;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
-class EveRoute extends DatabaseConnection
+class EveRoute
 {
     public static bool $useCache = true;
 
@@ -139,7 +140,7 @@ class EveRoute extends DatabaseConnection
      */
     protected static function getSolarSystemsMap(): array
     {
-        $data = self::db()->table('mapSolarSystems')->get();
+        $data = DB::table('mapSolarSystems')->get();
 
         $result = [];
         foreach ($data as $item) {
@@ -158,7 +159,7 @@ class EveRoute extends DatabaseConnection
      */
     protected static function getSolarSystemJumpsMap(): array
     {
-        $data = self::db()->table('mapSolarSystemJumps')->get();
+        $data = DB::table('mapSolarSystemJumps')->get();
 
         $result = [];
         foreach ($data as $item) {

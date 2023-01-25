@@ -6,8 +6,9 @@ use App\Core\EveMarketApi\EveMarketer;
 use App\Core\Exceptions\EveBlueprintException;
 use App\Models\InvType;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
-class EveBlueprint extends DatabaseConnection
+class EveBlueprint
 {
     public static bool $useCache = true;
 
@@ -15,7 +16,7 @@ class EveBlueprint extends DatabaseConnection
 
     public function getTypeId(string $blueprintName): ?int
     {
-        $result = self::db()->table('invTypes')
+        $result = DB::table('invTypes')
             ->where(['typeName' => $blueprintName])
             ->first(['typeID']);
         return $result ? $result->typeID : null;
