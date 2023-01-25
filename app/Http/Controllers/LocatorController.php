@@ -8,17 +8,13 @@ use App\Core\EveRoute;
 use App\Core\EveSolarSystem;
 use App\Core\Exceptions\EveApiException;
 use App\Core\Exceptions\EveApiTokenExpiredException;
+use App\Enums\TradeHubs;
+use App\Models\SolarSystem;
 use Illuminate\Support\Facades\Auth;
 
 class LocatorController extends Controller
 {
-    protected array $tradeHubs = [
-        'Jita',
-        'Amarr',
-        'Dodixie',
-        'Rens',
-        'Hek'
-    ];
+    protected array $tradeHubs = ['Jita', 'Amarr', 'Dodixie', 'Rens', 'Hek'];
 
     public function __construct()
     {
@@ -38,33 +34,32 @@ class LocatorController extends Controller
         return array_column($systems, 'solarSystemName');
     }
 
-    public function get(string $system)
+    public function get(string $systemName)
     {
-        $result = [
-            'system' => null,
-            'jumps' => [],
-            'errorMessage' => null,
-            'history' => EveLocationHistory::get(Auth::id()),
-            'signatures' => [],
+        $system = SolarSystem::where(['solarSystemName' => $systemName])
+            ->with(['region', 'constellation', 'wormhole', 'jumps'])
+            ->first();
+
+        if (!$system) {
+            return response()->json([
+                'error' => 'Solar system not found or empty'
+            ], 400);
+        }
+
+        foreach (TradeHubs::cases() as $hub) {
+            $jumps[$hub->name] = count(
+                EveRoute::getRoute($system->solarSystemName, $hub->name)
+            );
+        }
+        @asort($jumps);
+
+        $history = EveLocationHistory::get(Auth::id());
+
+        return [
+            'system' => $system->toArray(),
+            'jumps' => $jumps,
+            'history' => $history
         ];
-
-        if (empty($system)) {
-            $result['errorMessage'] = 'No system specified';
-            return $result;
-        }
-
-        $result['system'] = EveSolarSystem::getByName($system);
-
-        if ($result['system']) {
-            foreach ($this->tradeHubs as $tradeHub) {
-                $result['jumps'][$tradeHub] = count(
-                    EveRoute::getRoute($result['system']->solarSystemName, $tradeHub)
-                );
-            }
-            @asort($result['jumps']);
-        }
-
-        return $result;
     }
 
     public function getLocationsHistory()
@@ -83,27 +78,26 @@ class LocatorController extends Controller
         }
 
         try {
-            // get current character location
+            // get character location
             $location = LocationApiRequest::get($user);
 
-            // get solar system info
-            $solarSystem = EveSolarSystem::getById(
-                $location['solar_system_id']
-            );
-
-            // log current location
-            EveLocationHistory::write(
-                $user->characterId,
-                $solarSystem->solarSystemName
-            );
+            $system = SolarSystem::find($location['solar_system_id']);
+            // write history record
+            // EveLocationHistory::write(
+            //     $user->characterId,
+            //     $system->solarSystemName
+            // );
         } catch (EveApiTokenExpiredException $e) {
-            return redirect()->route('auth-update')->with('user', $user);
+            // redirect to update auth token
+            return redirect()->route('auth-update')
+                ->with('user', $user);
         } catch (EveApiException $e) {
+            // API error
             return response()->json([
                 'message' => $e->getMessage()
             ], 400);
         }
 
-        return $solarSystem->solarSystemName;
+        return response()->json($system->solarSystemName);
     }
 }

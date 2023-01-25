@@ -1,53 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Core\EveWormholeClasses;
-use App\Mail\ContactMessage;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Mail;
-use TimeHunter\LaravelGoogleReCaptchaV3\Facades\GoogleReCaptchaV3;
+use App\Enums\SecuritySpace;
+use App\Services\Wormholes;
 
 class SiteController extends Controller
 {
     public function getWormholeClasses()
     {
-        $types = [
-            'High' => 7,
-            'Low' => 8,
-            'Null' => 9,
-            'C1' => 1,
-            'C2' => 2,
-            'C3' => 3,
-            'C4' => 4,
-            'C5' => 5,
-            'C6' => 6,
-            'C13' => 13,
-            'Thera' => 12
-        ];
+        /**
+         * Describe security space items from 0 to 9
+         */
+        $elements = array_map(
+            function (SecuritySpace $value) {
+                return [
+                    'name' => $value->name(),
+                    'classes' => Wormholes::getWormholeClasses($value),
+                    'highlightColor' => $value->highlightColor()
+                ];
+            },
+            array_slice(SecuritySpace::cases(), 0, 10)
+        );
+        /**
+         * Add description for other security space items (10..)
+         */
+        $otherTypes = [];
+        foreach (array_slice(SecuritySpace::cases(), 10) as $value) {
+            array_push($otherTypes, ...Wormholes::getWormholeClasses($value));
+        }
+        array_push($elements, [
+            'name' => 'Other',
+            'classes' => $otherTypes,
+            'highlightColor' => SecuritySpace::Triglavian->highlightColor()
+        ]);
 
-        $colors = [
-            'High' => '#8afb66',
-            'Low' => '#f3ad2e',
-            'Null' => '#f35757',
-            'C1' => '#9df2fb',
-            'C2' => '#9df2fb',
-            'C3' => '#9df2fb',
-            'C4' => '#9df2fb',
-            'C5' => '#9df2fb',
-            'C6' => '#9df2fb',
-            'C13' => '#9df2fb',
-            'Thera' => '#df9fdf'
-        ];
-
-        return array_map(function ($key, $value) use ($colors) {
-            return array(
-                'name' => $key,
-                'classes'  => EveWormholeClasses::getList($value),
-                'highlightColor' => $colors[$key]
-            );
-        }, array_keys($types), $types);
+        return $elements;
     }
 
     public function getRatsDamages()
@@ -114,40 +104,5 @@ class SiteController extends Controller
                 "damageToUse" => "Kinetic"
             ],
         ];
-    }
-
-    public function contact(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'string|required',
-            'email' => 'email|required',
-            'message' => 'string|required',
-            'gRecaptchaResponse' => 'string|required'
-        ]);
-
-        $captcha = GoogleReCaptchaV3::verifyResponse(
-            $validated['gRecaptchaResponse'],
-            $request->getClientIp()
-        );
-
-        if (!$captcha->isSuccess()) {
-            $error = $captcha->getMessage();
-            return response()->json([
-                'message' => "Invalid captcha ({$error})"
-            ], 400);
-        }
-        $validated['captchaScore'] = $captcha->getScore();
-
-        $recipient = Config::get('mail.admin');
-
-        if ($recipient) {
-            Mail::to($recipient)->send(
-                new ContactMessage($validated)
-            );
-        }
-
-        return response()->json([
-            'message' => 'Message sent'
-        ]);
     }
 }

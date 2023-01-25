@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Core\ResponseReport;
 use App\Http\Resources\SignatureResource;
-use App\Models\Signature;
+use App\Models\CosmicSignature;
 use App\Services\CosmicSignatures;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,7 +25,7 @@ class SignaturesController extends Controller
     public function index(string $system)
     {
         return SignatureResource::collection(
-            Signature::select([
+            CosmicSignature::select([
                 'signatures.id as id',
                 'signatures.solarSystemName as solarSystemName',
                 'signatures.signatureId as signatureId',
