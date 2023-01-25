@@ -5,20 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ExtLink extends Model
+class ExternalLink extends Model
 {
     use HasFactory;
 
-    protected $connection = 'app';
-
     protected $table = 'extLinks';
+    protected $primaryKey = 'name';
+    protected $keyType = 'string';
+    public $incrementing = false;
 
     protected $fillable = [
         'name',
         'url',
     ];
 
-    protected $primaryKey = 'name';
 
     public function getWikiUrl()
     {
