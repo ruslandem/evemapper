@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Auth;
 
 class LocatorController extends Controller
 {
-    protected array $tradeHubs = ['Jita', 'Amarr', 'Dodixie', 'Rens', 'Hek'];
-
     public function __construct()
     {
         $this->middleware('eve.auth');
@@ -80,13 +78,13 @@ class LocatorController extends Controller
         try {
             // get character location
             $location = LocationApiRequest::get($user);
-
+            // get solar system info
             $system = SolarSystem::find($location['solar_system_id']);
             // write history record
-            // EveLocationHistory::write(
-            //     $user->characterId,
-            //     $system->solarSystemName
-            // );
+            EveLocationHistory::write(
+                $user->characterId,
+                $system->solarSystemName
+            );
         } catch (EveApiTokenExpiredException $e) {
             // redirect to update auth token
             return redirect()->route('auth-update')
