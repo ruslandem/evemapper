@@ -21,7 +21,7 @@ Route::get('/getWormholeClasses', [SiteController::class, 'getWormholeClasses'])
 Route::get('/getRatsDamages', [SiteController::class, 'getRatsDamages']);
 // Location and history
 Route::get('/getSolarSystems/{search}', [LocatorController::class, 'list']);
-Route::get('/getSolarSystemInfo/{system}', [LocatorController::class, 'get']);
+Route::get('/getSolarSystemInfo/{systemName}', [LocatorController::class, 'get']);
 Route::get('/getLocation', [LocatorController::class, 'locate']);
 Route::get('/getLocationsHistory', [LocatorController::class, 'getLocationsHistory']);
 // Signatures
