@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use App\Models\Signature;
+use App\Models\CosmicSignature;
 use App\Models\User;
 use App\Services\CosmicSignatures;
 
@@ -26,11 +26,11 @@ class CosmicSignaturesTest extends TestCase
         parent::setUp();
 
         User::query()->delete();
-        Signature::query()->delete();
+        CosmicSignature::query()->delete();
 
         $this->user = User::factory()->createOne();
 
-        $this->signatures = Signature::factory()->count(10)->create([
+        $this->signatures = CosmicSignature::factory()->count(10)->create([
             'characterId' => $this->user->characterId,
             'solarSystemName' => self::SOLAR_SYSTEM,
         ]);
@@ -73,7 +73,7 @@ class CosmicSignaturesTest extends TestCase
 
         $this->assertEquals(1, $deleted);
 
-        $found = Signature::query()->where([
+        $found = CosmicSignature::query()->where([
             'characterId' => $this->user->characterId,
             'solarSystemName' => $signature->solarSystemName,
             'signatureId' => $signature->signatureId,
@@ -106,7 +106,7 @@ class CosmicSignaturesTest extends TestCase
     public function test_insert_new_signatures_from_text()
     {
         // deleting signatures before insertion
-        Signature::query()->delete();
+        CosmicSignature::query()->delete();
 
         $service = new CosmicSignatures();
         $service->updateFromClipboardText(
@@ -116,22 +116,22 @@ class CosmicSignaturesTest extends TestCase
             false
         );
 
-        $inserted = Signature::all();
+        $inserted = CosmicSignature::all();
 
         $this->assertCount(6, $inserted);
 
-        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'ISN-720']);
-        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'KOA-124']);
-        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'QPI-926']);
-        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'ROJ-096']);
-        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'XCO-255']);
-        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'KOL-024']);
+        $this->assertDatabaseHas(CosmicSignature::class, ['signatureId' => 'ISN-720']);
+        $this->assertDatabaseHas(CosmicSignature::class, ['signatureId' => 'KOA-124']);
+        $this->assertDatabaseHas(CosmicSignature::class, ['signatureId' => 'QPI-926']);
+        $this->assertDatabaseHas(CosmicSignature::class, ['signatureId' => 'ROJ-096']);
+        $this->assertDatabaseHas(CosmicSignature::class, ['signatureId' => 'XCO-255']);
+        $this->assertDatabaseHas(CosmicSignature::class, ['signatureId' => 'KOL-024']);
     }
 
     public function test_update_signature_with_more_data()
     {
         // deleting signatures before insertion
-        Signature::query()->delete();
+        CosmicSignature::query()->delete();
         // seeding sample signatures
         $service = new CosmicSignatures();
         $service->updateFromClipboardText(
@@ -150,7 +150,7 @@ class CosmicSignaturesTest extends TestCase
             false
         );
 
-        $result = Signature::where([
+        $result = CosmicSignature::where([
             'characterId' => $this->user->characterId,
             'solarSystemName' => self::SOLAR_SYSTEM,
             'signatureId' => 'KOA-124'
@@ -172,7 +172,7 @@ class CosmicSignaturesTest extends TestCase
     public function test_update_signature_with_less_data()
     {
         // deleting signatures before insertion
-        Signature::query()->delete();
+        CosmicSignature::query()->delete();
         // seeding sample signatures
         $service = new CosmicSignatures();
         $service->updateFromClipboardText(
@@ -191,7 +191,7 @@ class CosmicSignaturesTest extends TestCase
             false
         );
 
-        $result = Signature::where([
+        $result = CosmicSignature::where([
             'characterId' => $this->user->characterId,
             'solarSystemName' => self::SOLAR_SYSTEM,
             'signatureId' => 'ROJ-096'
@@ -211,7 +211,7 @@ class CosmicSignaturesTest extends TestCase
     public function test_replace_signatures()
     {
         // deleting signatures before insertion
-        Signature::query()->delete();
+        CosmicSignature::query()->delete();
         // seeding sample signatures
         $service = new CosmicSignatures();
         $service->updateFromClipboardText(
@@ -246,7 +246,7 @@ class CosmicSignaturesTest extends TestCase
             $report->output()
         );
 
-        $result = Signature::where([
+        $result = CosmicSignature::where([
             'characterId' => $this->user->characterId,
             'solarSystemName' => self::SOLAR_SYSTEM,
         ])->get();
@@ -278,7 +278,7 @@ class CosmicSignaturesTest extends TestCase
     public function test_replace_with_invalid_clipboard_data()
     {
         // deleting signatures before insertion
-        Signature::query()->delete();
+        CosmicSignature::query()->delete();
         // seeding sample signatures
         $service = new CosmicSignatures();
         $service->updateFromClipboardText(
@@ -305,12 +305,12 @@ class CosmicSignaturesTest extends TestCase
             $report->output()
         );
 
-        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'ISN-720']);
-        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'KOA-124']);
-        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'QPI-926']);
-        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'ROJ-096']);
-        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'XCO-255']);
-        $this->assertDatabaseHas(Signature::class, ['signatureId' => 'KOL-024']);
+        $this->assertDatabaseHas(CosmicSignature::class, ['signatureId' => 'ISN-720']);
+        $this->assertDatabaseHas(CosmicSignature::class, ['signatureId' => 'KOA-124']);
+        $this->assertDatabaseHas(CosmicSignature::class, ['signatureId' => 'QPI-926']);
+        $this->assertDatabaseHas(CosmicSignature::class, ['signatureId' => 'ROJ-096']);
+        $this->assertDatabaseHas(CosmicSignature::class, ['signatureId' => 'XCO-255']);
+        $this->assertDatabaseHas(CosmicSignature::class, ['signatureId' => 'KOL-024']);
     }
 
     protected function getSampleSignaturesClipboardText(): string

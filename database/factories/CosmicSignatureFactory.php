@@ -2,10 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class SignatureFactory extends Factory
+class CosmicSignatureFactory extends Factory
 {
     public function definition()
     {
@@ -29,8 +28,8 @@ class SignatureFactory extends Factory
                 'Combat Site',
                 'Wormhole',
             ]),
-            'created_at' => date(DATE_ISO8601),
-            'updated_at' => date(DATE_ISO8601),
+            'created_at' => (new \DateTime)->format(\DateTime::ATOM),
+            'updated_at' => (new \DateTime)->format(\DateTime::ATOM)
         ];
     }
 }

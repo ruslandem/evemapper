@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Core\ResponseReport;
-use App\Models\Signature;
+use App\Models\CosmicSignature;
 use App\Services\CosmicSignatureUpsertStatus;
 use Illuminate\Support\Facades\Validator;
 
@@ -69,7 +69,7 @@ class CosmicSignatures
             return CosmicSignatureUpsertStatus::Unchanged;
         }
 
-        $found = Signature::where([
+        $found = CosmicSignature::where([
             'characterId' => $signature['characterId'],
             'solarSystemName' => $signature['solarSystemName'],
             'signatureId' => $signature['signatureId']
@@ -80,7 +80,7 @@ class CosmicSignatures
             return CosmicSignatureUpsertStatus::Updated;
         }
 
-        Signature::create($signature);
+        CosmicSignature::create($signature);
         return CosmicSignatureUpsertStatus::Created;
     }
 
@@ -88,7 +88,7 @@ class CosmicSignatures
     {
         $ids = array_column($signatures, 'signatureId');
 
-        return Signature::where([
+        return CosmicSignature::where([
             'characterId' => $characterId,
             'solarSystemName' => $solarSystem,
         ])
@@ -98,7 +98,7 @@ class CosmicSignatures
 
     public function deleteSignature(int $characterId, string $solarSystem, string $signatureId): int
     {
-        return Signature::where([
+        return CosmicSignature::where([
             'characterId' => $characterId,
             'solarSystemName' => $solarSystem,
             'signatureId' => $signatureId,
