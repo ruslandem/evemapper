@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Core\EveApi\LocationApiRequest;
-use App\Core\EveLocationHistory;
 use App\Core\EveRoute;
 use App\Core\EveSolarSystem;
 use App\Core\Exceptions\EveApiException;
 use App\Core\Exceptions\EveApiTokenExpiredException;
 use App\Enums\TradeHubs;
 use App\Models\SolarSystem;
+use App\Services\UserLocationHistory;
 use Illuminate\Support\Facades\Auth;
 
 class LocatorController extends Controller
@@ -34,6 +34,17 @@ class LocatorController extends Controller
 
     public function get(string $systemName)
     {
+        $user = Auth::user();
+
+        if ($user === null) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        /**
+         * get solar system information
+         */
         $system = SolarSystem::where(['solarSystemName' => $systemName])
             ->with(['region', 'constellation', 'wormhole', 'jumps'])
             ->first();
@@ -44,6 +55,10 @@ class LocatorController extends Controller
             ], 400);
         }
 
+        /**
+         * create jumps array
+         */
+        $jumps = [];
         foreach (TradeHubs::cases() as $hub) {
             $jumps[$hub->name] = count(
                 EveRoute::getRoute($system->solarSystemName, $hub->name)
@@ -51,7 +66,10 @@ class LocatorController extends Controller
         }
         @asort($jumps);
 
-        $history = EveLocationHistory::get(Auth::id());
+        /**
+         * get location history
+         */
+        $history = UserLocationHistory::getHistory($user);
 
         return [
             'system' => $system->toArray(),
@@ -62,7 +80,15 @@ class LocatorController extends Controller
 
     public function getLocationsHistory()
     {
-        return EveLocationHistory::get(Auth::id());
+        $user = Auth::user();
+
+        if ($user === null) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        return UserLocationHistory::getHistory($user);
     }
 
     public function locate()
@@ -81,10 +107,7 @@ class LocatorController extends Controller
             // get solar system info
             $system = SolarSystem::find($location['solar_system_id']);
             // write history record
-            EveLocationHistory::write(
-                $user->characterId,
-                $system->solarSystemName
-            );
+            UserLocationHistory::addHistory($user, $system);
         } catch (EveApiTokenExpiredException $e) {
             // redirect to update auth token
             return redirect()->route('auth-update')

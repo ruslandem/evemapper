@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Core\Singleton;
 use App\Models\SolarSystem;
-use App\Models\User;
 use Illuminate\Support\Collection;
 
 class SolarSystems extends Singleton
