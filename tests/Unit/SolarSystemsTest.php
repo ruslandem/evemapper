@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Core\EveSolarSystem;
 use App\Core\Exceptions\EveApiException;
 use App\Services\SolarSystems;
 use Tests\TestCase;
@@ -36,15 +35,15 @@ class SolarSystemsTest extends TestCase
 
     public function test_get_solar_system_with_invalid_id(): void
     {
-        $this->expectException(EveApiException::class);
-
-        EveSolarSystem::getById(9999999999);
+        $this->assertNull(
+            SolarSystems::getById(9999999999)
+        );
     }
 
     public function test_get_solar_system_with_invalid_name(): void
     {
-        $this->expectException(EveApiException::class);
-
-        EveSolarSystem::getByName('ABCDE');
+        $this->assertNull(
+            SolarSystems::getByName('ABCDE')
+        );
     }
 }

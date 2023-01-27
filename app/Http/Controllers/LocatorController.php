@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Core\EveApi\LocationApiRequest;
 use App\Core\EveRoute;
-use App\Core\EveSolarSystem;
 use App\Core\Exceptions\EveApiException;
 use App\Core\Exceptions\EveApiTokenExpiredException;
 use App\Enums\TradeHubs;
 use App\Models\SolarSystem;
+use App\Services\SolarSystems;
 use App\Services\UserLocationHistory;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,12 +24,11 @@ class LocatorController extends Controller
         $systems = [];
 
         $searchText = trim($search);
-
         if (!empty($searchText)) {
-            $systems = EveSolarSystem::search($searchText);
+            $systems = SolarSystems::filterByName($searchText);
         }
 
-        return array_column($systems, 'solarSystemName');
+        return $systems;
     }
 
     public function get(string $systemName)

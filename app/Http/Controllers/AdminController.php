@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\EveSolarSystem;
+use App\Services\Admin\AdminSolarSystems;
 
 class AdminController extends Controller
 {
@@ -13,6 +13,6 @@ class AdminController extends Controller
 
     public function getStatistics()
     {
-        return EveSolarSystem::getStatistics();
+        return AdminSolarSystems::getStatistics();
     }
 }
