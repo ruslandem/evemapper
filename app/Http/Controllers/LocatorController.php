@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Core\EveApi\LocationApiRequest;
-use App\Core\EveRoute;
 use App\Core\Exceptions\EveApiException;
 use App\Core\Exceptions\EveApiTokenExpiredException;
 use App\Enums\TradeHubs;
 use App\Models\SolarSystem;
+use App\Services\SolarSystemRoutes;
 use App\Services\SolarSystems;
 use App\Services\UserLocationHistory;
 use Illuminate\Support\Facades\Auth;
@@ -59,8 +59,9 @@ class LocatorController extends Controller
          */
         $jumps = [];
         foreach (TradeHubs::cases() as $hub) {
-            $jumps[$hub->name] = count(
-                EveRoute::getRoute($system->solarSystemName, $hub->name)
+            $jumps[$hub->name] = SolarSystemRoutes::getRouteLength(
+                $system->solarSystemName,
+                $hub->name
             );
         }
         @asort($jumps);

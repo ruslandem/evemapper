@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Core\EveApi\AutopilotWaypointApiRequest;
-use App\Core\EveRoute;
-use App\Core\EveSolarSystem;
 use App\Core\Exceptions\EveApiTokenExpiredException;
 use App\Core\Exceptions\EveRouteNotFoundException;
+use App\Services\SolarSystemRoutes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,25 +32,11 @@ class RoutesController extends Controller
         $waypoints = $request->input('waypoints', []);
 
         try {
-            $route = EveRoute::getWaypointsRoute($waypoints);
+            $route = SolarSystemRoutes::getWaypointsRoute($waypoints, true);
         } catch (EveRouteNotFoundException $e) {
             return response()->json([
                 'message' => 'Failed to build route'
             ], 401);
-        }
-
-        foreach ($route as &$waypointRoute) {
-            foreach ($waypointRoute as &$waypoint) {
-                $info = EveSolarSystem::getByName($waypoint);
-                $waypoint = [
-                    'solarSystemID' => $info->solarSystemID,
-                    'solarSystemName' => $info->solarSystemName,
-                    'constellationName' => $info->constellationName,
-                    'regionName' => $info->regionName,
-                    'security' => $info->security,
-                    'rats' => $info->rats,
-                ];
-            }
         }
 
         return response()->json($route);
