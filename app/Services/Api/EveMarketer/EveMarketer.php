@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Api\EveMarket;
+namespace App\Services\Api\EveMarketer;
 
 use App\Exceptions\EveApiException;
 use Illuminate\Support\Facades\Validator;

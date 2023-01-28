@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-use App\Services\Api\EveMarket\EveMarketer;
+use App\Services\Api\EveMarketer\EveMarketer;
 use App\Exceptions\EveBlueprintException;
 use App\Models\InvType;
 use Illuminate\Support\Facades\Cache;

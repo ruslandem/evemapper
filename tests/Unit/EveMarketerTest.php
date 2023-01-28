@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Services\Api\EveMarket\EveMarketer;
+use App\Services\Api\EveMarketer\EveMarketer;
 use App\Exceptions\EveApiException;
 use Tests\TestCase;
 
