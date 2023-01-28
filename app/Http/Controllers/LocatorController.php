@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\EveApi\LocationApiRequest;
+use App\Services\Api\EveOnline\LocationApiRequest;
 use App\Exceptions\EveApiException;
 use App\Exceptions\EveApiTokenExpiredException;
 use App\Enums\TradeHubs;

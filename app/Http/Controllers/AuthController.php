@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\EveApi\AuthDataFactory;
+use App\Services\Api\EveOnline\AuthDataFactory;
 use App\Models\User;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;

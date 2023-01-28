@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\EveApi\AutopilotWaypointApiRequest;
+use App\Services\Api\EveOnline\AutopilotWaypointApiRequest;
 use App\Exceptions\EveApiTokenExpiredException;
 use App\Exceptions\EveRouteNotFoundException;
 use App\Services\SolarSystemRoutes;

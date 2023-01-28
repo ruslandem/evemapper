@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Core\EveApi;
+namespace App\Services\Api\EveOnline;
 
 use App\Exceptions\EveApiException;
 use App\Exceptions\EveApiTokenExpiredException;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Core\EveApi;
+namespace App\Services\Api\EveOnline;
 
 use App\Models\User;
 use GuzzleHttp\Client as HttpClient;
