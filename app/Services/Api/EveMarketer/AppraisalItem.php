@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\EveMarketApi;
+namespace App\Services\Api\EveMarket;
 
 class AppraisalItem implements \JsonSerializable
 {
