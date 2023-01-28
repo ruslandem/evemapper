@@ -18,6 +18,10 @@ class RoutesController extends Controller
 
     public function route(Request $request)
     {
+        $request->validate([
+            'waypoints' => 'required',
+        ]);
+        
         $waypoints = [];
         if ($request->input('waypoints')) {
             $waypoints = explode(',', $request->input('waypoints'));
@@ -28,6 +32,10 @@ class RoutesController extends Controller
 
     public function buildRoute(Request $request)
     {
+        $request->validate([
+            'waypoints' => 'required',
+        ]);
+
         $route = [];
         $waypoints = $request->input('waypoints', []);
 
