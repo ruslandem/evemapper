@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Core\Exceptions\EveApiException;
+use App\Exceptions\EveApiException;
 use App\Services\SolarSystems;
 use Tests\TestCase;
 

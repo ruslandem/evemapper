@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\EveApi;
 
-use App\Core\Exceptions\EveApiException;
-use App\Core\Exceptions\EveApiTokenExpiredException;
+use App\Exceptions\EveApiException;
+use App\Exceptions\EveApiTokenExpiredException;
 use App\Models\User;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;

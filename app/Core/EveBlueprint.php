@@ -3,7 +3,7 @@
 namespace App\Core;
 
 use App\Core\EveMarketApi\EveMarketer;
-use App\Core\Exceptions\EveBlueprintException;
+use App\Exceptions\EveBlueprintException;
 use App\Models\InvType;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;

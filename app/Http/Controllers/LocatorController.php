@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Core\EveApi\LocationApiRequest;
-use App\Core\Exceptions\EveApiException;
-use App\Core\Exceptions\EveApiTokenExpiredException;
+use App\Exceptions\EveApiException;
+use App\Exceptions\EveApiTokenExpiredException;
 use App\Enums\TradeHubs;
 use App\Models\SolarSystem;
 use App\Services\SolarSystemRoutes;

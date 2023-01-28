@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\Exceptions;
+namespace App\Exceptions;
 
-class EveRouteNotFoundException extends \Exception
+class EveRouteNotFoundException extends \RuntimeException
 {
     public function __construct($message = null, $code = 0)
     {

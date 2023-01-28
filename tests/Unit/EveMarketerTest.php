@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Core\EveMarketApi\EveMarketer;
-use App\Core\Exceptions\EveApiException;
+use App\Exceptions\EveApiException;
 use Tests\TestCase;
 
 class EveMarketerTest extends TestCase

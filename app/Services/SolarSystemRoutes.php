@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Core\Exceptions\EveRouteNotFoundException;
+use App\Exceptions\EveRouteNotFoundException;
 use App\Core\Singleton;
 use Fisharebest\Algorithm\Dijkstra;
 use Illuminate\Support\Facades\Cache;

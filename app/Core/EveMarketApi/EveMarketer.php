@@ -2,7 +2,7 @@
 
 namespace App\Core\EveMarketApi;
 
-use App\Core\Exceptions\EveApiException;
+use App\Exceptions\EveApiException;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client as HttpClient;
 use Illuminate\Support\Facades\Config;
