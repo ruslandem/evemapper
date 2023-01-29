@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services\Admin;
 
-use App\Core\Singleton;
 use Illuminate\Support\Facades\DB;
 
-class AdminSolarSystems extends Singleton
+class AdminSolarSystems
 {
     public static function getStatistics(): array
     {

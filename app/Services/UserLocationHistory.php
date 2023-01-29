@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Core\Singleton;
 use App\Models\LocationHistory;
 use App\Models\SolarSystem;
 use App\Models\User;
 
-class UserLocationHistory extends Singleton
+class UserLocationHistory
 {
     public static function getHistory(User $user, int $count = 50): ?array
     {

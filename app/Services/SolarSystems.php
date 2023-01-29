@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Core\Singleton;
 use App\Models\SolarSystem;
 use Illuminate\Support\Collection;
 
-class SolarSystems extends Singleton
+class SolarSystems
 {
     public static function getById(int $solarSystemId): ?SolarSystem
     {

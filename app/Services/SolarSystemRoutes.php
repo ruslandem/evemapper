@@ -3,12 +3,11 @@
 namespace App\Services;
 
 use App\Exceptions\EveRouteNotFoundException;
-use App\Core\Singleton;
 use Fisharebest\Algorithm\Dijkstra;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
-final class SolarSystemRoutes extends Singleton
+final class SolarSystemRoutes
 {
     /**
      * Trigger to use cache to drastically speed up data processing.

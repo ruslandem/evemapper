@@ -2,9 +2,8 @@
 
 namespace App\Services;
 
-use App\Core\Singleton;
 
-final class Utils extends Singleton
+final class Utils
 {
     /**
      * Substitute $array values with mapped values in $token.

@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Core\Singleton;
 use App\Enums\SecuritySpace;
 use App\Models\Wormhole;
 use App\Models\WormholeClass;
 use Illuminate\Support\Collection;
 
-class Wormholes extends Singleton
+class Wormholes
 {
     /**
      * Get wormhole statics for the specified wormhole system
