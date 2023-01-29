@@ -4,38 +4,35 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Core\ResponseReport;
 use App\Models\CosmicSignature;
 use App\Services\CosmicSignatureUpsertStatus;
 use Illuminate\Support\Facades\Validator;
 
 class CosmicSignatures
 {
-    public const SIG_UNCHAGED = 0;
-    public const SIG_UPDATED = 1;
-    public const SIG_CREATED = 2;
-
-    public function updateFromClipboardText(int $characterId, string $solarSystem, string $text, bool $replace = false): ResponseReport
+    public function updateFromClipboardText(int $characterId, string $solarSystem, string $text, bool $replace = false): array
     {
-        $report = new ResponseReport();
-
         // parsing text
-        $signatures = $this->getArrayFromClipboardText($characterId, $solarSystem, $text);
+        $signatures = $this->getArrayFromClipboardText(
+            $characterId,
+            $solarSystem,
+            $text
+        );
 
         if (count($signatures) == 0) {
-            return $report
-                ->set('error', 'no signatures found');
+            return ['error' => 'no signatures found'];
         }
+
+        $counters = array_fill_keys(['created', 'updated', 'deleted'], 0);
 
         // deleting absent signatures
         if (count($signatures) > 0 && $replace) {
-            $removed = $this->removeAbsentSignatures(
-                $characterId,
-                $solarSystem,
-                $signatures
-            );
-
-            $report->increment('deleted', $removed);
+            $counters['deleted'] =
+                $this->removeAbsentSignatures(
+                    $characterId,
+                    $solarSystem,
+                    $signatures
+                );
         }
 
         // updating/inserting signatures
@@ -43,12 +40,12 @@ class CosmicSignatures
             $upserted = $this->upsertSignature($signature);
 
             match ($upserted) {
-                CosmicSignatureUpsertStatus::Created => $report->increment('created'),
-                CosmicSignatureUpsertStatus::Updated => $report->increment('updated')
+                CosmicSignatureUpsertStatus::Created => $counters['created']++,
+                CosmicSignatureUpsertStatus::Updated => $counters['updated']++
             };
         }
 
-        return $report;
+        return $counters;
     }
 
     /**

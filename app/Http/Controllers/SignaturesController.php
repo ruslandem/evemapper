@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\ResponseReport;
 use App\Http\Resources\SignatureResource;
 use App\Models\CosmicSignature;
 use App\Services\CosmicSignatures;
@@ -68,9 +67,7 @@ class SignaturesController extends Controller
             $validated['replace']
         );
 
-        return response()->json(
-            $result->output()
-        );
+        return response()->json($result);
     }
 
 
@@ -94,8 +91,6 @@ class SignaturesController extends Controller
             $validated['id'],
         );
 
-        return response()->json(
-            (new ResponseReport())->increment('deleted', $deleted)->output()
-        );
+        return response()->json(['deleted' => $deleted]);
     }
 }

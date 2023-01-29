@@ -238,12 +238,11 @@ class CosmicSignaturesTest extends TestCase
 
         $this->assertEqualsCanonicalizing(
             [
-                'error' => null,
-                'deleted' => 4,
                 'created' => 2,
                 'updated' => 2,
+                'deleted' => 4,
             ],
-            $report->output()
+            $report
         );
 
         $result = CosmicSignature::where([
@@ -302,7 +301,7 @@ class CosmicSignaturesTest extends TestCase
             [
                 'error' => 'no signatures found',
             ],
-            $report->output()
+            $report
         );
 
         $this->assertDatabaseHas(CosmicSignature::class, ['signatureId' => 'ISN-720']);
