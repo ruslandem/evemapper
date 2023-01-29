@@ -3,6 +3,8 @@
 namespace App\Services\Api\EveMarketer;
 
 use App\Exceptions\EveApiException;
+use App\Services\Api\AppraisalItem;
+use App\Services\Api\MarketApiInterface;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client as HttpClient;
 use Illuminate\Support\Facades\Config;

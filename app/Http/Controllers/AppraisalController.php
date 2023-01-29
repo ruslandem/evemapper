@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\BlueprintAppraisal;
 use App\Core\EveBlueprint;
+use App\Models\InvType;
+use App\Services\Api\EveMarketer\EveMarketer;
 use Illuminate\Http\Request;
 
 class AppraisalController extends Controller
@@ -14,21 +17,23 @@ class AppraisalController extends Controller
 
     public function blueprintAppraisal(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'blueprintName' => 'required|string',
         ]);
 
-        $blueprint = new EveBlueprint();
+        $item = InvType::where([
+            'typeName' => $request->input('blueprintName')
+        ])->get()->first();
 
-        $typeId = $blueprint->getTypeId($validated['blueprintName']);
-
-        if ($typeId === null) {
-            return response()->json(['error' => 'blueprint not found'], 400);
+        if (!$item) {
+            return response()->json(
+                ['error' => 'blueprint not found'],
+                400
+            );
         }
-        
-        $result = $blueprint->appraisal($typeId);
-        $result['name'] = $validated['blueprintName'];
 
-        return $result;
+        return response()->json(
+            (new BlueprintAppraisal(new EveMarketer))->appraise($item->typeID)
+        );
     }
 }

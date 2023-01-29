@@ -7,14 +7,14 @@
     </div>
     <div
       v-for="(bp, index) in props.blueprints"
-      :key="bp.typeId"
+      :key="bp.typeID"
       class="p-2 mb-1 is-dark-1"
     >
       <div class="columns">
         <div class="column">
-          <h4 class="title is-4 my-1">{{ bp.name }}</h4>
+          <h4 class="title is-4 my-1">{{ bp.typeName }}</h4>
         </div>
-        <div class="column is-one-fifth has-text-right">
+        <div class="column has-text-right">
           <h5
             v-if="profit"
             :class="{
@@ -34,7 +34,7 @@
           <h6 class="title is-6 mb-1 has-text-warning">Materials</h6>
           <table class="materials table is-narrow is-fullwidth is-size-7 mb-3">
             <thead>
-              <tr>
+              <tr class="has-background-dark">
                 <th class="is-one-half">Item</th>
                 <th class="has-text-right">Qty</th>
                 <th class="has-text-right">Price</th>
@@ -42,20 +42,21 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="m in bp.materials" :key="m.typeId">
-                <td>{{ m.name }}</td>
+              <tr v-for="m in bp.materials" :key="m.materialTypeID">
+                <td>{{ m.material_type.typeName }}</td>
                 <td class="has-text-right">
                   {{ m.quantity?.toLocaleString() }}
                 </td>
                 <td class="has-text-right">
-                  {{ m.sellPrice?.toLocaleString() }}
+                  {{ m.price?.toLocaleString() }}
                 </td>
                 <td class="has-text-right">
-                  {{
-                    m.sellPrice
-                      ? (m.quantity * m.sellPrice).toLocaleString()
-                      : null
-                  }}
+                  {{ m.price ? (m.quantity * m.price).toLocaleString() : null }}
+                </td>
+              </tr>
+              <tr class="has-background-dark">
+                <td colspan="4" class="has-text-right has-text-weight-bold">
+                  {{ bp.totals?.materialsCosts?.toLocaleString() }}
                 </td>
               </tr>
             </tbody>
@@ -74,18 +75,19 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="p in bp.products" :key="p.typeId">
-                <td>{{ p.name }}</td>
+              <tr v-for="p in bp.products" :key="p.productTypeID">
+                <td>{{ p.product_type.typeName }}</td>
                 <td class="has-text-right">{{ p.quantity }}</td>
                 <td class="has-text-right">
-                  {{ p.sellPrice?.toLocaleString() }}
+                  {{ p.price?.toLocaleString() }}
                 </td>
                 <td class="has-text-right">
-                  {{
-                    p.sellPrice
-                      ? (p.quantity * p.sellPrice).toLocaleString()
-                      : null
-                  }}
+                  {{ p.price ? (p.quantity * p.price).toLocaleString() : null }}
+                </td>
+              </tr>
+              <tr class="has-background-dark">
+                <td colspan="4" class="has-text-right has-text-weight-bold">
+                  {{ bp.totals?.productsCosts?.toLocaleString() }}
                 </td>
               </tr>
             </tbody>

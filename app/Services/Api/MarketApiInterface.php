@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Api\EveMarketer;
+namespace App\Services\Api;
 
 interface MarketApiInterface
 {

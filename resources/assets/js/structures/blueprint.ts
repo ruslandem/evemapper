@@ -1,10 +1,15 @@
-import { BlueprintMaterial } from "./blueprint-material";
+import { BlueprintMaterial } from './blueprint-material';
+import { BlueprintProduct } from './blueprint-product';
 
 export interface Blueprint {
-  typeId: number;
-  name: string;
-  products?: BlueprintMaterial[];
+  typeID: number;
+  typeName: string;
+  groupID: number;
+  volume: number;
   materials?: BlueprintMaterial[];
+  products?: BlueprintProduct[];
+  totals?: {
+    materialsCosts: number;
+    productsCosts: number;
+  };
 }
-
-
