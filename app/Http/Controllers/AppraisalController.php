@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Actions\BlueprintAppraisal;
-use App\Core\EveBlueprint;
 use App\Models\InvType;
 use App\Services\Api\EveMarketer\EveMarketer;
 use Illuminate\Http\Request;
