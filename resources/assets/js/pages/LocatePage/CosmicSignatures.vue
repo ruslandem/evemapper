@@ -77,7 +77,8 @@ import { getRelativeTime, getCosmicSignatureIcon } from '@/services/utils';
 import {
   fetchSignatures,
   updateSignatures,
-  deleteSignature
+  deleteSignature,
+  signatureUpdateResponse
 } from '@/services/api';
 
 interface Props {
@@ -97,13 +98,13 @@ const updateSignatureClick = async (replace: boolean): Promise<void> => {
   const clipboardText = await navigator.clipboard.readText();
 
   if (props.systemName && clipboardText.length > 0) {
-    const updated: string | null = await updateSignatures(
+    const updated = await updateSignatures(
       props.systemName,
       clipboardText,
       replace
     );
 
-    if (updated === null) {
+    if (!updated.error) {
       signatures.value = await fetchSignatures(props.systemName);
       toast({
         message: 'Signatures updated',
@@ -111,7 +112,7 @@ const updateSignatureClick = async (replace: boolean): Promise<void> => {
       });
     } else {
       toast({
-        message: updated,
+        message: updated.error,
         type: 'is-danger'
       });
     }

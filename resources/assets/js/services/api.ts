@@ -90,12 +90,19 @@ export const fetchSolarSystemInfo = async (
   return status == 200 ? data : {};
 };
 
+export interface signatureUpdateResponse {
+  created?: number;
+  updated?: number;
+  deleted?: number;
+  error?: string;
+}
+
 export const updateSignatures = async (
   solarSystemName: string,
   text: string,
   replace: boolean
-): Promise<string | null> => {
-  const { data, status } = await axios.post(
+): Promise<signatureUpdateResponse> => {
+  const { data, status } = await axios.post<signatureUpdateResponse>(
     '/api/updateSignatures',
     {
       solarSystemName,
@@ -106,10 +113,10 @@ export const updateSignatures = async (
   );
 
   if (status === 200) {
-    return data.error;
+    return <signatureUpdateResponse>{ error: data.error };
   }
 
-  return 'update error';
+  return data;
 };
 
 export const deleteSignature = async (
@@ -124,6 +131,7 @@ export const deleteSignature = async (
     },
     getAxiosPostConfig()
   );
+
   return status === 200;
 };
 
