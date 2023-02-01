@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -71,10 +73,3 @@ class SolarSystemJumps extends Model
         );
     }
 }
-
-// fromRegionID: 10000001,
-// fromConstellationID: 20000002,
-// fromSolarSystemID: 30000009,
-// toSolarSystemID: 30000010,
-// toConstellationID: 20000002,
-// toRegionID: 10000001,
