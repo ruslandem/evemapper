@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Log;
 
 class CosmicSignature extends Model
 {
@@ -48,5 +50,21 @@ class CosmicSignature extends Model
         }
 
         return $this;
+    }
+
+    /**
+     * Set the keys for a save update query.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function setKeysForSaveQuery($query)
+    {
+        $query
+            ->where('characterId', '=', $this->getAttribute('characterId'))
+            ->where('signatureId', '=', $this->getAttribute('signatureId'))
+            ->where('solarSystemName', '=', $this->getAttribute('solarSystemName'));
+
+        return $query;
     }
 }
