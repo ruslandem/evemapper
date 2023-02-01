@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\SecuritySpace;
+use App\Models\RatsDamage;
 use App\Services\Wormholes;
 
 class SiteController extends Controller
@@ -37,72 +38,11 @@ class SiteController extends Controller
             'highlightColor' => SecuritySpace::Triglavian->highlightColor()
         ]);
 
-        return $elements;
+        return response()->json($elements);
     }
 
     public function getRatsDamages()
     {
-        return [
-            [
-                "race" => "Blood Raider",
-                "damageToGet" => "EM/Thermal",
-                "damageToUse" => "EM"
-            ],
-            [
-                "race" => "Guristas",
-                "damageToGet" => "Kinetic/Thermal",
-                "damageToUse" => "Kinetic"
-            ],
-            [
-                "race" => "Sanshas",
-                "damageToGet" => "EM/Thermal",
-                "damageToUse" => "EM"
-            ],
-            [
-                "race" => "Serpentis",
-                "damageToGet" => "Thermal/Kinetic",
-                "damageToUse" => "Kinetic"
-            ],
-            [
-                "race" => "Angel",
-                "damageToGet" => "Explosive/Kinetic",
-                "damageToUse" => "Explosive"
-            ],
-            [
-                "race" => "Mordus",
-                "damageToGet" => "Kinetic/Thermal",
-                "damageToUse" => "Kinetic"
-            ],
-            [
-                "race" => "Rogue Drones",
-                "damageToGet" => "Explosive/Kinetic",
-                "damageToUse" => "EM"
-            ],
-            [
-                "race" => "Mercenary",
-                "damageToGet" => "EM/Thermal",
-                "damageToUse" => "Thermal"
-            ],
-            [
-                "race" => "Minmatar",
-                "damageToGet" => "Thermal",
-                "damageToUse" => " Explo"
-            ],
-            [
-                "race" => "Gallente",
-                "damageToGet" => "Kinetic/Thermal",
-                "damageToUse" => "Thermal"
-            ],
-            [
-                "race" => "Amarr",
-                "damageToGet" => "EM/Thermal",
-                "damageToUse" => "Thermal"
-            ],
-            [
-                "race" => "Caldari",
-                "damageToGet" => "Kinetic/Thermal",
-                "damageToUse" => "Kinetic"
-            ],
-        ];
+        return response()->json(RatsDamage::all()->toArray());
     }
 }
