@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,15 +17,23 @@ class ExternalLink extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
+    protected $appends = ['wiki_url'];
+
     protected $fillable = [
         'name',
         'url',
     ];
 
 
-    public function getWikiUrl()
+    protected function wikiUrl(): Attribute
     {
-        return "https://wiki.eveuniversity.org/" 
-            . urlencode(str_replace(" ", "_", trim($this->name)));
+        return new Attribute(
+            get: fn () => implode('', [
+                'https://wiki.eveuniversity.org/',
+                urlencode(
+                    str_replace(" ", "_", trim($this->name))
+                )
+            ])
+        );
     }
 }

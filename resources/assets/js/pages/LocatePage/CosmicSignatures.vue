@@ -22,7 +22,17 @@
               ></i>
               {{ signature.groupName }}
             </td>
-            <td>{{ signature.signatureName }}</td>
+            <td>
+              <a 
+                v-if="signature.external_link?.wiki_url" 
+                :href="signature.external_link?.wiki_url" 
+                target="_blank"
+                rel="noopener nofollow"
+              >
+                {{ signature.signatureName }}
+              </a>
+              <span v-else>{{ signature.signatureName }}</span>
+            </td>
             <td>{{ getRelativeTime(signature.created_at) }}</td>
             <td>
               <button

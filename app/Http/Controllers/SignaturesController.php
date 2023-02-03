@@ -8,6 +8,7 @@ use App\Services\CosmicSignatures;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use League\OAuth1\Client\Signature\Signature;
 
 class SignaturesController extends Controller
 {
@@ -24,23 +25,12 @@ class SignaturesController extends Controller
     public function index(string $system)
     {
         return SignatureResource::collection(
-            CosmicSignature::select([
-                'signatures.id as id',
-                'signatures.solarSystemName as solarSystemName',
-                'signatures.signatureId as signatureId',
-                'signatures.signatureName as signatureName',
-                'signatures.groupName as groupName',
-                'signatures.created_at as created_at',
-                'signatures.updated_at as updated_at',
-                'extLinks.name as linkName',
-                'extLinks.url as linkUrl',
+            CosmicSignature::where([
+                'characterId' => Auth::id(),
+                'solarSystemName' => $system
             ])
-                ->where([
-                    'signatures.characterId' => Auth::id(),
-                    'signatures.solarSystemName' => $system
-                ])
-                ->leftJoin('extLinks', 'extLinks.name', '=', 'signatures.signatureName')
-                ->orderBy('signatures.signatureId')->get()
+                ->with(['externalLink'])
+                ->orderBy('signatureId')->get()
         );
     }
 
